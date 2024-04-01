@@ -13,7 +13,7 @@ function SideBar() {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-10">
         <Logo isHovered={isHovered} />
         <Nav isHovered={isHovered} />
       </div>
