@@ -6,6 +6,7 @@ import { FaMoneyBills } from "react-icons/fa6";
 import { FaFileInvoice } from "react-icons/fa";
 import { GoGoal } from "react-icons/go";
 import { MdOutlineAccountCircle } from "react-icons/md";
+import { BiSupport } from "react-icons/bi";
 
 const navItems = [
   { icon: LuLayoutDashboard, text: "Dashboard" },
@@ -14,13 +15,16 @@ const navItems = [
   { icon: FaFileInvoice, text: "Invoice" },
   { icon: GoGoal, text: "Goals" },
   { icon: MdOutlineAccountCircle, text: "Account" },
+  { icon: BiSupport, text: "Support" },
 ];
 
-function Nav({ isHovered }) {
+function Nav({ isHovered, setIsHovered, closeSidebar }) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const handleClick = (index) => {
     setCurrentPage(index);
+    setIsHovered(false); // Close sidebar on click
+    closeSidebar(); // Call closeSidebar function from SideBar component
   };
 
   return (
@@ -55,6 +59,8 @@ function Nav({ isHovered }) {
 
 Nav.propTypes = {
   isHovered: PropTypes.bool.isRequired,
+  setIsHovered: PropTypes.func.isRequired,
+  closeSidebar: PropTypes.func.isRequired,
 };
 
 export default Nav;
