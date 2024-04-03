@@ -4,11 +4,13 @@ import Header from "./UI/Header";
 
 function AppLayout() {
   return (
-    <div className="w-full h-[100vh] text-white bg-[#121212] flex overflow-hidden">
+    <div className="flex h-screen text-white bg-[#121212]">
       <SideBar />
       <div className="flex flex-col w-full">
         <Header />
-        <Outlet />
+        <div className="flex-grow overflow-auto">
+          <Outlet />
+        </div>
       </div>
     </div>
   );

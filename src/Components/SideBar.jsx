@@ -12,7 +12,7 @@ function SideBar() {
 
   return (
     <div
-      className={`bg-[#1E1E1E] w-20 ${
+      className={`bg-[#1E1E1E]  w-20 ${
         isHovered ? "" : ""
       } flex flex-col justify-between h-full ${
         isHovered ? "w-64 min-w-48" : ""
