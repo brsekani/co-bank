@@ -1,5 +1,11 @@
+import TransactionsTable from "../UI/TransactionsTable";
+
 function Transactions() {
-  return <div>Transactions</div>;
+  return (
+    <div className="p-5">
+      <TransactionsTable />
+    </div>
+  );
 }
 
 export default Transactions;
