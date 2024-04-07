@@ -1,5 +1,9 @@
 function Profile() {
-  return <div>/account/</div>;
+  return (
+    <>
+      <p>wjduwj</p>
+    </>
+  );
 }
 
 export default Profile;

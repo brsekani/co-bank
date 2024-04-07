@@ -8,6 +8,7 @@ import { NavLink } from "react-router-dom";
 function AccountMobileNav({ setShowMobileNav }) {
   const handleNavLinkClick = () => {
     setShowMobileNav(false);
+    console.log("clicked");
   };
 
   return (

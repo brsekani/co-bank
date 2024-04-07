@@ -9,7 +9,12 @@ function Account() {
   const isSmallScreen = useMediaQuery("(max-width: 764px)");
 
   function handleShowMobileNav() {
-    setShowMobileNav(!showMobile);
+    setShowMobileNav(true);
+  }
+
+  function handleButtonClick(e) {
+    e.stopPropagation();
+    handleShowMobileNav(e);
   }
 
   return (
@@ -19,13 +24,13 @@ function Account() {
       </div>
 
       <div
-        className={`xl:col-start-2 xl:col-end-5 bg-[#1E1E1E] md:col-start-2 md:col-end-4 row-start-1 col-start-1 col-end-3 w-full h-56 ${
-          showMobile === true && isSmallScreen ? "hidden" : "block"
+        className={`xl:col-start-2 xl:col-end-5 bg-[#1E1E1E] md:col-start-2 md:col-end-4 row-start-1 col-start-1 col-end-3 w-full h-56 flex flex-col  gap-2 ${
+          showMobile && isSmallScreen ? "hidden" : "block"
         }`}
       >
-        <button className="block md:hidden" onClick={handleShowMobileNav}>
-          Back
-        </button>
+        <div className="" onClick={(e) => handleButtonClick(e)}>
+          <button className="block md:hidden">Back</button>
+        </div>
         <Outlet />
       </div>
 

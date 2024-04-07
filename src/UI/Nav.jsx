@@ -45,7 +45,7 @@ function Nav({ isHovered, setIsHovered, closeSidebar }) {
               <item.icon size={25} />
               <p
                 className={`absolute left-12 w-full ${
-                  isHovered ? "opacity-100" : "opacity-0"
+                  isHovered ? "flex" : "hidden"
                 } transition-opacity duration-300 md:block`}
               >
                 {item.text}
