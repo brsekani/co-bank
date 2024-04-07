@@ -7,6 +7,8 @@ import Invoice from "./Pages/Invoice";
 import Goals from "./Pages/Goals";
 import Account from "./Pages/Account";
 import Support from "./Pages/Support";
+import Profile from "./Pages/Profile";
+import Security from "./Pages/Security";
 
 function App() {
   return (
@@ -17,10 +19,14 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="cards" element={<Cards />} />
           <Route path="transactions" element={<Transactions />} />
-          <Route path="Invoice" element={<Invoice />} />
-          <Route path="Goals" element={<Goals />} />
-          <Route path="Account" element={<Account />} />
-          <Route path="Support" element={<Support />} />
+          <Route path="invoice" element={<Invoice />} />
+          <Route path="goals" element={<Goals />} />
+          <Route path="account" element={<Account />}>
+            <Route index element={<Navigate replace to="profile" />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="security" element={<Security />} />
+          </Route>
+          <Route path="support" element={<Support />} />
         </Route>
       </Routes>
     </BrowserRouter>
