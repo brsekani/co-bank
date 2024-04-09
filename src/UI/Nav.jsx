@@ -33,11 +33,11 @@ function Nav({ isHovered, setIsHovered, closeSidebar }) {
         {navItems.map((item, index) => (
           <NavLink key={index} to={item.text}>
             <li
-              className={`relative flex items-center gap-3 hover:bg-[#9898be] hover:border-r-4 hover:border-[#3F51B5] transition-all duration-300 ${
-                location === item.text ? "bg-[#9898be]" : ""
+              className={`relative flex items-center gap-3 hover:bg-[#536dfe] hover:border-r-4 hover:border-[#3F51B5] transition-all duration-300 ${
+                location === item.text ? "bg-[#3F51B5]" : ""
               } ${
                 isHovered && location === item.text
-                  ? "border-r-4 border-[#3F51B5]"
+                  ? "border-r-4 border-[#536dfe]"
                   : ""
               } h-10 rounded-sm px-3 hover:scale-105 transform`}
               onClick={() => handleClick(index + 1)}
