@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Logo from "../UI/Logo";
 import Nav from "../UI/Nav";
-import ToogleBackgroundBtn from "../UI/ToogleBackgroundBtn";
+// import ToogleBackgroundBtn from "../UI/ToogleBackgroundBtn";
 
 function SideBar() {
   const [isHovered, setIsHovered] = useState(false);
@@ -32,7 +32,7 @@ function SideBar() {
           closeSidebar={closeSidebar}
         />
       </div>
-      <ToogleBackgroundBtn isHovered={isHovered} setIsHovered={setIsHovered} />
+      {/* <ToogleBackgroundBtn isHovered={isHovered} setIsHovered={setIsHovered} /> */}
     </div>
   );
 }

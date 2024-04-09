@@ -46,3 +46,13 @@
   background-color: #1e1e1e; /* Back card background color */
   transform: rotateY(180deg);
 }
+
+.stripe-bg {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #0090e3,
+    #0090e3 5px,
+    #00a3ff 0,
+    #00a3ff 20px
+  );
+}

@@ -18,7 +18,7 @@ function PersonalAccount() {
   ];
 
   return (
-    <div className="w-full min-h-[195px] max-h-[250px] col-start-1 col-end-4 md:col-start-1 md:col-end-2  bg-[#1E1E1E] p-3 rounded-md">
+    <div className="w-full min-h-[195px] max-h-[250px] col-start-1 col-end-4 md:col-start-1 md:col-end-2  bg-[#1E1E1E] p-5 rounded-md">
       <div className="flex items-center justify-between">
         <p>Personal Account</p>
         <button className="flex items-center gap-2 p-2 border border-white rounded-md hover:bg-[#536dfe] ">
@@ -88,7 +88,7 @@ function PersonalAccount() {
         ))}
       </div>
 
-      <div className="flex items-center justify-between mt-2">
+      <div className="flex items-center justify-between mt-7">
         <p className="text-xs">
           Last Updated: <span>Just one</span>
         </p>
