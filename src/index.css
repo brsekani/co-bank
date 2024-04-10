@@ -56,3 +56,8 @@
     #00a3ff 20px
   );
 }
+
+/* Table */
+.table-header {
+  padding: 0.75rem;
+}

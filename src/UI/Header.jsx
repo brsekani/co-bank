@@ -11,7 +11,7 @@ function Header() {
       <div className="flex items-center gap-7">
         <FaRegBell size={20} />
         <img
-          className="flex items-center justify-center rounded-full w-9 h-9"
+          className="flex items-center justify-center object-cover rounded-full w-9 h-9"
           src={faceImage}
           alt=""
         />
