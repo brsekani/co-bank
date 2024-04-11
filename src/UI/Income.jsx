@@ -9,7 +9,6 @@ function Income() {
   return (
     <div className="w-full min-h-[195px] max-h-[250px] col-start-1 col-end-4 md:col-start-1 md:col-end-2 bg-[#1E1E1E] xl:row-start-1 xl:col-start-3 xl:col-end-4 rounded-md p-5">
       <p className="text-lg font-medium">Income</p>
-
       <div className="flex items-center justify-between mt-3">
         <div className="flex items-center gap-2">
           <h1 className="text-3xl">
