@@ -10,7 +10,7 @@ const useRandomDataGenerator = () => {
   };
 
   const getRandomDate = () => {
-    const startDate = new Date("2024-01-01");
+    const startDate = new Date("2023-01-01");
     const endDate = new Date();
     const randomDate = new Date(
       startDate.getTime() +
@@ -23,8 +23,9 @@ const useRandomDataGenerator = () => {
     });
   };
 
-  const getRandomAmount = () => {
-    return Math.floor(Math.random() * 9000) + 1000;
+  const getRandomAmount = (type) => {
+    const baseAmount = Math.floor(Math.random() * 9000) + 1000;
+    return type === "sent" ? -baseAmount : baseAmount;
   };
 
   const getRandomStatus = () => {
@@ -33,19 +34,25 @@ const useRandomDataGenerator = () => {
   };
 
   const generateRandomTransactions = () => {
-    const transactions = Array.from({ length: 20 }, (_, index) => ({
-      id: index + 1,
-      name: getRandomName(),
-      date: getRandomDate(),
-      amount: getRandomAmount(),
-      status: getRandomStatus(),
-      details: "Details",
-    }));
+    const transactions = [];
+    for (let i = 0; i < 20; i++) {
+      const type = Math.random() < 0.5 ? "received" : "sent";
+      transactions.push({
+        id: i + 1,
+        name: getRandomName(),
+        date: getRandomDate(),
+        amount: getRandomAmount(type),
+        status: getRandomStatus(),
+        details: "Details",
+        type: type,
+      });
+    }
     return transactions;
   };
 
-  const randomTransactions = generateRandomTransactions();
-  return randomTransactions;
+  const mixedTransactions = generateRandomTransactions();
+
+  return mixedTransactions;
 };
 
 export default useRandomDataGenerator;

@@ -61,7 +61,7 @@ function TransactionsTable() {
                   <span>{transaction.name}</span>
                 </td>
                 <td>{transaction.date}</td>
-                <td>${formattedAmout}</td>
+                <td>{formattedAmout}</td>
                 <td>
                   <span
                     className={`${
