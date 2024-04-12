@@ -1,45 +1,61 @@
+import { useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+
+// Import icons directly from the respective libraries
 import { MdOutlineAccountCircle } from "react-icons/md";
 import { IoKeyOutline } from "react-icons/io5";
 import { FaRegBell } from "react-icons/fa";
 import { MdOutlineVerified } from "react-icons/md";
 import { IoIosLogOut } from "react-icons/io";
-import { NavLink } from "react-router-dom";
 
 function AccountNav() {
+  const location = useLocation().pathname;
+  console.log(location);
+
+  const navItems = [
+    {
+      name: "My Profile",
+      icon: MdOutlineAccountCircle,
+      to: "/account/profile",
+    },
+    {
+      name: "Security",
+      icon: IoKeyOutline,
+      to: "/account/security",
+    },
+    {
+      name: "Notification",
+      icon: FaRegBell,
+      to: "/account/notifications",
+    },
+    {
+      name: "Verification",
+      icon: MdOutlineVerified,
+      to: "/account/verification",
+    },
+    {
+      name: "Logout",
+      icon: IoIosLogOut,
+      to: "/",
+    },
+  ];
+
   return (
-    <div>
+    <div className="">
       <nav>
-        <ul>
-          <NavLink to="/account/profile">
-            <li>
-              <MdOutlineAccountCircle />
-              <span>My Profile</span>
-            </li>
-          </NavLink>
-          <NavLink to="/account/security">
-            <li>
-              <IoKeyOutline />
-              <span>Security</span>
-            </li>
-          </NavLink>
-          <NavLink to="/account/notifications">
-            <li>
-              <FaRegBell />
-              <span>Notification</span>
-            </li>
-          </NavLink>
-          <NavLink to="/account/verification">
-            <li>
-              <MdOutlineVerified />
-              <span>Verfication</span>
-            </li>
-          </NavLink>
-          <NavLink to="/">
-            <li>
-              <IoIosLogOut />
-              <span>Logout</span>
-            </li>
-          </NavLink>
+        <ul className="flex flex-col gap-5 p-5">
+          {navItems.map((item, index) => (
+            <NavLink key={index} to={item.to}>
+              <li
+                className={`flex items-center h-12 gap-2 px-5 hover:bg-[#918888] rounded-md ${
+                  location === item.to ? "bg-[#918888]" : ""
+                }`}
+              >
+                <item.icon size={27} />
+                <span>{item.name}</span>
+              </li>
+            </NavLink>
+          ))}
         </ul>
       </nav>
     </div>

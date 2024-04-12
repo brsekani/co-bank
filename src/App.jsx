@@ -21,11 +21,12 @@ function App() {
           <Route path="transactions" element={<TransactionsTable />} />
           <Route path="invoice" element={<Invoice />} />
           <Route path="goals" element={<Goals />} />
-          <Route path="/account" element={<Account />}>
+          <Route path="account" element={<Account />}>
             <Route index element={<Profile />} />
             <Route path="profile" element={<Profile />} />
             <Route path="security" element={<Security />} />
           </Route>
+
           <Route path="support" element={<Support />} />
         </Route>
       </Routes>

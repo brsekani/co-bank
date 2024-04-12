@@ -15,7 +15,7 @@ const navItems = [
   { icon: FaMoneyBills, text: "Transactions" },
   { icon: FaFileInvoice, text: "Invoice" },
   { icon: GoGoal, text: "Goals" },
-  { icon: MdOutlineAccountCircle, text: "Account" },
+  { icon: MdOutlineAccountCircle, text: "account" },
   { icon: BiSupport, text: "Support" },
 ];
 
