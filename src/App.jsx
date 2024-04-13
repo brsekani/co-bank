@@ -9,6 +9,8 @@ import Support from "./Pages/Support";
 import Profile from "./Pages/Profile";
 import Security from "./Pages/Security";
 import TransactionsTable from "./UI/TransactionsTable";
+import Notifications from "./Pages/Notifications";
+import Verification from "./Pages/Verification";
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
             <Route index element={<Profile />} />
             <Route path="profile" element={<Profile />} />
             <Route path="security" element={<Security />} />
+            <Route path="Notifications" element={<Notifications />} />
+            <Route path="Verification" element={<Verification />} />
           </Route>
 
           <Route path="support" element={<Support />} />
