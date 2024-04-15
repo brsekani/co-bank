@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import faceImage from "/public/face image.avif"; // Assuming the correct path
+import faceImage from "/public/face image.avif";
 import useRandomDataGenerator from "../Hooks/useRandomDataGenerator";
 import useFormatBalance from "../Hooks/useFormatBalance";
 

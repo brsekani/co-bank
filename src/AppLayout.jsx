@@ -1,10 +1,25 @@
 import { Outlet } from "react-router-dom";
 import SideBar from "./Components/SideBar";
 import Header from "./UI/Header";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 function AppLayout() {
+  const darkMode = useSelector((state) => state.darkMode);
+  const { showSideBar } = useSelector((state) => state.ui);
+
+  useEffect(() => {
+    document.body.classList.toggle("dark", darkMode);
+  }, [darkMode]);
+
   return (
-    <div className="flex h-screen text-white bg-[#121212]">
+    <div
+      className={`flex h-screen text-white ${
+        darkMode ? "bg-[#121212]" : "bg-white"
+      } `}
+    >
+      {console.log(showSideBar)}
+      {/* {showSideBar && <SideBar />} */}
       <SideBar />
       <div className="flex flex-col w-full">
         <Header />

@@ -8,6 +8,9 @@ import { GoGoal } from "react-icons/go";
 import { MdOutlineAccountCircle } from "react-icons/md";
 import { BiSupport } from "react-icons/bi";
 import { NavLink, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsSideBarHovered, setShowSidebar } from "../Features/uiSlice";
+import { useMediaQuery } from "@react-hook/media-query";
 
 const navItems = [
   { icon: LuLayoutDashboard, text: "Dashboard" },
@@ -15,16 +18,21 @@ const navItems = [
   { icon: FaMoneyBills, text: "Transactions" },
   { icon: FaFileInvoice, text: "Invoice" },
   { icon: GoGoal, text: "Goals" },
-  { icon: MdOutlineAccountCircle, text: "account" },
+  { icon: MdOutlineAccountCircle, text: "Account" },
   { icon: BiSupport, text: "Support" },
 ];
 
-function Nav({ isHovered, setIsHovered, closeSidebar }) {
+function Nav() {
+  const isSmallScreen = useMediaQuery("(max-width: 764px)");
+  const { isSideBarHovered } = useSelector((state) => state.ui);
+
+  const dispatch = useDispatch();
+
   const location = useLocation().pathname.slice(1);
 
   const handleClick = () => {
-    setIsHovered(false); // Close sidebar on click
-    closeSidebar(); // Call closeSidebar function from SideBar component
+    dispatch(setIsSideBarHovered(false));
+    isSmallScreen ? dispatch(setShowSidebar(false)) : "";
   };
 
   return (
@@ -36,7 +44,7 @@ function Nav({ isHovered, setIsHovered, closeSidebar }) {
               className={`relative flex items-center gap-3 hover:bg-[#536dfe] hover:border-r-4 hover:border-[#3F51B5] transition-all duration-300 ${
                 location === item.text ? "bg-[#3F51B5]" : ""
               } ${
-                isHovered && location === item.text
+                isSideBarHovered && location === item.text
                   ? "border-r-4 border-[#536dfe]"
                   : ""
               } h-10 rounded-sm px-3 hover:scale-105 transform`}
@@ -45,7 +53,7 @@ function Nav({ isHovered, setIsHovered, closeSidebar }) {
               <item.icon size={25} />
               <p
                 className={`absolute left-12 w-full ${
-                  isHovered ? "block" : "hidden"
+                  isSideBarHovered ? "block" : "hidden"
                 } transition-opacity duration-300 `}
               >
                 {item.text}
@@ -59,8 +67,8 @@ function Nav({ isHovered, setIsHovered, closeSidebar }) {
 }
 
 Nav.propTypes = {
-  isHovered: PropTypes.bool.isRequired,
-  setIsHovered: PropTypes.func.isRequired,
+  isSideBarHovered: PropTypes.bool.isRequired,
+  setisSideBarHovered: PropTypes.func.isRequired,
   closeSidebar: PropTypes.func.isRequired,
 };
 

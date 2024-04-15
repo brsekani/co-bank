@@ -7,7 +7,7 @@ function Profile() {
       {/* Profile */}
       <div className="flex flex-col gap-10  rounded-md bg-[#1E1E1E] p-5">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl">Profile</h1>
+          <h1 className="text-2xl lg:text-3xl">Profile</h1>
           <button className="flex items-center gap-1 px-3 py-1 border border-white rounded-md">
             <span>Edit</span>
             <TbPencilMinus />

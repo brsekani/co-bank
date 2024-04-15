@@ -63,7 +63,7 @@ function FlipCard() {
                   !showBalance ? "" : "blur-sm"
                 }`}
               >
-                $<span>{useFormatBalance(200000)}</span>
+                {useFormatBalance(200000)}
               </h1>
               <button onClick={toggleShowbalance} className="pt-1">
                 <svg

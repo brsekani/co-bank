@@ -31,8 +31,10 @@ function Security() {
       <hr />
       <div className="flex items-center justify-between gap-4">
         <div className="flex flex-col gap-1">
-          <h1 className="text-2xl">Email Address</h1>
-          <p className="text-sm">The email associated with your account</p>
+          <h1 className="text-2xl">Password</h1>
+          <p className="text-sm">
+            Set a unique password that protects your account
+          </p>
         </div>
         <div>
           <button className="px-4 py-1 text-xl text-center border border-white rounded-md">

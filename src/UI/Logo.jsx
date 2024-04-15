@@ -1,6 +1,8 @@
-import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 
-function Logo({ isHovered }) {
+function Logo() {
+  const { isSideBarHovered } = useSelector((state) => state.ui);
+
   return (
     <div className="relative flex flex-row gap-1">
       <svg
@@ -20,7 +22,7 @@ function Logo({ isHovered }) {
       </svg>
       <p
         className={`absolute left-0 ${
-          !isHovered
+          !isSideBarHovered
             ? "translate-x-full opacity-0"
             : "translate-x-12 opacity-100"
         } transition-all duration-300 text-xl font-bold`}
@@ -30,9 +32,5 @@ function Logo({ isHovered }) {
     </div>
   );
 }
-
-Logo.propTypes = {
-  isHovered: PropTypes.bool.isRequired,
-};
 
 export default Logo;

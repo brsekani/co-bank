@@ -12,10 +12,7 @@ function Expenses() {
 
       <div className="flex items-center justify-between mt-3">
         <div className="flex items-center gap-2">
-          <h1 className="text-3xl">
-            <span>$</span>
-            {useFormatBalance(totalExpenses)}
-          </h1>
+          <h1 className="text-3xl">{useFormatBalance(totalExpenses)}</h1>
           <span
             className={`px-2 py-1 text-[12px] font-medium ${
               completionPercentage > 66
