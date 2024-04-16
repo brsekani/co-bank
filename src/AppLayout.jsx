@@ -15,10 +15,9 @@ function AppLayout() {
   return (
     <div
       className={`flex h-screen text-white ${
-        darkMode ? "bg-[#121212]" : "bg-white"
-      } `}
+        darkMode ? "bg-[#121212]" : "bg-[#ececec]"
+      } font-rob cursor-default`}
     >
-      {console.log(showSideBar)}
       {/* {showSideBar && <SideBar />} */}
       <SideBar />
       <div className="flex flex-col w-full">

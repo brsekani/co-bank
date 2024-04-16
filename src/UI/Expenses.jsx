@@ -1,14 +1,21 @@
 import { GoArrowUpRight } from "react-icons/go";
 import useFormatBalance from "../Hooks/useFormatBalance";
+import { useSelector } from "react-redux";
 
 function Expenses() {
   const totalExpenses = 1200;
   const targetExpenses = 1500;
   const completionPercentage = (totalExpenses / targetExpenses) * 100;
 
+  const darkMode = useSelector((state) => state.darkMode);
+
   return (
-    <div className="w-full min-h-[195px] max-h-[250px] col-start-1 col-end-4 md:col-start-2 md:cols-end-4 bg-[#1E1E1E] xl:row-start-2 xl:col-start-3 p-5 rounded-md">
-      <p className="text-lg font-medium">Expenses</p>
+    <div
+      className={`w-full min-h-[195px] max-h-[250px] col-start-1 col-end-4 md:col-start-2 md:cols-end-4 ${
+        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+      } xl:row-start-2 xl:col-start-3 p-5 rounded-md font-rob cursor-default`}
+    >
+      <p className="text-lg font-light">Expenses</p>
 
       <div className="flex items-center justify-between mt-3">
         <div className="flex items-center gap-2">
@@ -31,7 +38,8 @@ function Expenses() {
       </div>
 
       <p className="flex items-center gap-1 mt-10 text-sm">
-        Max:<span>${useFormatBalance(targetExpenses)}</span>
+        <span className="text-colorPrimary">Max:</span>
+        <span>{useFormatBalance(targetExpenses)}</span>
       </p>
 
       <div className="w-full h-12 bg-[rgb(161,161,161)] rounded-md mt-3">

@@ -3,12 +3,15 @@ import { BsSquareHalf } from "react-icons/bs";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import useFormatCreditCardNumber from "../Hooks/useFormatCreditCardNumber";
 import { RiVisaLine } from "react-icons/ri";
+import { useSelector } from "react-redux";
 // import "./FlipCard.css"; // Assuming you have a CSS file for styling
 
 function FlipCard() {
   const [showBalance, setShowBalance] = useState(false);
   const [showCreditCardNumber, setShowCreditCardNumber] = useState(false);
   const [showBack, setShowBack] = useState(false);
+
+  const darkMode = useSelector((state) => state.darkMode);
 
   function toggleShowbalance() {
     setShowBalance((showBalance) => !showBalance);
@@ -23,13 +26,23 @@ function FlipCard() {
   }
 
   return (
-    <div className="w-full bg-[#1E1E1E] col-start-1 col-end-4 md:col-start-2 md:col-end-4 xl:col-end-3 min-h-[195px] max-h-[250px] rounded-md p-5">
+    <div
+      className={`w-full font-rob ${darkMode ? "bg-[#1E1E1E]" : "bg-white"}  ${
+        darkMode ? "text-white" : "text-black"
+      }  col-start-1 col-end-4 md:col-start-2 md:col-end-4 xl:col-end-3 min-h-[195px] max-h-[250px] rounded-md p-5`}
+    >
       <div className={`flip-card ${showBack ? "flipped" : ""}`}>
         <div className="flip-card-inner">
-          <div className="flip-card-front">
+          <div
+            className={`flip-card-front ${
+              darkMode ? "bg-[#1E1E1E]" : "bg-white"
+            }`}
+          >
             <div className="flex items-center justify-between">
               <button
-                className="flex items-center gap-2 p-2 border border-white rounded-md hover:bg-[#536dfe]"
+                className={`flex items-center gap-2 p-2 border ${
+                  darkMode ? "border-white" : "border-black"
+                } rounded-md hover:bg-colorPrimary`}
                 onClick={handleFlipCard}
               >
                 <BsSquareHalf size={13} />
@@ -172,11 +185,17 @@ function FlipCard() {
           </div>
           <div className="relative flip-card-back">
             <div className="flex items-center justify-between">
-              <button className="flex items-center gap-2 p-2 border border-white rounded-md text-[11px]">
+              <button
+                className={`flex items-center gap-2 p-2 border ${
+                  darkMode ? "border-white" : "border-black"
+                } rounded-md hover:bg-colorPrimary text-[11px]`}
+              >
                 More Details
               </button>
               <button
-                className="flex items-center gap-2 p-2 border border-white rounded-md hover:bg-[#536dfe]"
+                className={`flex items-center gap-2 p-2 border ${
+                  darkMode ? "border-white" : "border-black"
+                } rounded-md hover:bg-colorPrimary`}
                 onClick={handleFlipCard}
               >
                 <BsSquareHalf size={13} />
@@ -185,13 +204,17 @@ function FlipCard() {
             </div>
 
             <div
-              className="absolute inset-0 h-8 bg-white top-16"
+              className={`absolute inset-0 h-8 ${
+                darkMode ? "bg-white" : "bg-black"
+              } top-16`}
               style={{ marginLeft: "-20px", marginRight: "-20px" }}
             ></div>
 
             <p className="mt-24 text-sm">Authorize Signature</p>
             <div className="flex items-center gap-2">
-              <div className="w-full h-8 bg-white "></div>
+              <div
+                className={`w-full h-8 ${darkMode ? "bg-white" : "bg-black"}`}
+              ></div>
               <p className="pr-10">232</p>
             </div>
           </div>

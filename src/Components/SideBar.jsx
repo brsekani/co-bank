@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 function SideBar() {
   const isSmallScreen = useMediaQuery("(max-width: 764px)");
   const { isSideBarHovered, showSideBar } = useSelector((state) => state.ui);
+  const darkMode = useSelector((state) => state.darkMode);
   const dispatch = useDispatch();
 
   const closeSidebar = () => {
@@ -25,13 +26,15 @@ function SideBar() {
         ></div>
       )}
       <div
-        className={`bg-[#1E1E1E] w-20 ${
+        className={`${
+          darkMode ? "bg-[#1E1E1E]" : "bg-white"
+        } text-[#6C6F87] w-20 ${
           isSideBarHovered ? "" : ""
         } flex flex-col justify-between h-full ${
           isSideBarHovered ? "w-64 min-w-48" : ""
         } p-4 ${isSmallScreen && showSideBar ? " hidden" : "fixed z-10"} ${
           !isSmallScreen ? "sticky" : ""
-        }`}
+        } shadow-xl`}
         onMouseEnter={() => dispatch(setIsSideBarHovered(true))} // Dispatch setIsSideBarHovered action
         onMouseLeave={() => dispatch(setIsSideBarHovered(false))} // Dispatch setIsSideBarHovered action
       >

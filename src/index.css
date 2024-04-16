@@ -42,12 +42,7 @@ body.dark {
   backface-visibility: hidden;
 }
 
-.flip-card-front {
-  background-color: #1e1e1e; /* Front card background color */
-}
-
 .flip-card-back {
-  background-color: #1e1e1e; /* Back card background color */
   transform: rotateY(180deg);
 }
 

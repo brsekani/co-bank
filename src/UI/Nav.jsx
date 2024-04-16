@@ -25,6 +25,7 @@ const navItems = [
 function Nav() {
   const isSmallScreen = useMediaQuery("(max-width: 764px)");
   const { isSideBarHovered } = useSelector((state) => state.ui);
+  const darkMode = useSelector((state) => state.darkMode);
 
   const dispatch = useDispatch();
 
@@ -36,21 +37,30 @@ function Nav() {
   };
 
   return (
-    <div className="">
+    <div className="font-rob">
       <ul className="flex flex-col gap-2">
         {navItems.map((item, index) => (
           <NavLink key={index} to={item.text}>
             <li
-              className={`relative flex items-center gap-3 hover:bg-[#536dfe] hover:border-r-4 hover:border-[#3F51B5] transition-all duration-300 ${
-                location === item.text ? "bg-[#3F51B5]" : ""
+              className={`relative flex items-center gap-3 hover:bg-colorPrimary/10 hover:border-r-4 hover:border-colorPrimary transition-all duration-300 ${
+                location === item.text && darkMode
+                  ? "bg-colorPrimary/10 text-white"
+                  : location === item.text && !darkMode
+                  ? "bg-colorPrimary/10 text-black"
+                  : ""
               } ${
                 isSideBarHovered && location === item.text
-                  ? "border-r-4 border-[#536dfe]"
+                  ? "border-r-4 border-colorPrimary"
                   : ""
-              } h-10 rounded-sm px-3 hover:scale-105 transform`}
+              } h-10 rounded-sm px-3 hover:scale-105 transform
+        
+              `}
               onClick={() => handleClick(index + 1)}
             >
-              <item.icon size={25} />
+              <item.icon
+                size={25}
+                color={`${location === item.text ? "rgb(0, 163, 255)" : ""}`}
+              />
               <p
                 className={`absolute left-12 w-full ${
                   isSideBarHovered ? "block" : "hidden"

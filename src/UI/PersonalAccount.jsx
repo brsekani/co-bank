@@ -2,9 +2,12 @@ import { useState } from "react";
 import { FaPhoneSquareAlt } from "react-icons/fa";
 import { FaArrowDownLong, FaFileInvoiceDollar, FaPlus } from "react-icons/fa6";
 import { FiRotateCw, FiSend } from "react-icons/fi";
+import { useSelector } from "react-redux";
 
 function PersonalAccount() {
   const [showBalance, setShowBalance] = useState(false);
+
+  const darkMode = useSelector((state) => state.darkMode);
 
   function toggleShowbalance() {
     setShowBalance((showBalance) => !showBalance);
@@ -18,17 +21,27 @@ function PersonalAccount() {
   ];
 
   return (
-    <div className="w-full min-h-[195px] max-h-[250px] col-start-1 col-end-4 md:col-start-1 md:col-end-2  bg-[#1E1E1E] p-5 rounded-md">
+    <div
+      className={`w-full min-h-[195px] max-h-[250px] col-start-1 col-end-4 md:col-start-1 md:col-end-2  bg-[#1E1E1E] p-5 rounded-md ${
+        darkMode ? "bg-[#1E1E1E]" : "bg-white"
+      } ${darkMode ? "text-white shadow-md" : "text-black"} font-rob`}
+    >
       <div className="flex items-center justify-between">
-        <p>Personal Account</p>
-        <button className="flex items-center gap-2 p-2 border border-white rounded-md hover:bg-[#536dfe] ">
+        <p className={`text-xs ${darkMode ? "text-white" : "text-black"}`}>
+          Personal Account
+        </p>
+        <button
+          className={`flex items-center gap-2 p-2 border ${
+            darkMode ? "border-white" : "border-black"
+          } rounded-md hover:bg-colorPrimary`}
+        >
           <FaPlus size={12} />
           <span className="text-xs">Add Card</span>
         </button>
       </div>
 
       <div className="flex items-center justify-between mt-2">
-        <h1 className={`text-2xl font-bold ${!showBalance ? "" : "blur-sm"}`}>
+        <h1 className={`text-2xl font-medium ${!showBalance ? "" : "blur-sm"}`}>
           $<span>0.00</span>
         </h1>
         <button onClick={toggleShowbalance}>
@@ -80,7 +93,11 @@ function PersonalAccount() {
             key={index}
             className="flex flex-col items-center justify-center"
           >
-            <span className="items-center p-3 bg-[#3F51B5] rounded-full">
+            <span
+              className={`items-center p-3  ${
+                darkMode ? "bg-colorPrimary" : "bg-[#ececec]"
+              } rounded-full`}
+            >
               {button.icon}
             </span>
             <span>{button.text}</span>

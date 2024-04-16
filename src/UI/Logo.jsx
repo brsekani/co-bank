@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 
 function Logo() {
+  const darkMode = useSelector((state) => state.darkMode);
   const { isSideBarHovered } = useSelector((state) => state.ui);
 
   return (
@@ -25,7 +26,9 @@ function Logo() {
           !isSideBarHovered
             ? "translate-x-full opacity-0"
             : "translate-x-12 opacity-100"
-        } transition-all duration-300 text-xl font-bold`}
+        } ${
+          darkMode ? "text-white" : "text-black"
+        } transition-all duration-300 text-lg font-medium font-rob`}
       >
         Co-Bank
       </p>

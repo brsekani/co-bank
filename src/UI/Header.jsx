@@ -18,11 +18,11 @@ function Header() {
   return (
     <div
       className={`h-16 p-4 flex items-center justify-between ${
-        darkMode ? "bg-[#1E1E1E]" : "bg-[#F8F8FB] shadow-md"
+        darkMode ? "bg-[#1E1E1E]" : "bg-white shadow-md"
       }`}
     >
       <h1
-        className={`text-xl font-bold capitalize ${
+        className={`font-bold capitalize text-xl md:text-2xl font-rob ${
           darkMode ? "text-white" : "text-black"
         }`}
       >

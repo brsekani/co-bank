@@ -1,14 +1,21 @@
 import { GoArrowUpRight } from "react-icons/go";
 import useFormatBalance from "../Hooks/useFormatBalance";
+import { useSelector } from "react-redux";
 
 function Savings() {
   const totalSavings = 1280;
   const targetSavings = 10000;
   const completionPercentage = (totalSavings / targetSavings) * 100;
 
+  const darkMode = useSelector((state) => state.darkMode);
+
   return (
-    <div className="w-full min-h-[195px] max-h-[250px] col-start-1 col-end-4 md:col-start-1 md:col-end-2 bg-[#1E1E1E] xl:row-start-3 xl:col-start-3 xl:col-end-4 p-5 rounded-md">
-      <p className="text-lg font-medium">Savings</p>
+    <div
+      className={`w-full min-h-[195px] max-h-[250px] col-start-1 col-end-4 md:col-start-1 md:col-end-2 ${
+        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+      } xl:row-start-3 xl:col-start-3 xl:col-end-4 p-5 rounded-md font-rob cursor-default`}
+    >
+      <p className="text-lg font-light">Savings</p>
 
       <div className="flex items-center justify-between mt-3">
         <div className="flex items-center gap-2">
