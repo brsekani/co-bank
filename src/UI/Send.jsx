@@ -50,7 +50,7 @@ function Send() {
     <div className="fixed left-0 top-0 z-[9999] flex h-full w-full items-center justify-center overflow-hidden bg-[rgba(0,0,0,.486)]">
       <div
         ref={sendRef}
-        className={`flex item-center justify-center flex-col p-5 rounded-lg font-rob w-[450px] h-fit ${
+        className={`flex item-center md:justify-center flex-col p-5 rounded-lg font-rob w-full h-full md:w-[450px] md:h-fit ${
           darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
         }`}
       >
