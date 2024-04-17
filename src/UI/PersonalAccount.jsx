@@ -2,19 +2,25 @@ import { useState } from "react";
 import { FaPhoneSquareAlt } from "react-icons/fa";
 import { FaArrowDownLong, FaFileInvoiceDollar, FaPlus } from "react-icons/fa6";
 import { FiRotateCw, FiSend } from "react-icons/fi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setShowSendUI } from "../Features/uiSlice";
 
 function PersonalAccount() {
   const [showBalance, setShowBalance] = useState(false);
 
   const darkMode = useSelector((state) => state.darkMode);
 
+  const dispatch = useDispatch();
   function toggleShowbalance() {
     setShowBalance((showBalance) => !showBalance);
   }
 
   const buttons = [
-    { icon: <FiSend size={20} />, text: "Send" },
+    {
+      icon: <FiSend size={20} />,
+      text: "Send",
+      onClick: () => dispatch(setShowSendUI(true)), // Wrap dispatch in an arrow function
+    },
     { icon: <FaArrowDownLong size={20} />, text: "Receive" },
     { icon: <FaPhoneSquareAlt size={20} />, text: "Airtime" },
     { icon: <FaFileInvoiceDollar size={20} />, text: "Airtime" },
@@ -92,6 +98,7 @@ function PersonalAccount() {
           <button
             key={index}
             className="flex flex-col items-center justify-center"
+            onClick={button.onClick}
           >
             <span
               className={`items-center p-3  ${

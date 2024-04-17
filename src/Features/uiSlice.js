@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   showSideBar: true,
   isSideBarHovered: false,
+  showSendUI: false,
 };
 
 const uiSlice = createSlice({
@@ -17,6 +18,10 @@ const uiSlice = createSlice({
     setIsSideBarHovered: (state, actions) => {
       state.isSideBarHovered = actions.payload;
     },
+
+    setShowSendUI: (state, actions) => {
+      state.showSendUI = actions.payload;
+    },
   },
 });
 
@@ -25,6 +30,8 @@ export const {
   setShowSidebar,
   isSideBarHovered,
   setIsSideBarHovered,
+  showSendUI,
+  setShowSendUI,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

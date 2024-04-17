@@ -3,10 +3,11 @@ import SideBar from "./Components/SideBar";
 import Header from "./UI/Header";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import Send from "./UI/Send";
 
 function AppLayout() {
   const darkMode = useSelector((state) => state.darkMode);
-  const { showSideBar } = useSelector((state) => state.ui);
+  const { showSendUI } = useSelector((state) => state.ui);
 
   useEffect(() => {
     document.body.classList.toggle("dark", darkMode);
@@ -18,7 +19,6 @@ function AppLayout() {
         darkMode ? "bg-[#121212]" : "bg-[#ececec]"
       } font-rob cursor-default`}
     >
-      {/* {showSideBar && <SideBar />} */}
       <SideBar />
       <div className="flex flex-col w-full">
         <Header />
@@ -26,6 +26,7 @@ function AppLayout() {
           <Outlet />
         </div>
       </div>
+      {showSendUI && <Send />}
     </div>
   );
 }
