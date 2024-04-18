@@ -4,6 +4,7 @@ const initialState = {
   showSideBar: true,
   isSideBarHovered: false,
   showSendUI: false,
+  showAirtelUI: false,
 };
 
 const uiSlice = createSlice({
@@ -22,6 +23,10 @@ const uiSlice = createSlice({
     setShowSendUI: (state, actions) => {
       state.showSendUI = actions.payload;
     },
+
+    setShowAirtelUI: (state, actions) => {
+      state.showAirtelUI = actions.payload;
+    },
   },
 });
 
@@ -32,6 +37,8 @@ export const {
   setIsSideBarHovered,
   showSendUI,
   setShowSendUI,
+  showAirtelUI,
+  setShowAirtelUI,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

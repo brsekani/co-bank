@@ -3,11 +3,12 @@ import SideBar from "./Components/SideBar";
 import Header from "./UI/Header";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import Send from "./UI/Send";
+import Send from "./Modals/Send";
+import Airtime from "./Modals/Airtime";
 
 function AppLayout() {
   const darkMode = useSelector((state) => state.darkMode);
-  const { showSendUI } = useSelector((state) => state.ui);
+  const { showSendUI, showAirtelUI } = useSelector((state) => state.ui);
 
   useEffect(() => {
     document.body.classList.toggle("dark", darkMode);
@@ -27,6 +28,8 @@ function AppLayout() {
         </div>
       </div>
       {showSendUI && <Send />}
+      {showAirtelUI && <Airtime />}
+      {console.log(showAirtelUI)}
     </div>
   );
 }
