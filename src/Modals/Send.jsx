@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setShowSendUI } from "../Features/uiSlice";
 import { PiCurrencyDollarSimpleBold } from "react-icons/pi";
 import { useForm } from "react-hook-form";
-import InfoModal from "./InfoModal";
+import InfoModal from "./SendInfoModal";
 
 function Send() {
   const darkMode = useSelector((state) => state.darkMode);
@@ -73,6 +73,10 @@ function Send() {
     dispatch(setShowSendUI(true));
   };
 
+  const closeSendModal = () => {
+    dispatch(setShowSendUI(false));
+  };
+
   return (
     <div className="fixed left-0 top-0 z-[9999] flex h-full w-full items-center justify-center overflow-hidden bg-[rgba(0,0,0,.486)]">
       <div
@@ -131,9 +135,9 @@ function Send() {
             )}
           </div>
 
-          <div className="flex flex-col relative z-10">
+          <div className="flex flex-col relative z-10 ">
             <label className="text-xs mb-1">Bank Name</label>
-            <div className="relative">
+            <div className="relative ">
               <div
                 onClick={() => setShowBankList(!showBankList)}
                 className="h-10 w-full bg-transparent border border-white/1 text-start pl-3 cursor-pointer flex items-center justify-between"
@@ -148,7 +152,7 @@ function Send() {
                   )}
                   {selectedBank ? (
                     <input
-                      className="h-10 w-full bg-transparent border-none pl-3"
+                      className="h-10 w-full bg-transparent border-none pl-3 cursor-pointer"
                       type="text"
                       value={selectedBank.name}
                       readOnly
@@ -158,7 +162,7 @@ function Send() {
                     />
                   ) : (
                     <input
-                      className="h-10 w-full bg-transparent border-none pl-3"
+                      className="h-10 w-full bg-transparent border-none pl-3 cursor-pointer"
                       type="text"
                       placeholder="Select bank"
                       readOnly
@@ -184,9 +188,9 @@ function Send() {
                       : "#e4e4e7 #ffffff",
                   }}
                 >
-                  {banks.map((bank) => (
+                  {banks.map((bank, i) => (
                     <li
-                      key={bank.id}
+                      key={i}
                       className={`${
                         darkMode
                           ? "bg-[#1E1E1E] text-white"
@@ -251,6 +255,8 @@ function Send() {
         isOpen={showModal}
         closeModal={closeModal}
         formData={formData}
+        bank={selectedBank}
+        closeSendModal={closeSendModal}
       />
     </div>
   );
