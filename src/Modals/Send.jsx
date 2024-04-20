@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setShowSendUI } from "../Features/uiSlice";
 import { PiCurrencyDollarSimpleBold } from "react-icons/pi";
 import { useForm } from "react-hook-form";
+import InfoModal from "./InfoModal";
 
 function Send() {
   const darkMode = useSelector((state) => state.darkMode);
@@ -12,6 +13,8 @@ function Send() {
   const [banks, setBanks] = useState([]);
   const [selectedBank, setSelectedBank] = useState("");
   const [showBankList, setShowBankList] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormatData] = useState({});
 
   useEffect(() => {
     const fetchBanks = async () => {
@@ -33,7 +36,9 @@ function Send() {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sendRef.current && !sendRef.current.contains(event.target)) {
-        dispatch(setShowSendUI(false));
+        if (!showModal) {
+          dispatch(setShowSendUI(false));
+        }
       }
     };
 
@@ -41,18 +46,32 @@ function Send() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dispatch]);
+  }, [dispatch, showModal]);
 
   const handleBankSelect = (bank) => {
     setSelectedBank(bank);
+    setValue("bankName", bank.name); // Update the form data with the selected bank name
     setShowBankList(false);
+    clearErrors("bankName");
   };
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    clearErrors,
+    setValue,
   } = useForm();
+
+  const onSubmit = (data) => {
+    setFormatData(data);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    dispatch(setShowSendUI(true));
+  };
 
   return (
     <div className="fixed left-0 top-0 z-[9999] flex h-full w-full items-center justify-center overflow-hidden bg-[rgba(0,0,0,.486)]">
@@ -66,7 +85,7 @@ function Send() {
           <h1 className="text-2xl font-semibold">Transfer</h1>
           <RxCross2
             size={30}
-            className="cusuor-pointer"
+            className="cursor-pointer"
             onClick={() => dispatch(setShowSendUI(false))}
           />
         </div>
@@ -77,7 +96,7 @@ function Send() {
         </div>
 
         <form
-          onSubmit={handleSubmit((data) => console.log(data))}
+          onSubmit={handleSubmit((data) => onSubmit(data))}
           className="flex gap-3 flex-col mt-5"
         >
           <div className="flex flex-col">
@@ -90,9 +109,19 @@ function Send() {
               maxLength={10}
               type="tel"
               {...register("accountNumber", {
-                minLength: 10,
-                maxLength: 10,
                 required: "Please enter a 10-digit account number",
+                minLength: {
+                  value: 10,
+                  message: "Please enter a 10-digit account number",
+                },
+                maxLength: {
+                  value: 10,
+                  message: "Please enter a 10-digit account number",
+                },
+                pattern: {
+                  value: /^\d{10}$/,
+                  message: "Please enter a valid 10-digit account number",
+                },
               })}
             />
             {errors.accountNumber && (
@@ -117,23 +146,34 @@ function Send() {
                       alt={selectedBank.name}
                     />
                   )}
-                  <span>
-                    {selectedBank ? selectedBank.name : "Select bank"}
-                  </span>
+                  {selectedBank ? (
+                    <input
+                      className="h-10 w-full bg-transparent border-none pl-3"
+                      type="text"
+                      value={selectedBank.name}
+                      readOnly
+                      {...register("bankName", {
+                        required: "Please select a bank",
+                      })}
+                    />
+                  ) : (
+                    <input
+                      className="h-10 w-full bg-transparent border-none pl-3"
+                      type="text"
+                      placeholder="Select bank"
+                      readOnly
+                      {...register("bankName", {
+                        required: "Please select a bank",
+                      })}
+                    />
+                  )}
                 </div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 ml-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M6.293 7.293a1 1 0 011.414 0L10 9.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
               </div>
+              {errors.bankName && (
+                <span className="text-red-500 text-xs">
+                  {errors.bankName.message}
+                </span>
+              )}
               {showBankList && (
                 <ul
                   className="absolute top-full w-full bg-white shadow-lg rounded-lg overflow-y-auto max-h-48"
@@ -172,19 +212,46 @@ function Send() {
             <input
               className="h-10 w-full bg-transparent border border-white/1 pl-7"
               placeholder="Enter Amount"
-              maxLength={10}
-              type="tel"
+              type="text" // Change type to text for formatting
+              {...register("Amount", {
+                required: "Enter an amount",
+                validate: (value) => {
+                  const amount = parseFloat(value.replace(/,/g, ""));
+                  if (isNaN(amount)) return "Invalid amount";
+                  if (amount < 10) return "Amount must be at least $10";
+                  return true;
+                },
+              })}
+              onChange={(e) => {
+                const formattedAmount = e.target.value
+                  .replace(/[^\d]/g, "") // Remove non-digit characters
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Add commas for thousands
+                setValue("Amount", formattedAmount);
+              }}
             />
+
             <PiCurrencyDollarSimpleBold
               color="GhostSmoke"
               size={25}
               className="absolute top-7 left-1"
             />
+            {errors.Amount && (
+              <span className="text-red-500 text-xs">
+                {errors.Amount.message}
+              </span>
+            )}
           </div>
 
-          <button className="h-10 w-full bg-colorPrimary">Continue</button>
+          <button className="h-10 w-full bg-colorPrimary rounded-md">
+            Confrim
+          </button>
         </form>
       </div>
+      <InfoModal
+        isOpen={showModal}
+        closeModal={closeModal}
+        formData={formData}
+      />
     </div>
   );
 }
