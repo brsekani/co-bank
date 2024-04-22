@@ -9,6 +9,7 @@ import MTNLogo from "../../public/MTN logo.png";
 import GLOLogo from "../../public/glo logo.png";
 import AirtelLogo from "../../public/Airtel_logo.png";
 import MobileLogo from "../../public/9mobile logo.png";
+import { Controller, useForm } from "react-hook-form";
 
 function Airtime() {
   const darkMode = useSelector((state) => state.darkMode);
@@ -16,7 +17,7 @@ function Airtime() {
   const sendRef = useRef(null);
   const [selectedNetwork, setSelectedNetwork] = useState(null);
   const [showNetworkList, setShowNetworkList] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(null);
 
   const networks = [
     {
@@ -103,6 +104,16 @@ function Airtime() {
     }
   };
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
   return (
     <div className="fixed left-0 top-0 z-[9999] flex h-full w-full items-center justify-center overflow-hidden bg-[rgba(0,0,0,.486)]">
       <div
@@ -114,74 +125,122 @@ function Airtime() {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">Airtime</h1>
           <RxCross2
+            className="cursor-pointer"
             size={30}
             onClick={() => dispatch(setShowAirtelUI(false))}
           />
         </div>
 
-        <form className="flex gap-3 flex-col mt-5">
+        <form
+          onSubmit={handleSubmit((data) => onSubmit(data))}
+          className="flex gap-3 flex-col mt-5"
+        >
           <div className="flex flex-col">
             <label className="text-xs mb-1">Phone Number</label>
-            <input
-              className="h-10 w-full bg-transparent border border-white/1 pl-3"
-              placeholder="Enter Mobile Number"
-              maxLength={11}
-              type="tel"
-              value={phoneNumber}
-              onChange={handlePhoneInput}
+            <Controller
+              control={control}
+              name="phoneNumber"
+              render={({ field }) => (
+                <input
+                  className="h-10 w-full bg-transparent border border-white/1 pl-3"
+                  placeholder="Enter Mobile Number"
+                  maxLength={11}
+                  type="tel"
+                  value={field.value}
+                  onChange={(e) => {
+                    handlePhoneInput(e);
+                    field.onChange(e);
+                  }}
+                />
+              )}
+              rules={{
+                required: "Enter number",
+                minLength: {
+                  value: 11,
+                  message: "Enter 11 digit number",
+                },
+              }}
             />
+
+            {errors.phoneNumber && (
+              <span className="text-red-500 text-xs">
+                {errors.phoneNumber.message}
+              </span>
+            )}
           </div>
 
           <div className="flex flex-col relative z-10">
             <label className="text-xs mb-1">Network Provider</label>
             <div className="relative">
-              <div
-                onClick={() => setShowNetworkList(!showNetworkList)}
-                className="h-10 w-full bg-transparent border border-white/1 text-start pl-3 cursor-pointer flex items-center justify-between"
-              >
-                <div className="flex items-center gap-2">
-                  {selectedNetwork && (
-                    <img
-                      className="h-8 w-8"
-                      src={selectedNetwork.logo}
-                      alt={selectedNetwork.name}
-                    />
-                  )}
-                  <span>
-                    {selectedNetwork ? selectedNetwork.name : "Select network"}
-                  </span>
-                </div>
-              </div>
-              {showNetworkList && (
-                <ul
-                  className="absolute top-full w-full bg-white shadow-lg rounded-lg overflow-y-auto max-h-48"
-                  style={{
-                    scrollbarWidth: "thin",
-                    scrollbarColor: darkMode
-                      ? "#3c3f4f #1E1E1E"
-                      : "#e4e4e7 #ffffff",
-                  }}
-                >
-                  {networks.map((network) => (
-                    <li
-                      key={network.id}
-                      className={`${
-                        darkMode
-                          ? "bg-[#1E1E1E] text-white"
-                          : "bg-white text-black"
-                      } h-12 border border-[#fff]/1 flex items-center gap-3 px-3 cursor-pointer`}
-                      onClick={() => handleNetworkSelect(network)}
+              <Controller
+                name="selectedNetwork"
+                control={control}
+                rules={{ required: "Select a network" }}
+                render={({ field }) => (
+                  <div>
+                    <div
+                      onClick={() => setShowNetworkList(!showNetworkList)}
+                      className="h-10 w-full bg-transparent border border-white/1 text-start pl-3 cursor-pointer flex items-center justify-between"
                     >
-                      <img
-                        className="h-8 w-8"
-                        src={network.logo}
-                        alt={network.name}
-                      />
-                      <span>{network.name}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
+                      <div className="flex items-center gap-2">
+                        {selectedNetwork && (
+                          <img
+                            className="h-8 w-8"
+                            src={selectedNetwork.logo}
+                            alt={selectedNetwork.name}
+                          />
+                        )}
+                        <span>
+                          {selectedNetwork
+                            ? selectedNetwork.name
+                            : "Select network"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Conditionally render the error message */}
+                    {errors.selectedNetwork && (
+                      <span className="text-red-500 text-xs">
+                        {errors.selectedNetwork.message}
+                      </span>
+                    )}
+
+                    {showNetworkList && (
+                      <ul
+                        className="absolute top-full w-full bg-white shadow-lg rounded-lg overflow-y-auto max-h-48"
+                        style={{
+                          scrollbarWidth: "thin",
+                          scrollbarColor: darkMode
+                            ? "#3c3f4f #1E1E1E"
+                            : "#e4e4e7 #ffffff",
+                        }}
+                      >
+                        {networks.map((network) => (
+                          <li
+                            key={network.id}
+                            className={`${
+                              darkMode
+                                ? "bg-[#1E1E1E] text-white"
+                                : "bg-white text-black"
+                            } h-12 border border-[#fff]/1 flex items-center gap-3 px-3 cursor-pointer`}
+                            onClick={() => {
+                              handleNetworkSelect(network);
+                              field.onChange(network.name); // Pass the selected network's name to onChange
+                            }}
+                          >
+                            <img
+                              className="h-8 w-8"
+                              src={network.logo}
+                              alt={network.name}
+                            />
+                            <span>{network.name}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )}
+              />
             </div>
           </div>
 
