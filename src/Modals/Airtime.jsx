@@ -88,9 +88,9 @@ function Airtime() {
   };
 
   const handlePhoneInput = (event) => {
-    const inputNumber = event.target.value;
+    const inputNumber = event.target?.value;
     setPhoneNumber(inputNumber);
-    if (inputNumber.length >= 4) {
+    if (inputNumber?.length >= 4) {
       const matchedNetwork = networks.find((network) =>
         network.startNumbers.some((startNum) =>
           inputNumber.startsWith(startNum)
@@ -99,7 +99,7 @@ function Airtime() {
       if (matchedNetwork) {
         setSelectedNetwork(matchedNetwork);
       }
-    } else if (inputNumber.length < 4) {
+    } else if (inputNumber?.length < 4) {
       setSelectedNetwork(null);
     }
   };
@@ -175,7 +175,9 @@ function Airtime() {
               <Controller
                 name="selectedNetwork"
                 control={control}
-                rules={{ required: "Select a network" }}
+                rules={{
+                  required: selectedNetwork ? false : "Select a network", // Set required to false if a network is selected
+                }}
                 render={({ field }) => (
                   <div>
                     <div
