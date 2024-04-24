@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
-import { setShowAirtelUI } from "../Features/uiSlice";
+import { setShowAirtimeUI, showAirtimeUI } from "../Features/uiSlice";
 import { PiCurrencyDollarSimpleBold } from "react-icons/pi";
 
 // Logo imports
@@ -10,6 +10,7 @@ import GLOLogo from "../../public/glo logo.png";
 import AirtelLogo from "../../public/Airtel_logo.png";
 import MobileLogo from "../../public/9mobile logo.png";
 import { Controller, useForm } from "react-hook-form";
+import AirtimeinfoModal from "./AirtimeinfoModal";
 
 function Airtime() {
   const darkMode = useSelector((state) => state.darkMode);
@@ -18,6 +19,9 @@ function Airtime() {
   const [selectedNetwork, setSelectedNetwork] = useState(null);
   const [showNetworkList, setShowNetworkList] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState(null);
+  const formRef = useRef(null);
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormatData] = useState({});
 
   const networks = [
     {
@@ -72,7 +76,7 @@ function Airtime() {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sendRef.current && !sendRef.current.contains(event.target)) {
-        dispatch(setShowAirtelUI(false));
+        dispatch(showAirtimeUI(false));
       }
     };
 
@@ -87,31 +91,52 @@ function Airtime() {
     setShowNetworkList(false);
   };
 
-  const handlePhoneInput = (event) => {
-    const inputNumber = event.target?.value;
+  const handlePhoneInput = (event, setValue) => {
+    const inputNumber = event.target.value;
     setPhoneNumber(inputNumber);
-    if (inputNumber?.length >= 4) {
+    if (inputNumber.length >= 4) {
       const matchedNetwork = networks.find((network) =>
         network.startNumbers.some((startNum) =>
           inputNumber.startsWith(startNum)
         )
       );
+      console.log(matchedNetwork, selectedNetwork);
       if (matchedNetwork) {
         setSelectedNetwork(matchedNetwork);
+        setValue(
+          "selectedNetwork",
+          selectedNetwork ? selectedNetwork.name : ""
+        );
+
+        // Trigger form submission after setting the value
+        formRef.current.dispatchEvent(new Event("submit"));
       }
-    } else if (inputNumber?.length < 4) {
+    } else if (inputNumber.length < 4) {
       setSelectedNetwork(null);
+      setValue("selectedNetwork", "");
     }
   };
 
+  const closeModal = () => {
+    setShowModal(false);
+    dispatch(setShowAirtimeUI(true));
+  };
+
+  const closeAirtimeModal = () => {
+    dispatch(setShowAirtimeUI(false));
+  };
+
   const {
+    register,
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
+    setFormatData(data);
+    setShowModal(true);
   };
 
   return (
@@ -127,11 +152,12 @@ function Airtime() {
           <RxCross2
             className="cursor-pointer"
             size={30}
-            onClick={() => dispatch(setShowAirtelUI(false))}
+            onClick={() => dispatch(showAirtimeUI(false))}
           />
         </div>
 
         <form
+          ref={formRef}
           onSubmit={handleSubmit((data) => onSubmit(data))}
           className="flex gap-3 flex-col mt-5"
         >
@@ -148,7 +174,7 @@ function Airtime() {
                   type="tel"
                   value={field.value}
                   onChange={(e) => {
-                    handlePhoneInput(e);
+                    handlePhoneInput(e, setValue);
                     field.onChange(e);
                   }}
                 />
@@ -175,9 +201,7 @@ function Airtime() {
               <Controller
                 name="selectedNetwork"
                 control={control}
-                rules={{
-                  required: selectedNetwork ? false : "Select a network", // Set required to false if a network is selected
-                }}
+                rules={{ required: "Select a network" }}
                 render={({ field }) => (
                   <div>
                     <div
@@ -192,12 +216,36 @@ function Airtime() {
                             alt={selectedNetwork.name}
                           />
                         )}
-                        <span>
-                          {selectedNetwork
-                            ? selectedNetwork.name
-                            : "Select network"}
-                        </span>
                       </div>
+                      {selectedNetwork ? (
+                        // Render the selected network as a read-only input
+                        <input
+                          className="h-10 w-full bg-transparent border-none pl-3 cursor-pointer"
+                          type="text"
+                          value={
+                            selectedNetwork
+                              ? selectedNetwork.name
+                              : "Select network"
+                          }
+                          readOnly
+                          {...field}
+                          {...register("network", {
+                            required: "Please select a bank",
+                          })}
+                        />
+                      ) : (
+                        // Render placeholder text if no network is selected
+                        <input
+                          className="h-10 w-full bg-transparent border-none pl-3 cursor-pointer"
+                          type="text"
+                          placeholder="Select network"
+                          readOnly
+                          {...field}
+                          {...register("network", {
+                            required: "Please select a bank",
+                          })}
+                        />
+                      )}
                     </div>
 
                     {/* Conditionally render the error message */}
@@ -227,7 +275,7 @@ function Airtime() {
                             } h-12 border border-[#fff]/1 flex items-center gap-3 px-3 cursor-pointer`}
                             onClick={() => {
                               handleNetworkSelect(network);
-                              field.onChange(network.name); // Pass the selected network's name to onChange
+                              field.onChange(network.name); // Pass the selected network to onChange
                             }}
                           >
                             <img
@@ -251,8 +299,19 @@ function Airtime() {
             <input
               className="h-10 w-full bg-transparent border border-white/1 pl-7"
               placeholder="Enter Amount"
-              maxLength={10}
+              maxLength={4}
               type="tel"
+              {...register("amount", {
+                required: "Please enter an amount",
+                min: {
+                  value: 10,
+                  message: "Minimum amount is 10",
+                },
+                max: {
+                  value: 10000,
+                  message: "maximmum amount is 10,000",
+                },
+              })}
             />
             <PiCurrencyDollarSimpleBold
               color="GhostSmoke"
@@ -260,6 +319,11 @@ function Airtime() {
               className="absolute top-7 left-1"
             />
           </div>
+          {errors.amount && (
+            <span className="text-red-500 text-xs">
+              {errors.amount.message}
+            </span>
+          )}
           <button className="h-10 w-full bg-colorPrimary">Continue</button>
         </form>
 
@@ -272,6 +336,12 @@ function Airtime() {
           )}
         </div>
       </div>
+      <AirtimeinfoModal
+        isOpen={showModal}
+        closeModal={closeModal}
+        formData={formData}
+        closeAirtimeModal={closeAirtimeModal}
+      />
     </div>
   );
 }

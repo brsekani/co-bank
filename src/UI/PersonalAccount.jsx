@@ -3,7 +3,7 @@ import { FaPhoneSquareAlt } from "react-icons/fa";
 import { FaArrowDownLong, FaFileInvoiceDollar, FaPlus } from "react-icons/fa6";
 import { FiRotateCw, FiSend } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { setShowAirtelUI, setShowSendUI } from "../Features/uiSlice";
+import { setShowAirtimeUI, setShowSendUI } from "../Features/uiSlice";
 
 function PersonalAccount() {
   const [showBalance, setShowBalance] = useState(false);
@@ -19,7 +19,7 @@ function PersonalAccount() {
     {
       icon: <FiSend size={20} />,
       text: "Send",
-      onClick: () => dispatch(setShowSendUI(true)), // Wrap dispatch in an arrow function setShowAirtelUI
+      onClick: () => dispatch(setShowSendUI(true)), // Wrap dispatch in an arrow function setShowAirtimeUI
     },
     {
       icon: <FaArrowDownLong size={20} />,
@@ -28,7 +28,7 @@ function PersonalAccount() {
     {
       icon: <FaPhoneSquareAlt size={20} />,
       text: "Airtime",
-      onClick: () => dispatch(setShowAirtelUI(true)),
+      onClick: () => dispatch(setShowAirtimeUI(true)),
     },
     { icon: <FaFileInvoiceDollar size={20} />, text: "Airtime" },
   ];

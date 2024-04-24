@@ -8,7 +8,7 @@ import Airtime from "./Modals/Airtime";
 
 function AppLayout() {
   const darkMode = useSelector((state) => state.darkMode);
-  const { showSendUI, showAirtelUI } = useSelector((state) => state.ui);
+  const { showSendUI, showAirtimeUI } = useSelector((state) => state.ui);
 
   useEffect(() => {
     document.body.classList.toggle("dark", darkMode);
@@ -28,8 +28,7 @@ function AppLayout() {
         </div>
       </div>
       {showSendUI && <Send />}
-      {showAirtelUI && <Airtime />}
-      {console.log(showAirtelUI)}
+      {showAirtimeUI && <Airtime />}
     </div>
   );
 }
