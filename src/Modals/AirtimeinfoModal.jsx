@@ -18,11 +18,6 @@ function AirtimeinfoModal({ isOpen, closeModal, formData, closeAirtimeModal }) {
     setTransactionSuccess(true); // Set success state to true
   };
 
-  function handleClose() {
-    closeAirtimeModal();
-    setTransactionSuccess(false);
-  }
-
   const {
     register,
     handleSubmit,
@@ -31,6 +26,11 @@ function AirtimeinfoModal({ isOpen, closeModal, formData, closeAirtimeModal }) {
 
   function removeCommas(numberString) {
     return numberString?.replace(/,/g, "");
+  }
+
+  function handleClose() {
+    closeAirtimeModal();
+    setTransactionSuccess(false);
   }
 
   return (
@@ -59,17 +59,10 @@ function AirtimeinfoModal({ isOpen, closeModal, formData, closeAirtimeModal }) {
           </h1>
         )}
         <h1 className="text-center text-3xl mt-2 text-colorPrimary">
-          {useFormatBalance(Number(removeCommas(Amount)) + 1)}
+          {useFormatBalance(Number(removeCommas(Amount)))}
         </h1>
 
         <div className="mt-2 px-5">
-          {!transactionSuccess && (
-            <div className="flex items-center justify-between">
-              <p className="text-sm">Fee</p>
-              <p>$1</p>
-            </div>
-          )}
-
           <div className="flex items-center justify-between">
             <p className="text-sm">Account Number</p>
             <p>{RecipientPhoneNumberNumber}</p>
@@ -79,13 +72,6 @@ function AirtimeinfoModal({ isOpen, closeModal, formData, closeAirtimeModal }) {
             <p className="text-sm">Network</p>
             <p>{RecipientNetWorkProvider}</p>
           </div>
-
-          {/* {transactionSuccess && (
-            <div className="flex items-center justify-between">
-              <p className="text-sm">Bank</p>
-              <p>{bank.name}</p>
-            </div>
-          )} */}
         </div>
 
         {!transactionSuccess && (
@@ -145,7 +131,6 @@ AirtimeinfoModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
   formData: PropTypes.object.isRequired,
   closeAirtimeModal: PropTypes.object.isRequired,
-  bank: PropTypes.object.isRequired,
 };
 
 export default AirtimeinfoModal;

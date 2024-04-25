@@ -14,7 +14,6 @@ function Header() {
     dispatch(setShowSidebar());
   };
 
-  console.log(darkMode);
   return (
     <div
       className={`h-16 p-4 flex items-center justify-between ${

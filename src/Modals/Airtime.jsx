@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
-import { setShowAirtimeUI, showAirtimeUI } from "../Features/uiSlice";
+import { setShowAirtimeUI } from "../Features/uiSlice";
 import { PiCurrencyDollarSimpleBold } from "react-icons/pi";
 
 // Logo imports
@@ -19,7 +19,6 @@ function Airtime() {
   const [selectedNetwork, setSelectedNetwork] = useState(null);
   const [showNetworkList, setShowNetworkList] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState(null);
-  const formRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormatData] = useState({});
 
@@ -76,7 +75,9 @@ function Airtime() {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sendRef.current && !sendRef.current.contains(event.target)) {
-        dispatch(showAirtimeUI(false));
+        if (!showModal) {
+          dispatch(setShowAirtimeUI(false));
+        }
       }
     };
 
@@ -84,7 +85,7 @@ function Airtime() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dispatch]);
+  }, [dispatch, showModal]);
 
   const handleNetworkSelect = (network) => {
     setSelectedNetwork(network);
@@ -100,16 +101,12 @@ function Airtime() {
           inputNumber.startsWith(startNum)
         )
       );
-      console.log(matchedNetwork, selectedNetwork);
       if (matchedNetwork) {
         setSelectedNetwork(matchedNetwork);
         setValue(
           "selectedNetwork",
           selectedNetwork ? selectedNetwork.name : ""
         );
-
-        // Trigger form submission after setting the value
-        formRef.current.dispatchEvent(new Event("submit"));
       }
     } else if (inputNumber.length < 4) {
       setSelectedNetwork(null);
@@ -152,12 +149,11 @@ function Airtime() {
           <RxCross2
             className="cursor-pointer"
             size={30}
-            onClick={() => dispatch(showAirtimeUI(false))}
+            onClick={() => dispatch(setShowAirtimeUI(false))}
           />
         </div>
 
         <form
-          ref={formRef}
           onSubmit={handleSubmit((data) => onSubmit(data))}
           className="flex gap-3 flex-col mt-5"
         >
@@ -324,17 +320,16 @@ function Airtime() {
               {errors.amount.message}
             </span>
           )}
-          <button className="h-10 w-full bg-colorPrimary">Continue</button>
+          <button
+            type="submit"
+            className="h-10 w-full bg-colorPrimary"
+            disabled={
+              errors.amount || errors.phoneNumber || errors.selectedNetwork
+            }
+          >
+            Continue
+          </button>
         </form>
-
-        <div className="mt-5">
-          {selectedNetwork && phoneNumber && (
-            <p className="text-sm">
-              Airtime of <strong>{phoneNumber}</strong> to{" "}
-              <strong>{selectedNetwork.name}</strong>
-            </p>
-          )}
-        </div>
       </div>
       <AirtimeinfoModal
         isOpen={showModal}
