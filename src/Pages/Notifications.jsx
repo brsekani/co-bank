@@ -15,7 +15,7 @@ function Notifications() {
           <div className="flex flex-row items-center justify-between" key={i}>
             <div className="flex items-center gap-3">
               {!transaction.image ? (
-                <div className="flex items-center justify-center w-12 h-12 text-2xl text-center text-blue-600 bg-blue-300 rounded-md">
+                <div className="flex items-center justify-center w-12 h-12 text-2xl text-center text-colorPrimary bg-blue-300 rounded-md">
                   {transaction.name.charAt(0)}
                 </div>
               ) : (

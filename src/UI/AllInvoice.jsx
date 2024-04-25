@@ -18,7 +18,7 @@ function AllInvoice() {
     <div className="xl:row-start-1 xl:col-start-1 xl:col-end-3 bg-[#1E1E1E] p-5 rounded-md">
       <div className="flex flex-row items-center justify-between ">
         <h1 className="text-3xl font-semibold ">All Invoice</h1>
-        <button className="px-5 py-2 text-lg font-semibold bg-blue-600 rounded-md">
+        <button className="px-5 py-2 text-lg font-semibold bg-colorPrimary rounded-md">
           + Add Invoice
         </button>
       </div>
@@ -45,7 +45,7 @@ function AllInvoice() {
               >
                 <td className="flex items-center gap-2 pl-5 mt-4 mb-4">
                   {!transaction.image ? (
-                    <div className="flex items-center justify-center w-12 h-12 text-2xl text-center text-blue-600 bg-blue-300 rounded-md">
+                    <div className="flex items-center justify-center w-12 h-12 text-2xl text-center text-colorPrimary bg-blue-300 rounded-md">
                       {transaction.name.charAt(0)}
                     </div>
                   ) : (

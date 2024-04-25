@@ -1,7 +1,10 @@
 import { Bar } from "react-chartjs-2";
 import useRandomDataGenerator from "../Hooks/useRandomDataGenerator";
+import { useSelector } from "react-redux";
 
 function OverviewCard() {
+  const darkMode = useSelector((state) => state.darkMode);
+
   // Extract relevant data for the chart
   const transactions = useRandomDataGenerator();
   const transactionData = {};
@@ -33,8 +36,12 @@ function OverviewCard() {
   };
 
   return (
-    <div className="min-h-[490px] max-h-[660px] w-full bg-[#1E1E1E] row-start-4 col-start-1 col-end-3 xl:row-start-2 md:row-start-3 md:col-start-1 md:col-end-3 lg:row-start-3 p-5 rounded-md overflow-x-auto">
-      <h2 className="mb-3 text-3xl font-semibold">Overview</h2>
+    <div
+      className={`min-h-[490px] max-h-[660px] w-full bg-[#1E1E1E] row-start-4 col-start-1 col-end-3 xl:row-start-2 md:row-start-3 md:col-start-1 md:col-end-3 lg:row-start-3 p-5 rounded-md overflow-x-auto  ${
+        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+      }`}
+    >
+      <h2 className="mb-3 text-2xl font-meduim">Overview</h2>
       <div style={{ minWidth: "700px", maxWidth: "100%" }}>
         <Bar data={data} />
       </div>

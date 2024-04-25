@@ -3,8 +3,10 @@ import { NavLink } from "react-router-dom";
 import faceImage from "/public/face image.avif"; // Assuming the correct path
 import useRandomDataGenerator from "../Hooks/useRandomDataGenerator";
 import useFormatBalance from "../Hooks/useFormatBalance";
+import { useSelector } from "react-redux";
 
 function TransactionsTableCards() {
+  const darkMode = useSelector((state) => state.darkMode);
   const pageSize = 10; // Number of transactions per page
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -17,7 +19,11 @@ function TransactionsTableCards() {
   const currentTransactions = transactions.slice(startIndex, endIndex);
 
   return (
-    <div className="w-full bg-[#1E1E1E] col-start-1 col-end-4 h-fit p-5 rounded-md overflow-x-auto text-base font-bold">
+    <div
+      className={`w-full bg-[#1E1E1E] col-start-1 col-end-4 h-fit p-5 rounded-md overflow-x-auto text-base font-bold ${
+        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+      }`}
+    >
       <div className="flex items-center justify-between mb-5">
         <h1>Transactions</h1>
         <NavLink to="/Transactions">
@@ -47,7 +53,7 @@ function TransactionsTableCards() {
               >
                 <td className="flex items-center gap-2 pl-5 mt-4 mb-4">
                   {!transaction.image ? (
-                    <div className="flex items-center justify-center w-12 h-12 text-2xl text-center text-blue-600 bg-blue-300 rounded-md">
+                    <div className="flex items-center justify-center w-12 h-12 text-2xl text-center text-colorPrimary bg-blue-300 rounded-md">
                       {transaction.name.charAt(0)}
                     </div>
                   ) : (
