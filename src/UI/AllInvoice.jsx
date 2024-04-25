@@ -1,8 +1,10 @@
 import { useState } from "react";
 import useRandomDataGenerator from "../Hooks/useRandomDataGenerator";
 import useFormatBalance from "../Hooks/useFormatBalance";
+import { useSelector } from "react-redux";
 
 function AllInvoice() {
+  const darkMode = useSelector((state) => state.darkMode);
   const pageSize = 10; // Number of transactions per page
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -15,7 +17,11 @@ function AllInvoice() {
   const currentTransactions = transactions.slice(startIndex, endIndex);
 
   return (
-    <div className="xl:row-start-1 xl:col-start-1 xl:col-end-3 bg-[#1E1E1E] p-5 rounded-md">
+    <div
+      className={`xl:row-start-1 xl:col-start-1 xl:col-end-3 bg-[#1E1E1E] p-5 rounded-md ${
+        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+      }`}
+    >
       <div className="flex flex-row items-center justify-between ">
         <h1 className="text-3xl font-semibold ">All Invoice</h1>
         <button className="px-5 py-2 text-lg font-semibold bg-colorPrimary rounded-md">

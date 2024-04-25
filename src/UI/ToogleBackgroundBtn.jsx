@@ -32,7 +32,7 @@ function ToggleBackgroundBtn() {
     <div
       className={`border border-colorPrimary ${
         isSideBarHovered ? "w-20 h-10 flex-row px-2" : "w-10 h-20 flex-col py-2"
-      } rounded-full mb-10 m-auto flex items-center justify-between relative`}
+      } rounded-full mb-10 m-auto flex items-center justify-between relative cursor-pointer`}
       onClick={handleToggle}
     >
       <IoSunnyOutline

@@ -1,9 +1,16 @@
 import { FaCheck } from "react-icons/fa6";
 import useFormatBalance from "../Hooks/useFormatBalance";
+import { useSelector } from "react-redux";
 
 function InvoicePaid() {
+  const darkMode = useSelector((state) => state.darkMode);
+
   return (
-    <div className="bg-[#1E1E1E] w-full h-fit p-5 rounded-md">
+    <div
+      className={`bg-[#1E1E1E] w-full h-fit p-5 rounded-md ${
+        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+      }`}
+    >
       <h6 className="text-[12px]">Invoice Paid</h6>
       <div className="flex items-center justify-between">
         <h1 className="text-3xl">{useFormatBalance(4738)}</h1>
