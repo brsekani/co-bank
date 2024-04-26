@@ -1,8 +1,11 @@
 import { GoArrowUpRight, GoGoal } from "react-icons/go";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import { completionPercentage } from "../utility/utilityFunction";
+import { useSelector } from "react-redux";
 
 function Goals() {
+  const darkMode = useSelector((state) => state.darkMode);
+
   const goals = [
     {
       Name: "Savings",
@@ -10,7 +13,7 @@ function Goals() {
       totalAmount: 100,
     },
     {
-      Name: "Savings",
+      Name: "Car",
       TargetAmount: 1000,
       totalAmount: 100,
     },
@@ -37,7 +40,11 @@ function Goals() {
   ];
 
   return (
-    <div className="flex flex-col gap-5 p-5">
+    <div
+      className={`flex flex-col gap-5 p-5 ${
+        darkMode ? "bg-[#121212] text-white" : "bg-[#ececec] text-black"
+      }`}
+    >
       <div className="flex items-center justify-between">
         <h1 className="text-2xl">All Goals</h1>
         <input
@@ -55,7 +62,9 @@ function Goals() {
           return (
             <div
               key={i}
-              className="min-h-[216px] max-h-[240px] bg-[#1E1E1E] w-full p-5 rounded-md"
+              className={`min-h-[216px] max-h-[240px] bg-[#1E1E1E] w-full p-5 rounded-md ${
+                darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+              }`}
             >
               <div className="flex flex-row items-center justify-between">
                 <div className="flex items-start gap-3">
