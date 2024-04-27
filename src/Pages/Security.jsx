@@ -14,16 +14,18 @@ function Security() {
       <div className="flex flex-col gap-10">
         <h1 className="text-3xl">Security</h1>
 
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex flex-col gap-1">
             <h1 className="text-2xl">Email Address</h1>
             <p className="text-sm">The email associated with your account</p>
           </div>
           <div>
-            <div className="flex flex-row items-center gap-5">
+            <div className="flex flex-col items-start lg:flex-row lg:items-center gap-5">
               <div className="flex flex-col">
                 <h1 className="text-xl">Saige_Krajcik@gmail.com</h1>
-                <p className="text-lg text-red-600 text-end ">Not Verified</p>
+                <p className="text-lg text-red-600 text-start lg:text-end ">
+                  Not Verified
+                </p>
               </div>
               <button className="flex items-center gap-1 px-4 py-2 border border-colorPrimary rounded-md">
                 <span>Edit</span>
@@ -36,7 +38,7 @@ function Security() {
 
       {/* Password */}
       <hr />
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex lg:flex-row flex-col lg:items-center justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl">Password</h1>
           <p className="text-sm">
@@ -52,7 +54,7 @@ function Security() {
 
       {/* Deactivate My Account */}
       <hr />
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex lg:flex-row flex-col lg:items-center lg:justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl">Deactivate My Account</h1>
           <p className="text-sm">
@@ -69,7 +71,7 @@ function Security() {
 
       {/* Delete My Account */}
       <hr />
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex lg:flex-row flex-col lg:items-center justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl">Delete My Account</h1>
           <p className="text-sm">

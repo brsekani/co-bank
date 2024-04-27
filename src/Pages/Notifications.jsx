@@ -35,11 +35,13 @@ function Notifications() {
                 />
               )}
               <div className="flex flex-col gap-1">
-                <h1 className="text-2xl">{transaction.name}</h1>
+                <h1 className="text-lg md:text-2xl">{transaction.name}</h1>
                 <p className="text-sm">{transaction.date}</p>
               </div>
             </div>
-            <h1 className="text-2xl">{useFormatBalance(transaction.amount)}</h1>
+            <h1 className="text-lg md:text-2xl">
+              {useFormatBalance(transaction.amount)}
+            </h1>
           </div>
         ))}
       </div>
