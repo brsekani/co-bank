@@ -7,8 +7,10 @@ import { IoKeyOutline } from "react-icons/io5";
 import { FaRegBell } from "react-icons/fa";
 import { MdOutlineVerified } from "react-icons/md";
 import { IoIosLogOut } from "react-icons/io";
+import { useSelector } from "react-redux";
 
 function AccountNav() {
+  const darkMode = useSelector((state) => state.darkMode);
   const location = useLocation().pathname;
   console.log(location);
 
@@ -41,7 +43,11 @@ function AccountNav() {
   ];
 
   return (
-    <div className="">
+    <div
+      className={`${
+        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+      }`}
+    >
       <nav>
         <ul className="flex flex-col gap-5 p-5">
           {navItems.map((item, index) => (

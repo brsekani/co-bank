@@ -1,10 +1,17 @@
 import { TbPencilMinus } from "react-icons/tb";
+import { useSelector } from "react-redux";
 
 function Security() {
+  const darkMode = useSelector((state) => state.darkMode);
+
   return (
-    <div className="flex flex-col gap-10 bg-[#1E1E1E] p-5 rounded-md">
+    <div
+      className={`flex flex-col gap-10 bg-[#1E1E1E] p-5 rounded-md ${
+        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+      }`}
+    >
       {/* Email Address */}
-      <div className="flex flex-col gap-10 ">
+      <div className="flex flex-col gap-10">
         <h1 className="text-3xl">Security</h1>
 
         <div className="flex items-center justify-between gap-4">
@@ -18,7 +25,7 @@ function Security() {
                 <h1 className="text-xl">Saige_Krajcik@gmail.com</h1>
                 <p className="text-lg text-red-600 text-end ">Not Verified</p>
               </div>
-              <button className="flex items-center gap-1 px-4 py-2 border border-white rounded-md">
+              <button className="flex items-center gap-1 px-4 py-2 border border-colorPrimary rounded-md">
                 <span>Edit</span>
                 <TbPencilMinus />
               </button>
@@ -37,7 +44,7 @@ function Security() {
           </p>
         </div>
         <div>
-          <button className="px-4 py-1 text-xl text-center border border-white rounded-md">
+          <button className="px-4 py-1 text-xl text-center border border-colorPrimary rounded-md">
             Change Password
           </button>
         </div>
@@ -54,7 +61,7 @@ function Security() {
           </p>
         </div>
         <div>
-          <button className="px-4 py-1 text-xl text-center border border-white rounded-md">
+          <button className="px-4 py-1 text-xl text-center border border-colorPrimary rounded-md">
             Deactivate
           </button>
         </div>
