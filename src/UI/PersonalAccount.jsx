@@ -1,16 +1,26 @@
-import { useState } from "react";
+import PropTypes from "prop-types";
+import { useContext, useState } from "react";
 import { FaPhoneSquareAlt } from "react-icons/fa";
 import { FaArrowDownLong, FaFileInvoiceDollar, FaPlus } from "react-icons/fa6";
 import { FiRotateCw, FiSend } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { setShowAirtimeUI, setShowSendUI } from "../Features/uiSlice";
 
+import useFormatBalance from "../Hooks/useFormatBalance";
+import { AccountContext } from "../Context/AccountContext";
+
 function PersonalAccount() {
   const [showBalance, setShowBalance] = useState(false);
-
   const darkMode = useSelector((state) => state.darkMode);
 
   const dispatch = useDispatch();
+
+  const { accountData } = useContext(AccountContext);
+
+  const accountBalance = accountData?.map((account) =>
+    Number(account?.accountBalance)
+  );
+
   function toggleShowbalance() {
     setShowBalance((showBalance) => !showBalance);
   }
@@ -55,7 +65,7 @@ function PersonalAccount() {
 
       <div className="flex items-center justify-between mt-2">
         <h1 className={`text-2xl font-medium ${!showBalance ? "" : "blur-sm"}`}>
-          $<span>0.00</span>
+          <span>{useFormatBalance(accountBalance)}</span>
         </h1>
         <button onClick={toggleShowbalance}>
           <svg
@@ -128,5 +138,9 @@ function PersonalAccount() {
     </div>
   );
 }
+
+PersonalAccount.propTypes = {
+  accountBalance: PropTypes.bool.isRequired,
+};
 
 export default PersonalAccount;

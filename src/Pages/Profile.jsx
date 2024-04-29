@@ -1,9 +1,59 @@
 import { TbPencilMinus } from "react-icons/tb";
 import profilePic from "/public/face image.avif";
 import { useSelector } from "react-redux";
+import { useContext } from "react";
+import { AccountContext } from "../Context/AccountContext";
 
 function Profile() {
   const darkMode = useSelector((state) => state.darkMode);
+
+  const { customerData, accountData } = useContext(AccountContext);
+
+  console.log(customerData);
+
+  // FullName
+  const fullName = customerData.map((customer) => {
+    const capitalizeLastName =
+      customer.lastName.charAt(0).toUpperCase(1) +
+      customer.lastName.slice(1).toLowerCase();
+    const capitalizeFirst =
+      customer.firstName.charAt(0).toUpperCase(1) +
+      customer.firstName.slice(1).toLowerCase();
+    return `${capitalizeLastName} ${capitalizeFirst}`;
+  });
+
+  // FirstName
+  const firstname = customerData.map((customer) => {
+    const capitalizeFirst =
+      customer.firstName.charAt(0).toUpperCase(1) +
+      customer.firstName.slice(1).toLowerCase();
+
+    return capitalizeFirst;
+  });
+
+  // lastName
+  const lastName = customerData.map((customer) => {
+    const capitalizeFirst =
+      customer.lastName.charAt(0).toUpperCase(1) +
+      customer.lastName.slice(1).toLowerCase();
+
+    return capitalizeFirst;
+  });
+
+  // Email
+  const email = customerData.map((customer) => customer.email);
+
+  // Phone Number
+  const phoneNumber = customerData.map((customer) => customer.phoneNumber);
+
+  // Address
+  const address = customerData.map((customer) => customer.address);
+
+  // username
+  const userName = customerData.map((customer) => `@${customer.userName}`);
+
+  // AccountNumber
+  const accountNumber = accountData.map((account) => account.accountNumber);
 
   return (
     <div className="flex flex-col gap-5 ">
@@ -28,10 +78,8 @@ function Profile() {
             alt=""
           />
           <div>
-            <h1 className="text-xl lg:text-3xl font-semibold">
-              Geraldine Corwin
-            </h1>
-            <p className="text-lg">@GeraldineCorwin</p>
+            <h1 className="text-xl lg:text-3xl font-semibold">{fullName}</h1>
+            <p className="text-lg">{userName}</p>
           </div>
         </div>
       </div>
@@ -47,11 +95,11 @@ function Profile() {
         <div className="grid grid-cols-1 gap-3 md:gap-0 md:grid-cols-2">
           <div>
             <p className="text-lg">Account Name</p>
-            <h1 className="text-xl lg:text-3xl">Geraldine Corwin</h1>
+            <h1 className="text-xl lg:text-3xl">{fullName}</h1>
           </div>
           <div>
-            <p className="text-lg">@Account Number</p>
-            <h1 className="text-xl lg:text-3xl">53521359</h1>
+            <p className="text-lg">Account Number</p>
+            <h1 className="text-xl lg:text-3xl">{accountNumber}</h1>
           </div>
         </div>
       </div>
@@ -74,27 +122,25 @@ function Profile() {
           <div className="flex flex-col gap-5">
             <div>
               <p className="text-lg">First Name</p>
-              <h1 className="text-xl lg:text-3xl">Geraldine</h1>
+              <h1 className="text-xl lg:text-3xl">{firstname}</h1>
             </div>
             <div>
               <p className="text-lg">Email Address</p>
-              <h1 className="text-xl lg:text-3xl">Sherwood8@Hotmail.Com</h1>
+              <h1 className="text-xl lg:text-3xl">{email}</h1>
             </div>
             <div>
               <p className="text-lg">Address</p>
-              <h1 className="text-xl lg:text-3xl">
-                8604 Darrick Row Suite 929
-              </h1>
+              <h1 className="text-xl lg:text-3xl">{address}</h1>
             </div>
           </div>
           <div className="flex flex-col gap-5">
             <div>
               <p className="text-lg">Last Number</p>
-              <h1 className="text-xl lg:text-3xl">Corwin</h1>
+              <h1 className="text-xl lg:text-3xl">{lastName}</h1>
             </div>
             <div>
               <p className="text-lg">Phone Number</p>
-              <h1 className="text-xl lg:text-3xl">435.292.9712</h1>
+              <h1 className="text-xl lg:text-3xl">{phoneNumber}</h1>
             </div>
           </div>
         </div>

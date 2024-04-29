@@ -1,17 +1,33 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { BsSquareHalf } from "react-icons/bs";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import useFormatCreditCardNumber from "../Hooks/useFormatCreditCardNumber";
 import { RiVisaLine } from "react-icons/ri";
 import { useSelector } from "react-redux";
+import { AccountContext } from "../Context/AccountContext";
 // import "./FlipCard.css"; // Assuming you have a CSS file for styling
 
 function FlipCard() {
   const [showBalance, setShowBalance] = useState(false);
   const [showCreditCardNumber, setShowCreditCardNumber] = useState(false);
   const [showBack, setShowBack] = useState(false);
-
   const darkMode = useSelector((state) => state.darkMode);
+
+  const { accountData } = useContext(AccountContext);
+
+  const creditCardBalance = accountData.map(
+    (account) => account.creditCardBalance
+  );
+
+  const creditCardNumber = accountData.map(
+    (account) => account.creditCardNumber
+  );
+
+  const cvv = accountData.map((account) => account.cvv);
+
+  const creditCardExpireDate = accountData.map(
+    (account) => account.creditCardExpireDate
+  );
 
   function toggleShowbalance() {
     setShowBalance((showBalance) => !showBalance);
@@ -76,7 +92,7 @@ function FlipCard() {
                   !showBalance ? "" : "blur-sm"
                 }`}
               >
-                {useFormatBalance(200000)}
+                {useFormatBalance(creditCardBalance)}
               </h1>
               <button onClick={toggleShowbalance} className="pt-1">
                 <svg
@@ -127,7 +143,7 @@ function FlipCard() {
                   !showCreditCardNumber ? "" : "blur-sm"
                 }`}
               >
-                {useFormatCreditCardNumber(1234567890987654).map((num, i) => (
+                {useFormatCreditCardNumber(creditCardNumber).map((num, i) => (
                   <span key={i}>{num}</span>
                 ))}
               </h1>
@@ -178,7 +194,7 @@ function FlipCard() {
               <h1 className="text-base font-medium">Samuel Kime</h1>
               <div>
                 <p className="text-[10px]">Expires</p>
-                <h1 className="font-medium">07/26</h1>
+                <h1 className="font-medium">{creditCardExpireDate}</h1>
               </div>
               <RiVisaLine size={55} />
             </div>
@@ -215,7 +231,7 @@ function FlipCard() {
               <div
                 className={`w-full h-8 ${darkMode ? "bg-white" : "bg-black"}`}
               ></div>
-              <p className="pr-10">232</p>
+              <p className="pr-10">{cvv}</p>
             </div>
           </div>
         </div>
@@ -225,4 +241,3 @@ function FlipCard() {
 }
 
 export default FlipCard;
-//////////////////
