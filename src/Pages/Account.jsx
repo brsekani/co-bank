@@ -5,11 +5,15 @@ import { useState } from "react";
 import { useMediaQuery } from "@react-hook/media-query";
 import { useSelector } from "react-redux";
 import { MdArrowBackIos } from "react-icons/md";
+import { useUserData } from "../Hooks/useUserData";
 
 function Account() {
   const darkMode = useSelector((state) => state.darkMode);
   const [showMobile, setShowMobileNav] = useState(false);
   const isSmallScreen = useMediaQuery("(max-width: 764px)");
+
+  const { data, isLoading, isError } = useUserData();
+  console.log(data, isLoading, isError);
 
   function handleShowMobileNav() {
     setShowMobileNav(true);
