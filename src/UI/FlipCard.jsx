@@ -13,21 +13,31 @@ function FlipCard() {
   const [showBack, setShowBack] = useState(false);
   const darkMode = useSelector((state) => state.darkMode);
 
-  const { accountData } = useContext(AccountContext);
+  const { accountData, customerData } = useContext(AccountContext);
 
-  const creditCardBalance = accountData.map(
+  const creditCardBalance = accountData?.map(
     (account) => account.creditCardBalance
   );
 
-  const creditCardNumber = accountData.map(
+  const creditCardNumber = accountData?.map(
     (account) => account.creditCardNumber
   );
 
-  const cvv = accountData.map((account) => account.cvv);
+  const cvv = accountData?.map((account) => account.cvv);
 
-  const creditCardExpireDate = accountData.map(
+  const creditCardExpireDate = accountData?.map(
     (account) => account.creditCardExpireDate
   );
+
+  const fullName = customerData.map((customer) => {
+    const capitalizeLastName =
+      customer.lastName.charAt(0).toUpperCase(1) +
+      customer.lastName.slice(1).toLowerCase();
+    const capitalizeFirst =
+      customer.firstName.charAt(0).toUpperCase(1) +
+      customer.firstName.slice(1).toLowerCase();
+    return `${capitalizeLastName} ${capitalizeFirst}`;
+  });
 
   function toggleShowbalance() {
     setShowBalance((showBalance) => !showBalance);
@@ -191,7 +201,7 @@ function FlipCard() {
             </div>
 
             <div className="flex items-center justify-between mt-3">
-              <h1 className="text-base font-medium">Samuel Kime</h1>
+              <h1 className="text-base font-medium">{fullName}</h1>
               <div>
                 <p className="text-[10px]">Expires</p>
                 <h1 className="font-medium">{creditCardExpireDate}</h1>

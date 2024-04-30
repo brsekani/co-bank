@@ -1,15 +1,43 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { BsSquareHalf } from "react-icons/bs";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import useFormatCreditCardNumber from "../Hooks/useFormatCreditCardNumber";
 import { RiVisaLine } from "react-icons/ri";
 import { useSelector } from "react-redux";
+import { AccountContext } from "../Context/AccountContext";
 
 function FlipCardForCardPage() {
   const darkMode = useSelector((state) => state.darkMode);
   const [showBalance, setShowBalance] = useState(false);
   const [showCreditCardNumber, setShowCreditCardNumber] = useState(false);
   const [showBack, setShowBack] = useState(false);
+
+  const { accountData, customerData } = useContext(AccountContext);
+
+  const creditCardBalance = accountData?.map(
+    (account) => account.creditCardBalance
+  );
+
+  const creditCardNumber = accountData?.map(
+    (account) => account.creditCardNumber
+  );
+
+  const cvv = accountData?.map((account) => account.cvv);
+
+  const creditCardExpireDate = accountData?.map(
+    (account) => account.creditCardExpireDate
+  );
+
+  // FullName
+  const fullName = customerData.map((customer) => {
+    const capitalizeLastName =
+      customer.lastName.charAt(0).toUpperCase(1) +
+      customer.lastName.slice(1).toLowerCase();
+    const capitalizeFirst =
+      customer.firstName.charAt(0).toUpperCase(1) +
+      customer.firstName.slice(1).toLowerCase();
+    return `${capitalizeLastName} ${capitalizeFirst}`;
+  });
 
   function toggleShowbalance() {
     setShowBalance((showBalance) => !showBalance);
@@ -67,7 +95,7 @@ function FlipCardForCardPage() {
             <h1
               className={`text-2xl font-bold ${!showBalance ? "" : "blur-sm"}`}
             >
-              {useFormatBalance(200000)}
+              {useFormatBalance(creditCardBalance)}
             </h1>
             <button onClick={toggleShowbalance} className="pt-1">
               <svg
@@ -118,7 +146,7 @@ function FlipCardForCardPage() {
                 !showCreditCardNumber ? "" : "blur-sm"
               }`}
             >
-              {useFormatCreditCardNumber(1234567890987654).map((num, i) => (
+              {useFormatCreditCardNumber(creditCardNumber).map((num, i) => (
                 <span key={i}>{num}</span>
               ))}
             </h1>
@@ -166,10 +194,10 @@ function FlipCardForCardPage() {
           </div>
 
           <div className="flex items-center justify-between mt-3">
-            <h1 className="text-base font-medium">Samuel Kime</h1>
+            <h1 className="text-base font-medium">{fullName}</h1>
             <div>
               <p className="text-[10px]">Expires</p>
-              <h1 className="font-medium">07/26</h1>
+              <h1 className="font-medium">{creditCardExpireDate}</h1>
             </div>
             <RiVisaLine size={55} />
           </div>
@@ -206,7 +234,7 @@ function FlipCardForCardPage() {
             <div
               className={`w-full h-8 ${darkMode ? "bg-white" : "bg-black"}`}
             ></div>
-            <p className="pr-10">232</p>
+            <p className="pr-10">{cvv}</p>
           </div>
         </div>
       </div>
