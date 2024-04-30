@@ -1,7 +1,27 @@
 import { useSelector } from "react-redux";
+import { AccountContext } from "../Context/AccountContext";
+import { useContext } from "react";
 
 function Verification() {
   const darkMode = useSelector((state) => state.darkMode);
+
+  const { customerData } = useContext(AccountContext);
+
+  // Email
+  const email = customerData?.map((customer) => customer.email);
+
+  // Email Verified
+  const emailVerified = customerData
+    ?.map((customer) => customer.emailVerified)
+    .at(0);
+  console.log(emailVerified);
+
+  // Phone Number
+  const phoneNumber = customerData?.map((customer) => customer.phoneNumber);
+
+  const phoneNumVerified = customerData
+    ?.map((customer) => customer.phoneNumVerified)
+    .at(0);
 
   return (
     <div
@@ -21,14 +41,20 @@ function Verification() {
           <div>
             <div className="flex flex-col items-start lg:flex-row lg:items-center gap-5">
               <div className="flex flex-col">
-                <h1 className="text-xl">Saige_Krajcik@gmail.com</h1>
-                <p className="text-lg text-red-600 text-start lg:text-end ">
-                  Not Verified
+                <h1 className="text-xl">{email}</h1>
+                <p
+                  className={`text-lg ${
+                    emailVerified ? "text-green-500" : "text-red-600"
+                  }  text-start lg:text-end`}
+                >
+                  {emailVerified ? "Verified" : "Not Verified"}
                 </p>
               </div>
-              <button className="flex items-center gap-1 px-4 py-2 border border-colorPrimary rounded-md">
-                Verify
-              </button>
+              {!emailVerified && (
+                <button className="flex items-center gap-1 px-4 py-2 border border-colorPrimary rounded-md">
+                  Verify
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -43,11 +69,22 @@ function Verification() {
             The phone number associated with your account
           </p>
         </div>
-        <div className="flex flex-col">
-          <h1 className="text-xl">(449) 477-9364 x01852</h1>
-          <p className="text-lg text-green-600 text-start lg:text-end ">
-            Verified
-          </p>
+        <div className="flex flex-col items-start lg:flex-row lg:items-center gap-5">
+          <div className="flex flex-col">
+            <h1 className="text-xl">{phoneNumber}</h1>
+            <p
+              className={`text-lg ${
+                phoneNumVerified ? "text-green-500" : "text-red-600"
+              }  text-start lg:text-end`}
+            >
+              {emailVerified ? "Verified" : "Not Verified"}
+            </p>
+          </div>
+          {!phoneNumVerified && (
+            <button className="flex items-center gap-1 px-4 py-2 border border-colorPrimary rounded-md">
+              Verify
+            </button>
+          )}
         </div>
       </div>
 
@@ -59,7 +96,7 @@ function Verification() {
           <p className="text-sm">Link your NIN to your account</p>
         </div>
         <div>
-          <button className="px-4 py-1 text-xl text-center border border-white rounded-md">
+          <button className="px-4 py-1 text-xl text-center border border-colorPrimary rounded-md">
             Link
           </button>
         </div>
@@ -73,7 +110,7 @@ function Verification() {
           <p className="text-sm">Link your BVN to your account</p>
         </div>
         <div>
-          <button className="px-4 py-1 text-xl text-center border border-white rounded-md">
+          <button className="px-4 py-1 text-xl text-center border border-colorPrimary rounded-md">
             Link
           </button>
         </div>

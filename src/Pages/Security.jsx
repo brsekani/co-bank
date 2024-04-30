@@ -1,8 +1,20 @@
+import { useContext } from "react";
 import { TbPencilMinus } from "react-icons/tb";
 import { useSelector } from "react-redux";
+import { AccountContext } from "../Context/AccountContext";
 
 function Security() {
   const darkMode = useSelector((state) => state.darkMode);
+  const { customerData } = useContext(AccountContext);
+
+  // Email
+  const email = customerData?.map((customer) => customer.email);
+
+  // Email Verified
+  const emailVerified = customerData
+    ?.map((customer) => customer.emailVerified)
+    .at(0);
+  console.log(emailVerified);
 
   return (
     <div
@@ -22,9 +34,13 @@ function Security() {
           <div>
             <div className="flex flex-col items-start lg:flex-row lg:items-center gap-5">
               <div className="flex flex-col">
-                <h1 className="text-xl">Saige_Krajcik@gmail.com</h1>
-                <p className="text-lg text-red-600 text-start lg:text-end ">
-                  Not Verified
+                <h1 className="text-xl">{email}</h1>
+                <p
+                  className={`text-lg ${
+                    emailVerified ? "text-green-500" : "text-red-600"
+                  }  text-start lg:text-end`}
+                >
+                  {emailVerified ? "Verified" : "Not Verified"}
                 </p>
               </div>
               <button className="flex items-center gap-1 px-4 py-2 border border-colorPrimary rounded-md">
