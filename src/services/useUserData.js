@@ -17,10 +17,35 @@ const fetchaccountData = async () => {
   return data;
 };
 
+const fetchTransactions = async (accountId) => {
+  console.log(accountId);
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("*")
+    .eq("accountId", accountId);
+
+  console.log(data);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
 export const useCustomerData = () => {
   return useQuery("customerData", fetchCustomerData);
 };
 
-export const useaccountData = () => {
+export const useAccountData = () => {
   return useQuery("accountData", fetchaccountData);
+};
+
+export const useTransactions = (accountData) => {
+  const accountId = accountData?.map((acc) => acc.accountId).at(0);
+  console.log(accountId);
+
+  return useQuery(["transactions", accountId], () =>
+    fetchTransactions(accountId)
+  );
 };

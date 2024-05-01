@@ -1,6 +1,10 @@
 // AccountContext.jsx
 import { createContext } from "react";
-import { useaccountData, useCustomerData } from "../services/useUserData";
+import {
+  useAccountData,
+  useCustomerData,
+  useTransactions,
+} from "../services/useUserData";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 const AccountContext = createContext();
@@ -13,13 +17,19 @@ const AccountProvider = ({ children }) => {
     data: accountData,
     isLoading: isLoadingAD,
     isError: isErrorAD,
-  } = useaccountData();
+  } = useAccountData();
 
   const {
     data: customerData,
     isLoading: isLoadingCD,
     isError: isErrorCd,
   } = useCustomerData();
+
+  const {
+    data: transactionsData,
+    isLoading: isLoadingTD,
+    isError: isErrorTD,
+  } = useTransactions(accountData);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -31,6 +41,9 @@ const AccountProvider = ({ children }) => {
           customerData,
           isLoadingCD,
           isErrorCd,
+          transactionsData,
+          isLoadingTD,
+          isErrorTD,
         }}
       >
         {children}

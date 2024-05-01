@@ -14,7 +14,7 @@ function useFormatCreditCardNumber(number) {
 
       setFormattedNumber(groups);
     }
-  }, [number]);
+  }, []);
 
   return formattedNumber;
 }

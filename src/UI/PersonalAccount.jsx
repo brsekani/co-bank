@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useContext, useState } from "react";
 import { FaPhoneSquareAlt } from "react-icons/fa";
 import { FaArrowDownLong, FaFileInvoiceDollar, FaPlus } from "react-icons/fa6";
@@ -138,9 +137,5 @@ function PersonalAccount() {
     </div>
   );
 }
-
-PersonalAccount.propTypes = {
-  accountBalance: PropTypes.bool.isRequired,
-};
 
 export default PersonalAccount;
