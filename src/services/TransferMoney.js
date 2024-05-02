@@ -1,5 +1,6 @@
 import { useMutation } from "react-query";
 import supabase from "../supabase";
+import { useState } from "react";
 
 const tranferMoney = async (tranferInfo) => {
   console.log(tranferInfo);
@@ -61,5 +62,19 @@ const tranferMoney = async (tranferInfo) => {
 };
 
 export const useTransferMoney = () => {
-  return useMutation(tranferMoney);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const mutation = useMutation(tranferMoney, {
+    onSuccess: () => {
+      setIsLoading(false);
+    },
+    onError: () => {
+      setIsLoading(false);
+    },
+    onMutate: () => {
+      setIsLoading(true);
+    },
+  });
+
+  return { ...mutation, isLoading };
 };

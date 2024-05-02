@@ -16,35 +16,36 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
   const [transactionSuccess, setTransactionSuccess] = useState(false); // State for transaction success
   const { accountData } = useContext(AccountContext);
   const accountId = accountData.map((acc) => acc.accountId);
+  const accountBalance = accountData.map((acc) => acc.accountBalance);
+  const [insufficentBalance, setInsufficientBalance] = useState(false);
 
   // Custom hook for transferring money
   const transferMoneyMutation = useTransferMoney();
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data) => {
     console.log(amount, data);
+    setIsLoading(true);
     try {
       await transferMoneyMutation.mutateAsync({ accountId, amount });
       setTransactionSuccess(true); // Set success state to true
       alert("Money transfer successful!");
     } catch (error) {
-      alert(error.message || "An error occurred during money transfer");
+      if (error.message == "Insufficent balance to transfer") {
+        setInsufficientBalance(true);
+      }
+      // alert(error.message || "An error occurred during money transfer");
     }
-
-    // const pin = data.pin;
-    // console.log(
-    //   RecipientName,
-    //   RecipientAccountNumber,
-    //   amount,
-    //   pin,
-    //   bank,
-    //   accountId
-    // );
+    setIsLoading(false);
   };
+
+  console.log(isLoading);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    clearErrors,
   } = useForm();
 
   function removeCommas(numberString) {
@@ -54,6 +55,13 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
   function handleClose() {
     closeSendModal();
     setTransactionSuccess(false);
+    setInsufficientBalance(false);
+  }
+
+  function handleClosePaymentModal() {
+    closeModal();
+    setInsufficientBalance(false);
+    clearErrors("password");
   }
 
   return (
@@ -73,7 +81,7 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
             <RxCross2
               size={25}
               className="cursor-pointer"
-              onClick={() => closeModal()}
+              onClick={() => handleClosePaymentModal()}
             />
           </div>
         ) : (
@@ -81,7 +89,11 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
             Transaction Successful!
           </h1>
         )}
-        <h1 className="text-center text-3xl mt-2 text-colorPrimary">
+        <h1
+          className={`text-center text-3xl mt-2  ${
+            insufficentBalance ? "text-red-600" : "text-colorPrimary"
+          }`}
+        >
           {useFormatBalance(Number(removeCommas(amount)) + 1)}
         </h1>
 
@@ -115,9 +127,13 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
           <div className="mt-3">
             <h1 className="text-xl text-colorPrimary mb-1">Payment Method</h1>
 
-            <div className="flex items-start justify-between">
+            <div
+              className={`flex items-start justify-between ${
+                insufficentBalance ? "text-red-600" : ""
+              }`}
+            >
               <p>Balance</p>
-              <p>{useFormatBalance(1000)}</p>
+              <p>{useFormatBalance(accountBalance)}</p>
             </div>
 
             <form onSubmit={handleSubmit((data) => onSubmit(data))}>
@@ -144,12 +160,24 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
                   {errors.pin.message}
                 </span>
               )}
-              <button className="h-10 w-full bg-colorPrimary rounded-md mt-5">
+
+              {/* insufficient Balance notification */}
+              {insufficentBalance && (
+                <p className="text-center text-red-600">Insufficient Balance</p>
+              )}
+
+              <button
+                className={`h-10 w-full bg-colorPrimary rounded-md ${
+                  insufficentBalance ? "" : "mt-5"
+                } `}
+                disabled={insufficentBalance}
+              >
                 Confirm Payment
               </button>
             </form>
           </div>
         )}
+
         {transactionSuccess && (
           <button
             className="h-10 w-full bg-colorPrimary rounded-md mt-5"
