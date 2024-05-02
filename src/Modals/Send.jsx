@@ -217,7 +217,7 @@ function Send() {
               className="h-10 w-full bg-transparent border border-white/1 pl-7"
               placeholder="Enter Amount"
               type="text" // Change type to text for formatting
-              {...register("Amount", {
+              {...register("amount", {
                 required: "Enter an amount",
                 validate: (value) => {
                   const amount = parseFloat(value.replace(/,/g, ""));

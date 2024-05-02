@@ -14,7 +14,6 @@ function Verification() {
   const emailVerified = customerData
     ?.map((customer) => customer.emailVerified)
     .at(0);
-  console.log(emailVerified);
 
   // Phone Number
   const phoneNumber = customerData?.map((customer) => customer.phoneNumber);

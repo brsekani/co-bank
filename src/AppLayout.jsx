@@ -11,8 +11,7 @@ function AppLayout() {
   const darkMode = useSelector((state) => state.darkMode);
   const { showSendUI, showAirtimeUI } = useSelector((state) => state.ui);
 
-  const { accountData, isLoadingAD } = useContext(AccountContext);
-  console.log(accountData);
+  const { isLoadingAD } = useContext(AccountContext);
 
   useEffect(() => {
     document.body.classList.toggle("dark", darkMode);

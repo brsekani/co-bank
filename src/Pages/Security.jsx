@@ -14,7 +14,6 @@ function Security() {
   const emailVerified = customerData
     ?.map((customer) => customer.emailVerified)
     .at(0);
-  console.log(emailVerified);
 
   return (
     <div

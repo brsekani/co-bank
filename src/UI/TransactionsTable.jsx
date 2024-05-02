@@ -16,15 +16,16 @@ function TransactionsTable() {
 
   useEffect(() => {
     if (!isLoadingTD && !isErrorTD) {
-      setTransactions(transactionsData); // Update transactions state when data is fetched
-      console.log(transactionsData);
+      const sortedTransaction = transactionsData.sort(
+        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+      );
+      setTransactions(sortedTransaction); // Update transactions state when data is fetched
     }
   }, [isLoadingTD, isErrorTD, transactionsData]);
 
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const currentTransactions = transactions.slice(startIndex, endIndex);
-  console.log(transactionsData);
 
   return (
     <div
@@ -57,7 +58,7 @@ function TransactionsTable() {
 
               const dateObject = new Date(transaction.timestamp);
               const date = dateObject; // Date string without the day of the week
-              const time = dateObject.toLocaleTimeString(); // Time string
+              // const time = dateObject.toLocaleTimeString(); // Time string
 
               const options = {
                 month: "short",
@@ -66,12 +67,12 @@ function TransactionsTable() {
               };
               const formattedDate = date.toLocaleDateString(undefined, options);
 
-              console.log(formattedDate); // Output: "4/1/2024" (or "01/04/2024" depending on locale)
-              console.log(time); // Output: "8:14:53 AM" (or "08:14:53" depending on locale)
+              // console.log(formattedDate); // Output: "4/1/2024" (or "01/04/2024" depending on locale)
+              // console.log(time); // Output: "8:14:53 AM" (or "08:14:53" depending on locale)
 
               return (
                 <tr
-                  key={transaction.id}
+                  key={transaction.transactionId}
                   className="border-t-[1px] border-white cursor-default hover:bg-gray-300"
                 >
                   <td className="flex items-center gap-2 pl-5 mt-4 mb-4">

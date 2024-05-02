@@ -33,7 +33,7 @@ const navItems = [
 function AccountMobileNav({ setShowMobileNav }) {
   const handleNavLinkClick = () => {
     setShowMobileNav(false);
-    console.log("clicked");
+    // console.log("clicked");
   };
 
   return (

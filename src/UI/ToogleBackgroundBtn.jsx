@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useState } from "react";
 import { IoMoonOutline } from "react-icons/io5";
 import { IoSunnyOutline } from "react-icons/io5";
@@ -49,10 +48,5 @@ function ToggleBackgroundBtn() {
     </div>
   );
 }
-
-ToggleBackgroundBtn.propTypes = {
-  isSideBarHovered: PropTypes.bool.isRequired,
-  setisSideBarHovered: PropTypes.func.isRequired,
-};
 
 export default ToggleBackgroundBtn;

@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 import { LuLayoutDashboard } from "react-icons/lu";
 import { PiCardsBold } from "react-icons/pi";
 import { FaMoneyBills } from "react-icons/fa6";
@@ -75,11 +73,5 @@ function Nav() {
     </div>
   );
 }
-
-Nav.propTypes = {
-  isSideBarHovered: PropTypes.bool.isRequired,
-  setisSideBarHovered: PropTypes.func.isRequired,
-  closeSidebar: PropTypes.func.isRequired,
-};
 
 export default Nav;

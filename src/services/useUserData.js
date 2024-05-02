@@ -1,8 +1,16 @@
 import { useQuery } from "react-query";
 import supabase from "../supabase";
+import { accountIdInfo, customerIdInfo } from "../utility/utilityFunction";
+
+const accountIdInfoData = accountIdInfo();
+const customerIdInfoData = customerIdInfo();
+console.log(accountIdInfoData);
 
 const fetchCustomerData = async () => {
-  const { data, error } = await supabase.from("customers").select("*");
+  const { data, error } = await supabase
+    .from("customers")
+    .select("*")
+    .eq("customerId", customerIdInfoData);
   if (error) {
     throw new Error(error.message);
   }
@@ -10,7 +18,10 @@ const fetchCustomerData = async () => {
 };
 
 const fetchaccountData = async () => {
-  const { data, error } = await supabase.from("accounts").select("*");
+  const { data, error } = await supabase
+    .from("accounts")
+    .select("*")
+    .eq("accountId", accountIdInfoData);
   if (error) {
     throw new Error(error.message);
   }
@@ -18,13 +29,10 @@ const fetchaccountData = async () => {
 };
 
 const fetchTransactions = async (accountId) => {
-  console.log(accountId);
   const { data, error } = await supabase
     .from("transactions")
     .select("*")
     .eq("accountId", accountId);
-
-  console.log(data);
 
   if (error) {
     throw new Error(error.message);
@@ -43,7 +51,6 @@ export const useAccountData = () => {
 
 export const useTransactions = (accountData) => {
   const accountId = accountData?.map((acc) => acc.accountId).at(0);
-  console.log(accountId);
 
   return useQuery(["transactions", accountId], () =>
     fetchTransactions(accountId)

@@ -42,10 +42,7 @@ function SideBar() {
           <Logo />
           <Nav />
         </div>
-        <ToogleBackgroundBtn
-          isSideBarHovered={isSideBarHovered}
-          setIsSideBarHovered={setIsSideBarHovered} // Remove this line
-        />
+        <ToogleBackgroundBtn />
       </div>
     </>
   );

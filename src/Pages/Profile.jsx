@@ -9,8 +9,6 @@ function Profile() {
 
   const { customerData, accountData } = useContext(AccountContext);
 
-  console.log(customerData);
-
   // FullName
   const fullName = customerData.map((customer) => {
     const capitalizeLastName =

@@ -1,21 +1,44 @@
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import { useState } from "react"; // Added useState
+import { useContext, useState } from "react"; // Added useState
 import { RxCross2 } from "react-icons/rx";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import { useForm } from "react-hook-form";
+import { useTransferMoney } from "../services/TransferMoney";
+import { AccountContext } from "../Context/AccountContext";
+import { MdDescription } from "react-icons/md";
 
 const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
   const darkMode = useSelector((state) => state.darkMode);
   const RecipientName = "Lawal Temidayo";
   const RecipientAccountNumber = formData.accountNumber;
-  const Amount = formData.Amount;
+  const amount = formData.amount;
   const [transactionSuccess, setTransactionSuccess] = useState(false); // State for transaction success
+  const { accountData } = useContext(AccountContext);
+  const accountId = accountData.map((acc) => acc.accountId);
 
-  const onSubmit = (data) => {
-    const pin = data.pin;
-    console.log(RecipientName, RecipientAccountNumber, Amount, pin, bank);
-    setTransactionSuccess(true); // Set success state to true
+  // Custom hook for transferring money
+  const transferMoneyMutation = useTransferMoney();
+
+  const onSubmit = async (data) => {
+    console.log(amount, data);
+    try {
+      await transferMoneyMutation.mutateAsync({ accountId, amount });
+      setTransactionSuccess(true); // Set success state to true
+      alert("Money transfer successful!");
+    } catch (error) {
+      alert(error.message || "An error occurred during money transfer");
+    }
+
+    // const pin = data.pin;
+    // console.log(
+    //   RecipientName,
+    //   RecipientAccountNumber,
+    //   amount,
+    //   pin,
+    //   bank,
+    //   accountId
+    // );
   };
 
   const {
@@ -59,7 +82,7 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
           </h1>
         )}
         <h1 className="text-center text-3xl mt-2 text-colorPrimary">
-          {useFormatBalance(Number(removeCommas(Amount)) + 1)}
+          {useFormatBalance(Number(removeCommas(amount)) + 1)}
         </h1>
 
         <div className="mt-2 px-5">

@@ -12,7 +12,6 @@ import { useSelector } from "react-redux";
 function AccountNav() {
   const darkMode = useSelector((state) => state.darkMode);
   const location = useLocation().pathname;
-  console.log(location);
 
   const navItems = [
     {
