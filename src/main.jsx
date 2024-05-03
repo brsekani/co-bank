@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { QueryClient, QueryClientProvider } from "react-query"; // Import QueryClient and QueryClientProvider
 import App from "./App.jsx";

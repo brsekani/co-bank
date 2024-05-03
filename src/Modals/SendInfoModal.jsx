@@ -6,7 +6,7 @@ import useFormatBalance from "../Hooks/useFormatBalance";
 import { useForm } from "react-hook-form";
 import { useTransferMoney } from "../services/TransferMoney";
 import { AccountContext } from "../Context/AccountContext";
-import { MdDescription } from "react-icons/md";
+import { useQueryClient } from "react-query";
 
 const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
   const darkMode = useSelector((state) => state.darkMode);
@@ -18,18 +18,19 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
   const accountId = accountData.map((acc) => acc.accountId);
   const accountBalance = accountData.map((acc) => acc.accountBalance);
   const [insufficentBalance, setInsufficientBalance] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   // Custom hook for transferring money
   const transferMoneyMutation = useTransferMoney();
-  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data) => {
     console.log(amount, data);
     setIsLoading(true);
     try {
       await transferMoneyMutation.mutateAsync({ accountId, amount });
+
       setTransactionSuccess(true); // Set success state to true
-      alert("Money transfer successful!");
     } catch (error) {
       if (error.message == "Insufficent balance to transfer") {
         setInsufficientBalance(true);
@@ -56,6 +57,9 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
     closeSendModal();
     setTransactionSuccess(false);
     setInsufficientBalance(false);
+    // queryClient.invalidateQueries("customerData");
+    queryClient.invalidateQueries("accountData");
+    // queryClient.invalidateQueries("transactions");
   }
 
   function handleClosePaymentModal() {
@@ -75,6 +79,32 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
           isOpen ? "translate-y-0" : "translate-y-full"
         } ${darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"}`}
       >
+        {/* Loading logo */}
+        {isLoading && (
+          <div
+            className={`fixed left-0 top-0 z-[9999] flex h-full w-full items-center justify-center overflow-hidden transition-opacity ${
+              isLoading ? "opacity-100" : "opacity-0 pointer-events-none"
+            } bg-[rgba(0,0,0,.486)]`}
+          >
+            <div className="z-1000 text-blue-500">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 101 101"
+                className="w-8 h-8 spin-animation"
+              >
+                <path
+                  fill="#00446A"
+                  d="M48.734 2.797A6 6 0 0 1 53.808 0h36.31c4.724 0 7.595 5.207 5.073 9.203l-42.925 68A6 6 0 0 1 47.192 80h-36.31c-4.724 0-7.595-5.207-5.073-9.203z"
+                ></path>
+                <path
+                  fill="#00A3FF"
+                  d="M48.734 23.797A6 6 0 0 1 53.808 21h36.31c4.724 0 7.595 5.208 5.073 9.203l-42.925 68A6 6 0 0 1 47.192 101h-36.31c-4.724 0-7.595-5.207-5.073-9.203z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        )}
         {!transactionSuccess ? (
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-semibold">Payment</h1>
