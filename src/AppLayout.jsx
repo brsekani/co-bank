@@ -82,10 +82,13 @@ function AppLayout() {
       <div
         className={`flex h-screen text-white ${
           darkMode ? "bg-[#121212]" : "bg-[#ececec]"
-        } font-rob cursor-default`}
+        } font-rob cursor-default relative`}
       >
-        <SideBar />
-        <div className="flex flex-col w-full">
+        <div className="absolute h-full">
+          <SideBar />
+        </div>
+        {/* <SideBar /> */}
+        <div className="flex flex-col w-full md:ml-20">
           <Header />
           <div className="flex-grow overflow-auto">
             <Outlet />
