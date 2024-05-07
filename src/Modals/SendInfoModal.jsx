@@ -4,9 +4,11 @@ import { useContext, useState } from "react"; // Added useState
 import { RxCross2 } from "react-icons/rx";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import { useForm } from "react-hook-form";
-import { useTransferMoney } from "../services/TransferMoney";
+import { tranferMoneyApi } from "../services/TransferMoney";
 import { AccountContext } from "../Context/AccountContext";
-import { useQueryClient } from "react-query";
+import { useMutation } from "@tanstack/react-query";
+
+// import { useQueryClient } from "@tanstack/react-query";
 
 const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
   const darkMode = useSelector((state) => state.darkMode);
@@ -18,29 +20,31 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
   const accountId = accountData.map((acc) => acc.accountId);
   const accountBalance = accountData.map((acc) => acc.accountBalance);
   const [insufficentBalance, setInsufficientBalance] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const queryClient = useQueryClient();
 
   // Custom hook for transferring money
-  const transferMoneyMutation = useTransferMoney();
+  // const { transferMoney, isTransfering, transferError } = useTransferMoney();
+  // console.log(transferError?.message === "Insufficent balance to transfer");
+  // const queryClient = useQueryClient();
 
-  const onSubmit = async (data) => {
-    console.log(amount, data);
-    setIsLoading(true);
-    try {
-      await transferMoneyMutation.mutateAsync({ accountId, amount });
-
-      setTransactionSuccess(true); // Set success state to true
-    } catch (error) {
-      if (error.message == "Insufficent balance to transfer") {
+  const mutation = useMutation({
+    mutationFn: (tranferInfo) => tranferMoneyApi(tranferInfo),
+    onError: (error) => {
+      console.log(error);
+      if (error.message === "Insufficent balance to transfer") {
         setInsufficientBalance(true);
       }
-      // alert(error.message || "An error occurred during money transfer");
-    }
-    setIsLoading(false);
-  };
+    },
+  });
 
-  console.log(isLoading);
+  const onSubmit = async (data) => {
+    console.log(data);
+    try {
+      const result = mutation.mutateAsync({ accountId, amount });
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const {
     register,
@@ -57,9 +61,6 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
     closeSendModal();
     setTransactionSuccess(false);
     setInsufficientBalance(false);
-    // queryClient.invalidateQueries("customerData");
-    queryClient.invalidateQueries("accountData");
-    // queryClient.invalidateQueries("transactions");
   }
 
   function handleClosePaymentModal() {
@@ -80,13 +81,15 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
         } ${darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"}`}
       >
         {/* Loading logo */}
-        {isLoading && (
+        {mutation.isPending && (
           <div
             className={`fixed left-0 top-0 z-[9999] flex h-full w-full items-center justify-center overflow-hidden transition-opacity ${
-              isLoading ? "opacity-100" : "opacity-0 pointer-events-none"
+              mutation.isPending
+                ? "opacity-100"
+                : "opacity-0 pointer-events-none"
             } bg-[rgba(0,0,0,.486)]`}
           >
-            <div className="z-1000 text-blue-500">
+            <div className="text-blue-500 z-1000">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -115,7 +118,7 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
             />
           </div>
         ) : (
-          <h1 className="text-green-600 text-center text-3xl mt-2">
+          <h1 className="mt-2 text-3xl text-center text-green-600">
             Transaction Successful!
           </h1>
         )}
@@ -127,7 +130,7 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
           {useFormatBalance(Number(removeCommas(amount)) + 1)}
         </h1>
 
-        <div className="mt-2 px-5">
+        <div className="px-5 mt-2">
           {!transactionSuccess && (
             <div className="flex items-center justify-between">
               <p className="text-sm">Fee</p>
@@ -155,7 +158,7 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
 
         {!transactionSuccess && (
           <div className="mt-3">
-            <h1 className="text-xl text-colorPrimary mb-1">Payment Method</h1>
+            <h1 className="mb-1 text-xl text-colorPrimary">Payment Method</h1>
 
             <div
               className={`flex items-start justify-between ${
@@ -186,7 +189,7 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
                 />
               </div>
               {errors?.pin && (
-                <span className="text-red-500 text-xs">
+                <span className="text-xs text-red-500">
                   {errors.pin.message}
                 </span>
               )}
@@ -210,7 +213,7 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
 
         {transactionSuccess && (
           <button
-            className="h-10 w-full bg-colorPrimary rounded-md mt-5"
+            className="w-full h-10 mt-5 rounded-md bg-colorPrimary"
             onClick={handleClose}
           >
             Close
@@ -225,8 +228,8 @@ Tranfers.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
   formData: PropTypes.object.isRequired,
-  closeSendModal: PropTypes.object.isRequired,
-  bank: PropTypes.object.isRequired,
+  closeSendModal: PropTypes.func.isRequired,
+  bank: PropTypes.string.isRequired,
 };
 
 export default Tranfers;

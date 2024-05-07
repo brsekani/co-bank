@@ -4,8 +4,8 @@ import {
   useAccountData,
   useCustomerData,
   useTransactions,
-} from "../services/useUserData";
-import { QueryClient, QueryClientProvider } from "react-query";
+} from "../services/UserData";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const AccountContext = createContext();
 const queryClient = new QueryClient();
@@ -13,37 +13,28 @@ const queryClient = new QueryClient();
 // eslint-disable-next-line react/prop-types
 const AccountProvider = ({ children }) => {
   // Account Data
-  const {
-    data: accountData,
-    isLoading: isLoadingAD,
-    isError: isErrorAD,
-  } = useAccountData();
+  const { isLoadingAccountData, accountData, errorAccountData } =
+    useAccountData();
 
-  const {
-    data: customerData,
-    isLoading: isLoadingCD,
-    isError: isErrorCd,
-  } = useCustomerData();
+  const { customerData, isLoadingCustomerData, errorCustomerData } =
+    useCustomerData();
 
-  const {
-    data: transactionsData,
-    isLoading: isLoadingTD,
-    isError: isErrorTD,
-  } = useTransactions(accountData);
+  const { isLoadingTransactions, transactionsData, errorTransactions } =
+    useTransactions(accountData);
 
   return (
     <QueryClientProvider client={queryClient}>
       <AccountContext.Provider
         value={{
           accountData,
-          isLoadingAD,
-          isErrorAD,
+          isLoadingAccountData,
+          errorAccountData,
           customerData,
-          isLoadingCD,
-          isErrorCd,
+          isLoadingCustomerData,
+          errorCustomerData,
           transactionsData,
-          isLoadingTD,
-          isErrorTD,
+          isLoadingTransactions,
+          errorTransactions,
         }}
       >
         {children}

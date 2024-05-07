@@ -1,14 +1,12 @@
-import { useMutation } from "react-query";
+// import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "../supabase";
-import { useState } from "react";
+// import { useState } from "react";
 
-const tranferMoney = async (tranferInfo) => {
-  console.log(tranferInfo);
-
+export const tranferMoneyApi = async (tranferInfo) => {
   const { accountId, amount } = tranferInfo;
   const FormattedAmount = Number(amount);
+  console.log(FormattedAmount);
   const description = "";
-  console.log(accountId, amount, description);
   // Fetch sender and receiver account information
   const { data: senderAccount, error: senderError } = await supabase
     .from("accounts")
@@ -23,8 +21,7 @@ const tranferMoney = async (tranferInfo) => {
     );
   }
 
-  const senderBalance = senderAccount.map((acc) => acc.accountBalance);
-  console.log(senderBalance);
+  const senderBalance = senderAccount.map((acc) => acc.accountBalance).at(0);
 
   // Check if sender has sufficient Balance
   if (senderBalance < FormattedAmount) {
@@ -42,7 +39,7 @@ const tranferMoney = async (tranferInfo) => {
     .eq("accountId", accountId);
 
   // Record transaction details (debit from sender)
-  const { data, error } = await supabase.from("transactions").insert([
+  await supabase.from("transactions").insert([
     {
       accountId: String(accountId),
       amount: -amount,
@@ -53,28 +50,37 @@ const tranferMoney = async (tranferInfo) => {
     },
   ]);
 
-  console.log(data, error);
-
   // Return success message or relevant data
   return {
     messsage: "Money Transfer successful",
   };
 };
 
-export const useTransferMoney = () => {
-  const [isLoading, setIsLoading] = useState(false);
+// export const useTransferMoney = () => {
+//   const [transferError, setTransferError] = useState();
+//   const queryClient = useQueryClient();
 
-  const mutation = useMutation(tranferMoney, {
-    onSuccess: () => {
-      setIsLoading(false);
-    },
-    onError: () => {
-      setIsLoading(false);
-    },
-    onMutate: () => {
-      setIsLoading(true);
-    },
-  });
+//   const {
+//     mutate: transferMoney,
+//     isLoading: isTransfering,
+//     // error: transferError,
+//   } = useMutation({
+//     mutationFn: (tranferInfo) => tranferMoneyApi(tranferInfo),
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({
+//         queryKey: ["account"],
+//       });
+//       queryClient.invalidateQueries({
+//         queryKey: ["customer"],
+//       });
+//     },
+//     onError: (err) => {
+//       setTransferError(err);
+//       throw new Error(err.message);
+//     },
+//   });
 
-  return { ...mutation, isLoading };
-};
+//   console.log(transferError);
+
+//   return { transferMoney, isTransfering, transferError };
+// };

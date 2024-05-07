@@ -94,17 +94,17 @@ function Send() {
           />
         </div>
 
-        <div className="flex items-center justify-between text-sm mt-5">
+        <div className="flex items-center justify-between mt-5 text-sm">
           <p>Select Beneficiaries</p>
           <button className="text-colorPrimary">See All</button>
         </div>
 
         <form
           onSubmit={handleSubmit((data) => onSubmit(data))}
-          className="flex gap-3 flex-col mt-5"
+          className="flex flex-col gap-3 mt-5"
         >
           <div className="flex flex-col">
-            <label className="text-xs mb-1">Account Number</label>
+            <label className="mb-1 text-xs">Account Number</label>
             <input
               className={`${
                 errors.accountNumber ? "border-red-500" : "border-white/1"
@@ -129,30 +129,30 @@ function Send() {
               })}
             />
             {errors.accountNumber && (
-              <span className="text-red-500 text-xs">
+              <span className="text-xs text-red-500">
                 {errors.accountNumber.message}
               </span>
             )}
           </div>
 
-          <div className="flex flex-col relative z-10 ">
-            <label className="text-xs mb-1">Bank Name</label>
+          <div className="relative z-10 flex flex-col ">
+            <label className="mb-1 text-xs">Bank Name</label>
             <div className="relative ">
               <div
                 onClick={() => setShowBankList(!showBankList)}
-                className="h-10 w-full bg-transparent border border-white/1 text-start pl-3 cursor-pointer flex items-center justify-between"
+                className="flex items-center justify-between w-full h-10 pl-3 bg-transparent border cursor-pointer border-white/1 text-start"
               >
                 <div className="flex items-center gap-2">
                   {selectedBank && (
                     <img
-                      className="h-8 w-8"
+                      className="w-8 h-8"
                       src={selectedBank.logo}
                       alt={selectedBank.name}
                     />
                   )}
                   {selectedBank ? (
                     <input
-                      className="h-10 w-full bg-transparent border-none pl-3 cursor-pointer"
+                      className="w-full h-10 pl-3 bg-transparent border-none cursor-pointer"
                       type="text"
                       value={selectedBank.name}
                       readOnly
@@ -162,7 +162,7 @@ function Send() {
                     />
                   ) : (
                     <input
-                      className="h-10 w-full bg-transparent border-none pl-3 cursor-pointer"
+                      className="w-full h-10 pl-3 bg-transparent border-none cursor-pointer"
                       type="text"
                       placeholder="Select bank"
                       readOnly
@@ -174,13 +174,13 @@ function Send() {
                 </div>
               </div>
               {errors.bankName && (
-                <span className="text-red-500 text-xs">
+                <span className="text-xs text-red-500">
                   {errors.bankName.message}
                 </span>
               )}
               {showBankList && (
                 <ul
-                  className="absolute top-full w-full bg-white shadow-lg rounded-lg overflow-y-auto max-h-48"
+                  className="absolute w-full overflow-y-auto bg-white rounded-lg shadow-lg top-full max-h-48"
                   style={{
                     scrollbarWidth: "thin",
                     scrollbarColor: darkMode
@@ -199,7 +199,7 @@ function Send() {
                       onClick={() => handleBankSelect(bank)}
                     >
                       <img
-                        className="h-8 w-8"
+                        className="w-8 h-8"
                         src={bank.logo}
                         alt={bank.name}
                       />
@@ -211,10 +211,10 @@ function Send() {
             </div>
           </div>
 
-          <div className="flex flex-col relative">
-            <label className="text-xs mb-1">Amount</label>
+          <div className="relative flex flex-col">
+            <label className="mb-1 text-xs">Amount</label>
             <input
-              className="h-10 w-full bg-transparent border border-white/1 pl-7"
+              className="w-full h-10 bg-transparent border border-white/1 pl-7"
               placeholder="Enter Amount"
               type="text" // Change type to text for formatting
               {...register("amount", {
@@ -240,13 +240,13 @@ function Send() {
               className="absolute top-7 left-1"
             />
             {errors.Amount && (
-              <span className="text-red-500 text-xs">
+              <span className="text-xs text-red-500">
                 {errors.Amount.message}
               </span>
             )}
           </div>
 
-          <button className="h-10 w-full bg-colorPrimary rounded-md">
+          <button className="w-full h-10 rounded-md bg-colorPrimary">
             Confrim
           </button>
         </form>

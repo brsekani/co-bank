@@ -11,9 +11,9 @@ import { setDarkMode } from "./Features/DarkMode";
 function AppLayout() {
   const darkMode = useSelector((state) => state.darkMode);
   const { showSendUI, showAirtimeUI } = useSelector((state) => state.ui);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const { isLoadingAD } = useContext(AccountContext);
+  const { isLoadingAccountData } = useContext(AccountContext);
 
   useEffect(() => {
     document.body.classList.toggle("dark", darkMode);
@@ -30,7 +30,7 @@ function AppLayout() {
   //   }
   // }, [dispatch]);
 
-  if (isLoadingAD) {
+  if (isLoadingAccountData) {
     // Loading state while data is being fetched
     return (
       <div
@@ -60,7 +60,7 @@ function AppLayout() {
   return (
     <>
       {/* Second loading option */}
-      {/* {isLoadingAD && (
+      {/* {isLoadingAccountData && (
         <div className="fixed left-0 top-0 z-[9999] flex h-full w-full items-center justify-center overflow-hidden bg-[rgba(0,0,0,.486)]">
           <svg
             xmlns="http://www.w3.org/2000/svg"

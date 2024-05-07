@@ -10,7 +10,7 @@ function Profile() {
   const { customerData, accountData } = useContext(AccountContext);
 
   // FullName
-  const fullName = customerData.map((customer) => {
+  const fullName = customerData?.map((customer) => {
     const capitalizeLastName =
       customer.lastName.charAt(0).toUpperCase(1) +
       customer.lastName.slice(1).toLowerCase();

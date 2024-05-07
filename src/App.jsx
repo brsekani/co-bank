@@ -1,5 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
+
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import AppLayout from "./AppLayout";
@@ -14,6 +14,7 @@ import Security from "./Pages/Security";
 import TransactionsTable from "./UI/TransactionsTable";
 import Notifications from "./Pages/Notifications";
 import Verification from "./Pages/Verification";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,6 +27,7 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      {/* <ReactQueryDevtools initialIsOpen={true} /> */}
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
@@ -47,7 +49,6 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   );
 }

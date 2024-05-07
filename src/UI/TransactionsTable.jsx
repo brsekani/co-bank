@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import faceImage from "/public/face image.avif";
-import useRandomDataGenerator from "../Hooks/useRandomDataGenerator";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import { useSelector } from "react-redux";
 import { AccountContext } from "../Context/AccountContext";
@@ -16,7 +15,7 @@ function TransactionsTable() {
 
   useEffect(() => {
     if (!isLoadingTD && !isErrorTD) {
-      const sortedTransaction = transactionsData.sort(
+      const sortedTransaction = transactionsData?.sort(
         (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
       );
       setTransactions(sortedTransaction); // Update transactions state when data is fetched
@@ -25,7 +24,7 @@ function TransactionsTable() {
 
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  const currentTransactions = transactions.slice(startIndex, endIndex);
+  const currentTransactions = transactions?.slice(startIndex, endIndex);
 
   return (
     <div
@@ -77,7 +76,7 @@ function TransactionsTable() {
                 >
                   <td className="flex items-center gap-2 pl-5 mt-4 mb-4">
                     {!transaction.image ? (
-                      <div className="flex items-center justify-center w-12 h-12 text-2xl text-center text-colorPrimary bg-blue-300 rounded-md capitalize ">
+                      <div className="flex items-center justify-center w-12 h-12 text-2xl text-center capitalize bg-blue-300 rounded-md text-colorPrimary ">
                         {transaction.name.charAt(0)}
                       </div>
                     ) : (
