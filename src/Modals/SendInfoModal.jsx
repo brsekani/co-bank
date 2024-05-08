@@ -4,9 +4,8 @@ import { useContext, useState } from "react"; // Added useState
 import { RxCross2 } from "react-icons/rx";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import { useForm } from "react-hook-form";
-import { tranferMoneyApi } from "../services/TransferMoney";
+import { useTransferMoney } from "../services/TransferMoney";
 import { AccountContext } from "../Context/AccountContext";
-import { useMutation } from "@tanstack/react-query";
 
 // import { useQueryClient } from "@tanstack/react-query";
 
@@ -15,32 +14,22 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
   const RecipientName = "Lawal Temidayo";
   const RecipientAccountNumber = formData.accountNumber;
   const amount = formData.amount;
-  const [transactionSuccess, setTransactionSuccess] = useState(false); // State for transaction success
   const { accountData } = useContext(AccountContext);
   const accountId = accountData.map((acc) => acc.accountId);
   const accountBalance = accountData.map((acc) => acc.accountBalance);
-  const [insufficentBalance, setInsufficientBalance] = useState(false);
 
-  // Custom hook for transferring money
-  // const { transferMoney, isTransfering, transferError } = useTransferMoney();
-  // console.log(transferError?.message === "Insufficent balance to transfer");
-  // const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: (tranferInfo) => tranferMoneyApi(tranferInfo),
-    onError: (error) => {
-      console.log(error);
-      if (error.message === "Insufficent balance to transfer") {
-        setInsufficientBalance(true);
-      }
-    },
-  });
+  const {
+    transferMoney,
+    transactionSuccess,
+    setTransactionSuccess,
+    insufficentBalance,
+    setInsufficientBalance,
+  } = useTransferMoney();
 
   const onSubmit = async (data) => {
     console.log(data);
     try {
-      const result = mutation.mutateAsync({ accountId, amount });
-      console.log(result);
+      transferMoney.mutateAsync({ accountId, amount });
     } catch (error) {
       console.error(error);
     }
@@ -81,10 +70,10 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
         } ${darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"}`}
       >
         {/* Loading logo */}
-        {mutation.isPending && (
+        {transferMoney.isPending && (
           <div
             className={`fixed left-0 top-0 z-[9999] flex h-full w-full items-center justify-center overflow-hidden transition-opacity ${
-              mutation.isPending
+              transferMoney.isPending
                 ? "opacity-100"
                 : "opacity-0 pointer-events-none"
             } bg-[rgba(0,0,0,.486)]`}

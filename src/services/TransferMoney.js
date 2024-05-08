@@ -1,8 +1,8 @@
-// import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "../supabase";
-// import { useState } from "react";
+import { useState } from "react";
 
-export const tranferMoneyApi = async (tranferInfo) => {
+const transferMoneyApi = async (tranferInfo) => {
   const { accountId, amount } = tranferInfo;
   const FormattedAmount = Number(amount);
   console.log(FormattedAmount);
@@ -56,31 +56,34 @@ export const tranferMoneyApi = async (tranferInfo) => {
   };
 };
 
-// export const useTransferMoney = () => {
-//   const [transferError, setTransferError] = useState();
-//   const queryClient = useQueryClient();
+export const useTransferMoney = () => {
+  const [transactionSuccess, setTransactionSuccess] = useState(false);
+  const [insufficientBalance, setInsufficientBalance] = useState(false);
 
-//   const {
-//     mutate: transferMoney,
-//     isLoading: isTransfering,
-//     // error: transferError,
-//   } = useMutation({
-//     mutationFn: (tranferInfo) => tranferMoneyApi(tranferInfo),
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({
-//         queryKey: ["account"],
-//       });
-//       queryClient.invalidateQueries({
-//         queryKey: ["customer"],
-//       });
-//     },
-//     onError: (err) => {
-//       setTransferError(err);
-//       throw new Error(err.message);
-//     },
-//   });
+  const queryClient = useQueryClient();
 
-//   console.log(transferError);
+  const transferMoney = useMutation({
+    mutationFn: (transferInfo) => transferMoneyApi(transferInfo),
+    onSuccess: (data, variables) => {
+      console.log(data, variables);
+      queryClient.invalidateQueries({ queryKey: ["account"] });
+      queryClient.invalidateQueries({ queryKey: ["customer"] });
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      setTransactionSuccess(true);
+    },
+    onError: (error) => {
+      console.log(error);
+      if (error.message === "Insufficient balance to transfer") {
+        setInsufficientBalance(true);
+      }
+    },
+  });
 
-//   return { transferMoney, isTransfering, transferError };
-// };
+  return {
+    transferMoney,
+    transactionSuccess,
+    setTransactionSuccess,
+    insufficientBalance,
+    setInsufficientBalance,
+  };
+};
