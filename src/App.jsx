@@ -42,7 +42,6 @@ function App() {
                 <Route path="Notifications" element={<Notifications />} />
                 <Route path="Verification" element={<Verification />} />
               </Route>
-
               <Route path="support" element={<Support />} />
             </Route>
           </Routes>

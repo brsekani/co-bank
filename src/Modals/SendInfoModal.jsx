@@ -6,6 +6,7 @@ import useFormatBalance from "../Hooks/useFormatBalance";
 import { useForm } from "react-hook-form";
 import { useTransferMoney } from "../services/TransferMoney";
 import { AccountContext } from "../Context/AccountContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 // import { useQueryClient } from "@tanstack/react-query";
 
@@ -17,22 +18,23 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
   const { accountData } = useContext(AccountContext);
   const accountId = accountData.map((acc) => acc.accountId);
   const accountBalance = accountData.map((acc) => acc.accountBalance);
+  const queryClient = useQueryClient();
 
   const {
     transferMoney,
     transactionSuccess,
     setTransactionSuccess,
-    insufficentBalance,
+    insufficientBalance,
     setInsufficientBalance,
+    isTransfering,
+    transferError,
   } = useTransferMoney();
 
-  const onSubmit = async (data) => {
+  console.log(transferError);
+
+  const onSubmit = (data) => {
     console.log(data);
-    try {
-      transferMoney.mutateAsync({ accountId, amount });
-    } catch (error) {
-      console.error(error);
-    }
+    transferMoney({ accountId, amount });
   };
 
   const {
@@ -47,6 +49,8 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
   }
 
   function handleClose() {
+    queryClient.invalidateQueries(["accounts"]);
+    queryClient.invalidateQueries(["transactions"]);
     closeSendModal();
     setTransactionSuccess(false);
     setInsufficientBalance(false);
@@ -70,12 +74,10 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
         } ${darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"}`}
       >
         {/* Loading logo */}
-        {transferMoney.isPending && (
+        {isTransfering && (
           <div
             className={`fixed left-0 top-0 z-[9999] flex h-full w-full items-center justify-center overflow-hidden transition-opacity ${
-              transferMoney.isPending
-                ? "opacity-100"
-                : "opacity-0 pointer-events-none"
+              isTransfering ? "opacity-100" : "opacity-0 pointer-events-none"
             } bg-[rgba(0,0,0,.486)]`}
           >
             <div className="text-blue-500 z-1000">
@@ -113,7 +115,7 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
         )}
         <h1
           className={`text-center text-3xl mt-2  ${
-            insufficentBalance ? "text-red-600" : "text-colorPrimary"
+            insufficientBalance ? "text-red-600" : "text-colorPrimary"
           }`}
         >
           {useFormatBalance(Number(removeCommas(amount)) + 1)}
@@ -151,7 +153,7 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
 
             <div
               className={`flex items-start justify-between ${
-                insufficentBalance ? "text-red-600" : ""
+                insufficientBalance ? "text-red-600" : ""
               }`}
             >
               <p>Balance</p>
@@ -184,15 +186,15 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
               )}
 
               {/* insufficient Balance notification */}
-              {insufficentBalance && (
+              {insufficientBalance && (
                 <p className="text-center text-red-600">Insufficient Balance</p>
               )}
 
               <button
                 className={`h-10 w-full bg-colorPrimary rounded-md ${
-                  insufficentBalance ? "" : "mt-5"
+                  insufficientBalance ? "" : "mt-5"
                 } `}
-                disabled={insufficentBalance}
+                disabled={insufficientBalance}
               >
                 Confirm Payment
               </button>

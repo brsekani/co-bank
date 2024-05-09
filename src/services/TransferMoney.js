@@ -57,18 +57,19 @@ const transferMoneyApi = async (tranferInfo) => {
 };
 
 export const useTransferMoney = () => {
+  const queryClient = useQueryClient();
   const [transactionSuccess, setTransactionSuccess] = useState(false);
   const [insufficientBalance, setInsufficientBalance] = useState(false);
 
-  const queryClient = useQueryClient();
-
-  const transferMoney = useMutation({
-    mutationFn: (transferInfo) => transferMoneyApi(transferInfo),
-    onSuccess: (data, variables) => {
-      console.log(data, variables);
-      queryClient.invalidateQueries({ queryKey: ["account"] });
-      queryClient.invalidateQueries({ queryKey: ["customer"] });
-      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+  const {
+    mutate: transferMoney,
+    isPending: isTransfering,
+    error: transferError,
+  } = useMutation({
+    mutationFn: transferMoneyApi,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["accounts"]);
+      queryClient.invalidateQueries(["transactions"]);
       setTransactionSuccess(true);
     },
     onError: (error) => {
@@ -85,5 +86,7 @@ export const useTransferMoney = () => {
     setTransactionSuccess,
     insufficientBalance,
     setInsufficientBalance,
+    isTransfering,
+    transferError,
   };
 };
