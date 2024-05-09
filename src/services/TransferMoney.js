@@ -68,13 +68,12 @@ export const useTransferMoney = () => {
   } = useMutation({
     mutationFn: transferMoneyApi,
     onSuccess: () => {
-      queryClient.invalidateQueries(["accounts"]);
-      queryClient.invalidateQueries(["transactions"]);
+      queryClient.invalidateQueries({ queryKey: ["account"] });
       setTransactionSuccess(true);
     },
     onError: (error) => {
       console.log(error);
-      if (error.message === "Insufficient balance to transfer") {
+      if (error.message === "Insufficent balance to transfer") {
         setInsufficientBalance(true);
       }
     },
