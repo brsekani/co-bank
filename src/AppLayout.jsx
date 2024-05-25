@@ -6,14 +6,15 @@ import { useContext, useEffect } from "react";
 import Send from "./Modals/Send";
 import Airtime from "./Modals/Airtime";
 import { AccountContext } from "./Context/AccountContext";
-import { setDarkMode } from "./Features/DarkMode";
+// import { setDarkMode } from "./Features/DarkMode";
 
 function AppLayout() {
   const darkMode = useSelector((state) => state.darkMode);
   const { showSendUI, showAirtimeUI } = useSelector((state) => state.ui);
   // const dispatch = useDispatch();
 
-  const { isLoadingAccountData } = useContext(AccountContext);
+  const { isLoadingAccountData, isLoadingCustomerData, isLoadingTransactions } =
+    useContext(AccountContext);
 
   useEffect(() => {
     document.body.classList.toggle("dark", darkMode);
@@ -30,7 +31,7 @@ function AppLayout() {
   //   }
   // }, [dispatch]);
 
-  if (isLoadingAccountData) {
+  if (isLoadingAccountData && isLoadingCustomerData && isLoadingTransactions) {
     // Loading state while data is being fetched
     return (
       <div

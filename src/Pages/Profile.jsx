@@ -21,7 +21,7 @@ function Profile() {
   });
 
   // FirstName
-  const firstname = customerData.map((customer) => {
+  const firstname = customerData?.map((customer) => {
     const capitalizeFirst =
       customer.firstName.charAt(0).toUpperCase(1) +
       customer.firstName.slice(1).toLowerCase();
@@ -63,7 +63,7 @@ function Profile() {
       >
         <div className="flex items-center justify-between">
           <h1 className="text-xl lg:text-3xl">Profile</h1>
-          <button className="flex items-center gap-1 px-3 py-1 border border-colorPrimary rounded-md">
+          <button className="flex items-center gap-1 px-3 py-1 border rounded-md border-colorPrimary">
             <span>Edit</span>
             <TbPencilMinus />
           </button>
@@ -76,7 +76,7 @@ function Profile() {
             alt=""
           />
           <div>
-            <h1 className="text-xl lg:text-3xl font-semibold">{fullName}</h1>
+            <h1 className="text-xl font-semibold lg:text-3xl">{fullName}</h1>
             <p className="text-lg">{userName}</p>
           </div>
         </div>
@@ -110,7 +110,7 @@ function Profile() {
       >
         <div className="flex items-center justify-between">
           <h1 className="text-xl lg:text-3xl">Personal Information</h1>
-          <button className="flex items-center gap-1 px-3 py-1 border border-colorPrimary rounded-md">
+          <button className="flex items-center gap-1 px-3 py-1 border rounded-md border-colorPrimary">
             <span>Edit</span>
             <TbPencilMinus />
           </button>

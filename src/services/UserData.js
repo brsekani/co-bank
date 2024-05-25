@@ -4,7 +4,6 @@ import { accountIdInfo, customerIdInfo } from "../utility/utilityFunction";
 
 const accountIdInfoData = accountIdInfo();
 const customerIdInfoData = customerIdInfo();
-// console.log(accountIdInfoData);
 
 const fetchCustomerData = async () => {
   const { data, error } = await supabase
@@ -45,20 +44,21 @@ const fetchTransactions = async (accountData) => {
 
 export const useCustomerData = () => {
   const {
-    isLoading: isLoadingCustomerData,
+    isPending: isLoadingCustomerData,
     data: customerData,
     error: errorCustomerData,
   } = useQuery({
     queryKey: ["customer"],
     queryFn: fetchCustomerData,
   });
+  console.log("Customer Data:", customerData);
 
   return { isLoadingCustomerData, customerData, errorCustomerData };
 };
 
 export const useAccountData = () => {
   const {
-    isLoading: isLoadingAccountData,
+    isPending: isLoadingAccountData,
     data: accountData,
     error: errorAccountData,
   } = useQuery({
@@ -75,7 +75,7 @@ export const useAccountData = () => {
 
 export const useTransactions = (accountData) => {
   const {
-    isLoading: isLoadingTransactions,
+    isPending: isLoadingTransactions,
     data: transactionsData,
     error: errorTransactions,
   } = useQuery({

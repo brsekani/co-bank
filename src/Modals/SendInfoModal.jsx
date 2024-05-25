@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import { useContext, useState } from "react"; // Added useState
+import { useContext } from "react"; // Added useState
 import { RxCross2 } from "react-icons/rx";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import { useForm } from "react-hook-form";

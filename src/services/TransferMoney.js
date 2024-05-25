@@ -67,8 +67,8 @@ export const useTransferMoney = () => {
     error: transferError,
   } = useMutation({
     mutationFn: transferMoneyApi,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["account"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["account"] });
       setTransactionSuccess(true);
     },
     onError: (error) => {
