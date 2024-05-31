@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import { useContext } from "react"; // Added useState
+import { useContext, useEffect, useState } from "react"; // Added useState
 import { RxCross2 } from "react-icons/rx";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import { useForm } from "react-hook-form";
@@ -18,23 +18,21 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
   const { accountData } = useContext(AccountContext);
   const accountId = accountData.map((acc) => acc.accountId);
   const accountBalance = accountData.map((acc) => acc.accountBalance);
-  const queryClient = useQueryClient();
+  const [error, setError] = useState(null);
 
   const {
     transferMoney,
     transactionSuccess,
     setTransactionSuccess,
-    insufficientBalance,
-    setInsufficientBalance,
     isTransfering,
     transferError,
   } = useTransferMoney();
 
-  console.log(transferError);
+  console.log(transferError?.message);
 
   const onSubmit = (data) => {
-    console.log(data);
-    transferMoney({ accountId, amount });
+    const pin = data.pin;
+    transferMoney({ accountId, amount, pin });
   };
 
   const {
@@ -51,14 +49,19 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
   function handleClose() {
     closeSendModal();
     setTransactionSuccess(false);
-    setInsufficientBalance(false);
   }
 
   function handleClosePaymentModal() {
+    clearErrors("pin");
+    setError(null);
     closeModal();
-    setInsufficientBalance(false);
-    clearErrors("password");
   }
+
+  useEffect(() => {
+    setError(transferError?.message);
+  }, [transferError]);
+
+  console.log(error);
 
   return (
     <div
@@ -113,7 +116,7 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
         )}
         <h1
           className={`text-center text-3xl mt-2  ${
-            insufficientBalance ? "text-red-600" : "text-colorPrimary"
+            error ? "text-red-600" : "text-colorPrimary"
           }`}
         >
           {useFormatBalance(Number(removeCommas(amount)) + 1)}
@@ -151,7 +154,9 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
 
             <div
               className={`flex items-start justify-between ${
-                insufficientBalance ? "text-red-600" : ""
+                error === "Insufficient balance to transfer"
+                  ? "text-red-600"
+                  : ""
               }`}
             >
               <p>Balance</p>
@@ -160,14 +165,24 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
 
             <form onSubmit={handleSubmit((data) => onSubmit(data))}>
               <div className="flex items-center justify-between">
-                <label>Password</label>
+                <label
+                  className={`${
+                    error === "incorrect pin" ? "text-red-600" : ""
+                  }`}
+                >
+                  Pin
+                </label>
                 <input
-                  type="password"
+                  type="pin"
                   maxLength={4}
                   minLength={4}
                   className={`w-48 h-12 text-2xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 ${
                     darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
-                  } `}
+                  } ${
+                    error === "incorrect pin"
+                      ? "text-red-600 border-red-600"
+                      : ""
+                  }`}
                   {...register("pin", {
                     required: "Enter pin",
                     minLength: {
@@ -184,15 +199,13 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
               )}
 
               {/* insufficient Balance notification */}
-              {insufficientBalance && (
-                <p className="text-center text-red-600">Insufficient Balance</p>
-              )}
+              {error && <p className="text-center text-red-600">{error}</p>}
 
               <button
                 className={`h-10 w-full bg-colorPrimary rounded-md ${
-                  insufficientBalance ? "" : "mt-5"
+                  error ? "" : "mt-5"
                 } `}
-                disabled={insufficientBalance}
+                disabled={error}
               >
                 Confirm Payment
               </button>

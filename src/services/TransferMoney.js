@@ -3,7 +3,7 @@ import supabase from "../supabase";
 import { useEffect, useState } from "react";
 
 const transferMoneyApi = async (tranferInfo) => {
-  const { accountId, amount } = tranferInfo;
+  const { accountId, amount, pin } = tranferInfo;
   const FormattedAmount = Number(amount);
 
   const { data: senderAccount, error: senderError } = await supabase
@@ -17,11 +17,22 @@ const transferMoneyApi = async (tranferInfo) => {
     );
   }
 
+  console.log(senderAccount);
+
   const senderBalance = senderAccount[0]?.accountBalance;
+  const senderpin = senderAccount[0]?.pin;
 
   if (senderBalance < FormattedAmount) {
     throw new Error("Insufficient balance to transfer");
   }
+
+  if (pin !== senderpin) {
+    throw new Error("incorrect pin");
+  }
+
+  // if (senderBalance < FormattedAmount) {
+  //   throw new Error("Insufficient balance to transfer");
+  // }
 
   const UpdatedSenderBalance = senderBalance - FormattedAmount;
 
@@ -49,7 +60,6 @@ const transferMoneyApi = async (tranferInfo) => {
 export const useTransferMoney = () => {
   const queryClient = useQueryClient();
   const [transactionSuccess, setTransactionSuccess] = useState(false);
-  const [insufficientBalance, setInsufficientBalance] = useState(false);
 
   const {
     mutate: transferMoney,
@@ -61,19 +71,12 @@ export const useTransferMoney = () => {
       queryClient.invalidateQueries({ queryKey: ["account"] });
       setTransactionSuccess(true);
     },
-    onError: (error) => {
-      if (error.message === "Insufficient balance to transfer") {
-        setInsufficientBalance(true);
-      }
-    },
   });
 
   return {
     transferMoney,
     transactionSuccess,
     setTransactionSuccess,
-    insufficientBalance,
-    setInsufficientBalance,
     isTransfering,
     transferError,
   };
