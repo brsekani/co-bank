@@ -122,7 +122,7 @@ function TransactionsTable() {
                     <td>
                       <span
                         className={`${
-                          transaction.status === "successfull"
+                          transaction.status === "successful"
                             ? "bg-green-300 text-green-600"
                             : transaction.status === "pending"
                             ? "bg-yellow-300 text-yellow-600"

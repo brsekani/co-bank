@@ -49,8 +49,6 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
   }
 
   function handleClose() {
-    queryClient.invalidateQueries(["accounts"]);
-    queryClient.invalidateQueries(["transactions"]);
     closeSendModal();
     setTransactionSuccess(false);
     setInsufficientBalance(false);

@@ -1,58 +1,48 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "../supabase";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const transferMoneyApi = async (tranferInfo) => {
   const { accountId, amount } = tranferInfo;
   const FormattedAmount = Number(amount);
-  console.log(FormattedAmount);
-  const description = "";
-  // Fetch sender and receiver account information
+
   const { data: senderAccount, error: senderError } = await supabase
     .from("accounts")
     .select("*")
     .eq("accountId", accountId);
 
-  console.log(senderAccount, senderError);
-
   if (senderError) {
     throw new Error(
-      senderError.message || "Errors fetchimg sender account data"
+      senderError.message || "Error fetching sender account data"
     );
   }
 
-  const senderBalance = senderAccount.map((acc) => acc.accountBalance).at(0);
+  const senderBalance = senderAccount[0]?.accountBalance;
 
-  // Check if sender has sufficient Balance
   if (senderBalance < FormattedAmount) {
-    throw new Error("Insufficent balance to transfer");
+    throw new Error("Insufficient balance to transfer");
   }
 
-  // Deduct money from sender's account
   const UpdatedSenderBalance = senderBalance - FormattedAmount;
-  console.log(UpdatedSenderBalance);
 
-  // Update sender's account balance
   await supabase
     .from("accounts")
     .update({ accountBalance: UpdatedSenderBalance })
     .eq("accountId", accountId);
 
-  // Record transaction details (debit from sender)
   await supabase.from("transactions").insert([
     {
       accountId: String(accountId),
       amount: -amount,
       type: "debit",
-      description,
-      status: "successfull",
+      description: "",
+      status: "successful",
       name: "Lawal",
     },
   ]);
 
-  // Return success message or relevant data
   return {
-    messsage: "Money Transfer successful",
+    message: "Money Transfer successful",
   };
 };
 
@@ -67,13 +57,12 @@ export const useTransferMoney = () => {
     error: transferError,
   } = useMutation({
     mutationFn: transferMoneyApi,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["account"] });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["account"] });
       setTransactionSuccess(true);
     },
     onError: (error) => {
-      console.log(error);
-      if (error.message === "Insufficent balance to transfer") {
+      if (error.message === "Insufficient balance to transfer") {
         setInsufficientBalance(true);
       }
     },
