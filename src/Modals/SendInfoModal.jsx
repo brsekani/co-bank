@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import { useContext, useEffect, useState } from "react"; // Added useState
+import { useContext, useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import { useForm } from "react-hook-form";
@@ -8,9 +8,7 @@ import { useTransferMoney } from "../services/TransferMoney";
 import { AccountContext } from "../Context/AccountContext";
 import { useQueryClient } from "@tanstack/react-query";
 
-// import { useQueryClient } from "@tanstack/react-query";
-
-const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
+const Transfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
   const darkMode = useSelector((state) => state.darkMode);
   const RecipientName = "Lawal Temidayo";
   const RecipientAccountNumber = formData.accountNumber;
@@ -28,19 +26,21 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
     transferError,
   } = useTransferMoney();
 
-  console.log(transferError?.message);
-
-  const onSubmit = (data) => {
-    const pin = data.pin;
-    transferMoney({ accountId, amount, pin });
-  };
-
   const {
     register,
     handleSubmit,
     formState: { errors },
     clearErrors,
   } = useForm();
+
+  useEffect(() => {
+    setError(transferError?.message);
+  }, [transferError]);
+
+  const onSubmit = (data) => {
+    const pin = data.pin;
+    transferMoney({ accountId, amount, pin });
+  };
 
   function removeCommas(numberString) {
     return numberString?.replace(/,/g, "");
@@ -57,11 +57,10 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
     closeModal();
   }
 
-  useEffect(() => {
-    setError(transferError?.message);
-  }, [transferError]);
-
-  console.log(error);
+  function handlePin() {
+    clearErrors("pin");
+    setError(null);
+  }
 
   return (
     <div
@@ -74,7 +73,6 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
           isOpen ? "translate-y-0" : "translate-y-full"
         } ${darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"}`}
       >
-        {/* Loading logo */}
         {isTransfering && (
           <div
             className={`fixed left-0 top-0 z-[9999] flex h-full w-full items-center justify-center overflow-hidden transition-opacity ${
@@ -106,7 +104,7 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
             <RxCross2
               size={25}
               className="cursor-pointer"
-              onClick={() => handleClosePaymentModal()}
+              onClick={handleClosePaymentModal}
             />
           </div>
         ) : (
@@ -115,8 +113,10 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
           </h1>
         )}
         <h1
-          className={`text-center text-3xl mt-2  ${
-            error ? "text-red-600" : "text-colorPrimary"
+          className={`text-center text-3xl mt-2 ${
+            error === "Insufficient balance to transfer"
+              ? "text-red-600"
+              : "text-green-600"
           }`}
         >
           {useFormatBalance(Number(removeCommas(amount)) + 1)}
@@ -163,7 +163,7 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
               <p>{useFormatBalance(accountBalance)}</p>
             </div>
 
-            <form onSubmit={handleSubmit((data) => onSubmit(data))}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="flex items-center justify-between">
                 <label
                   className={`${
@@ -173,7 +173,7 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
                   Pin
                 </label>
                 <input
-                  type="pin"
+                  type="password"
                   maxLength={4}
                   minLength={4}
                   className={`w-48 h-12 text-2xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 ${
@@ -189,6 +189,7 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
                       value: 4,
                       message: "Enter 4 digits pin",
                     },
+                    onChange: handlePin,
                   })}
                 />
               </div>
@@ -198,13 +199,12 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
                 </span>
               )}
 
-              {/* insufficient Balance notification */}
               {error && <p className="text-center text-red-600">{error}</p>}
 
               <button
-                className={`h-10 w-full bg-colorPrimary rounded-md ${
+                className={`h-10 w-full text-xl font-semibold text-white bg-colorPrimary rounded-md ${
                   error ? "" : "mt-5"
-                } `}
+                }`}
                 disabled={error}
               >
                 Confirm Payment
@@ -215,7 +215,7 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
 
         {transactionSuccess && (
           <button
-            className="w-full h-10 mt-5 rounded-md bg-colorPrimary"
+            className="w-full h-10 mt-5 text-xl font-semibold text-white rounded-md bg-colorPrimary"
             onClick={handleClose}
           >
             Close
@@ -226,7 +226,7 @@ const Tranfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
   );
 };
 
-Tranfers.propTypes = {
+Transfers.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
   formData: PropTypes.object.isRequired,
@@ -234,4 +234,4 @@ Tranfers.propTypes = {
   bank: PropTypes.string.isRequired,
 };
 
-export default Tranfers;
+export default Transfers;

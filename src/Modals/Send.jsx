@@ -246,7 +246,7 @@ function Send() {
             )}
           </div>
 
-          <button className="w-full h-10 rounded-md bg-colorPrimary">
+          <button className="w-full h-10 text-xl font-semibold text-white rounded-md bg-colorPrimary">
             Confrim
           </button>
         </form>
