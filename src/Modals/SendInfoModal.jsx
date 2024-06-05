@@ -31,11 +31,16 @@ const Transfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
     handleSubmit,
     formState: { errors },
     clearErrors,
+    setValue,
   } = useForm();
 
   useEffect(() => {
+    if (transferError?.message === "incorrect pin") {
+      clearErrors("pin");
+      setValue("pin", ""); // Clear the pin input
+    }
     setError(transferError?.message);
-  }, [transferError]);
+  }, [transferError, clearErrors, setValue]);
 
   const onSubmit = (data) => {
     const pin = data.pin;

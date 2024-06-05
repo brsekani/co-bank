@@ -22,17 +22,13 @@ const transferMoneyApi = async (tranferInfo) => {
   const senderBalance = senderAccount[0]?.accountBalance;
   const senderpin = senderAccount[0]?.pin;
 
-  if (senderBalance < FormattedAmount) {
-    throw new Error("Insufficient balance to transfer");
-  }
-
   if (pin !== senderpin) {
     throw new Error("incorrect pin");
   }
 
-  // if (senderBalance < FormattedAmount) {
-  //   throw new Error("Insufficient balance to transfer");
-  // }
+  if (senderBalance < FormattedAmount) {
+    throw new Error("Insufficient balance to transfer");
+  }
 
   const UpdatedSenderBalance = senderBalance - FormattedAmount;
 
