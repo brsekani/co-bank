@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import useFormatBalance from "../Hooks/useFormatBalance";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useTransferMoney } from "../services/TransferMoney";
 import { AccountContext } from "../Context/AccountContext";
 import { useQueryClient } from "@tanstack/react-query";
@@ -27,12 +27,21 @@ const Transfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
   } = useTransferMoney();
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
     clearErrors,
     setValue,
   } = useForm();
+
+  const pinInputRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen && pinInputRef.current) {
+      // Focus the pin input when the component mounts
+      pinInputRef.current.focus();
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (transferError?.message === "incorrect pin") {
@@ -58,6 +67,7 @@ const Transfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
 
   function handleClosePaymentModal() {
     clearErrors("pin");
+    setValue("pin", ""); // Clear the pin input
     setError(null);
     closeModal();
   }
@@ -177,25 +187,36 @@ const Transfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
                 >
                   Pin
                 </label>
-                <input
-                  type="password"
-                  maxLength={4}
-                  minLength={4}
-                  className={`w-48 h-12 text-2xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 ${
-                    darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
-                  } ${
-                    error === "incorrect pin"
-                      ? "text-red-600 border-red-600"
-                      : ""
-                  }`}
-                  {...register("pin", {
+                <Controller
+                  name="pin"
+                  control={control}
+                  defaultValue=""
+                  rules={{
                     required: "Enter pin",
                     minLength: {
                       value: 4,
                       message: "Enter 4 digits pin",
                     },
                     onChange: handlePin,
-                  })}
+                  }}
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      type="password"
+                      maxLength={4}
+                      minLength={4}
+                      ref={pinInputRef}
+                      className={`w-48 h-12 text-2xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 ${
+                        darkMode
+                          ? "bg-[#1E1E1E] text-white"
+                          : "bg-white text-black"
+                      } ${
+                        error === "incorrect pin"
+                          ? "text-red-600 border-red-600"
+                          : ""
+                      }`}
+                    />
+                  )}
                 />
               </div>
               {errors?.pin && (
@@ -236,7 +257,7 @@ Transfers.propTypes = {
   closeModal: PropTypes.func.isRequired,
   formData: PropTypes.object.isRequired,
   closeSendModal: PropTypes.func.isRequired,
-  bank: PropTypes.string.isRequired,
+  bank: PropTypes.object.isRequired,
 };
 
 export default Transfers;
