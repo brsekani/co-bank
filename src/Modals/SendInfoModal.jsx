@@ -190,7 +190,6 @@ const Transfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
                 <Controller
                   name="pin"
                   control={control}
-                  defaultValue=""
                   rules={{
                     required: "Enter pin",
                     minLength: {
@@ -203,6 +202,8 @@ const Transfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
                     <input
                       {...field}
                       type="password"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       maxLength={4}
                       minLength={4}
                       ref={pinInputRef}

@@ -3,11 +3,12 @@ import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import { setShowSendUI } from "../Features/uiSlice";
 import { PiCurrencyDollarSimpleBold } from "react-icons/pi";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import InfoModal from "./SendInfoModal";
 
 function Send() {
   const darkMode = useSelector((state) => state.darkMode);
+  const { showSendUI } = useSelector((state) => state.ui);
   const dispatch = useDispatch();
   const sendRef = useRef(null);
   const [banks, setBanks] = useState([]);
@@ -15,6 +16,16 @@ function Send() {
   const [showBankList, setShowBankList] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormatData] = useState({});
+  const accountNumberInputRef = useRef(null);
+
+  useEffect(() => {
+    console.log(showSendUI, accountNumberInputRef.current);
+    if (showSendUI && accountNumberInputRef.current) {
+      accountNumberInputRef.current.focus();
+    }
+  }, [showSendUI, accountNumberInputRef]);
+
+  console.log(showSendUI);
 
   useEffect(() => {
     const fetchBanks = async () => {
@@ -62,6 +73,7 @@ function Send() {
     formState: { errors },
     clearErrors,
     setValue,
+    control,
   } = useForm();
 
   const onSubmit = (data) => {
@@ -106,14 +118,10 @@ function Send() {
         >
           <div className="flex flex-col">
             <label className="mb-1 text-xs">Account Number</label>
-            <input
-              className={`${
-                errors.accountNumber ? "border-red-500" : "border-white/1"
-              } h-10 w-full bg-transparent border pl-3`}
-              placeholder="Enter 10-digit Account Number"
-              maxLength={10}
-              type="tel"
-              {...register("accountNumber", {
+            <Controller
+              name="accountNumber"
+              control={control}
+              rules={{
                 required: "Please enter a 10-digit account number",
                 minLength: {
                   value: 10,
@@ -127,8 +135,23 @@ function Send() {
                   value: /^\d{10}$/,
                   message: "Please enter a valid 10-digit account number",
                 },
-              })}
+              }}
+              render={({ field }) => (
+                <input
+                  {...field}
+                  type="number"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  className={`${
+                    errors.accountNumber ? "border-red-500" : "border-white/1"
+                  } h-10 w-full bg-transparent border pl-3`}
+                  placeholder="Enter 10-digit Account Number"
+                  maxLength={10}
+                  ref={accountNumberInputRef}
+                />
+              )}
             />
+
             {errors.accountNumber && (
               <span className="text-xs text-red-500">
                 {errors.accountNumber.message}
@@ -217,7 +240,9 @@ function Send() {
             <input
               className="w-full h-10 bg-transparent border border-white/1 pl-7"
               placeholder="Enter Amount"
-              type="text" // Change type to text for formatting
+              type="number"
+              inputMode="numeric"
+              pattern="[0-9]*"
               {...register("amount", {
                 required: "Enter an amount",
                 validate: (value) => {

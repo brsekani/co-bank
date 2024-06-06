@@ -21,6 +21,7 @@ const uiSlice = createSlice({
     },
 
     setShowSendUI: (state, actions) => {
+      console.log(state.showSendUI); // Corrected this line
       state.showSendUI = actions.payload;
     },
 
