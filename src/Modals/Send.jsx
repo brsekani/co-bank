@@ -5,6 +5,7 @@ import { setShowSendUI } from "../Features/uiSlice";
 import { PiCurrencyDollarSimpleBold } from "react-icons/pi";
 import { Controller, useForm } from "react-hook-form";
 import InfoModal from "./SendInfoModal";
+import supabase from "../supabase";
 
 function Send() {
   const darkMode = useSelector((state) => state.darkMode);
@@ -16,7 +17,12 @@ function Send() {
   const [showBankList, setShowBankList] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormatData] = useState({});
+  // const [accountNumber, setAccountNumber] = useState("");
+  // const [accountInfo, setAccountInfo] = useState(null);
+  const [accountName, setAccountName] = useState("");
+  const [accountNotFound, setAccountNotFound] = useState("");
   const accountNumberInputRef = useRef(null);
+  const [loadingAccName, setLoadingAccountName] = useState(false);
 
   useEffect(() => {
     console.log(showSendUI, accountNumberInputRef.current);
@@ -25,7 +31,7 @@ function Send() {
     }
   }, [showSendUI, accountNumberInputRef]);
 
-  console.log(showSendUI);
+  console.log(accountName);
 
   useEffect(() => {
     const fetchBanks = async () => {
@@ -65,6 +71,7 @@ function Send() {
     setValue("bankName", bank.name); // Update the form data with the selected bank name
     setShowBankList(false);
     clearErrors("bankName");
+    setAccountNotFound("");
   };
 
   const {
@@ -76,9 +83,43 @@ function Send() {
     control,
   } = useForm();
 
-  const onSubmit = (data) => {
-    setFormatData(data);
-    setShowModal(true);
+  const fetchAccountInfo = async (accountNumber, bankName) => {
+    setLoadingAccountName(true);
+    const bank_name = bankName.toLowerCase();
+    try {
+      const { data: centralizedAccountInformation, error } = await supabase
+        .from("centralizedAccountInformation")
+        .select("*")
+        .eq("account_number", accountNumber)
+        .eq("bank_name", bank_name);
+
+      console.log(centralizedAccountInformation);
+      if (error) throw error;
+      return centralizedAccountInformation;
+    } catch (error) {
+      console.error("Error fetching account info:", error);
+      return null;
+    } finally {
+      setLoadingAccountName(false);
+    }
+  };
+
+  const onSubmit = async (data) => {
+    const accountInfo = await fetchAccountInfo(
+      data.accountNumber,
+      data.bankName
+    );
+
+    const account_name = accountInfo?.at(0)?.account_name;
+
+    if (account_name) {
+      setAccountName(account_name);
+      setFormatData(data);
+      setShowModal(true);
+      setAccountNotFound(""); // Clear previous error message
+    } else {
+      setAccountNotFound("Account info not found");
+    }
   };
 
   const closeModal = () => {
@@ -135,19 +176,20 @@ function Send() {
                   value: /^\d{10}$/,
                   message: "Please enter a valid 10-digit account number",
                 },
+                onChange: () => setAccountNotFound(""),
               }}
               render={({ field }) => (
                 <input
                   {...field}
-                  type="number"
+                  type="text"
                   inputMode="numeric"
-                  pattern="[0-9]*"
                   className={`${
                     errors.accountNumber ? "border-red-500" : "border-white/1"
                   } h-10 w-full bg-transparent border pl-3`}
                   placeholder="Enter 10-digit Account Number"
                   maxLength={10}
                   ref={accountNumberInputRef}
+                  // onChange={() => setAccountNotFound("")}
                 />
               )}
             />
@@ -272,10 +314,20 @@ function Send() {
             )}
           </div>
 
-          <button className="w-full h-10 text-xl font-semibold text-white rounded-md bg-colorPrimary">
-            Confrim
+          <button
+            className={`flex items-center justify-center w-full h-10 text-xl font-semibold text-white rounded-md bg-colorPrimary ${
+              accountNotFound ? "bg-[#435564]" : ""
+            }`}
+            disabled={accountNotFound || loadingAccName}
+          >
+            {loadingAccName ? <div className="spinner"></div> : "Confirm"}
           </button>
         </form>
+        {accountNotFound !== "" && (
+          <p className="text-red-600 text-xl font-medium mt-2">
+            {accountNotFound}
+          </p>
+        )}
       </div>
       <InfoModal
         isOpen={showModal}
@@ -283,6 +335,7 @@ function Send() {
         formData={formData}
         bank={selectedBank}
         closeSendModal={closeSendModal}
+        accountName={accountName}
       />
     </div>
   );

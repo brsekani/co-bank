@@ -64,7 +64,7 @@ export const useAccountData = () => {
   } = useQuery({
     queryKey: ["account"],
     queryFn: fetchaccountData,
-    refetchInterval: 1000 * 3,
+    // refetchInterval: 1000 * 3,
   });
   return {
     isLoadingAccountData,
@@ -81,7 +81,7 @@ export const useTransactions = (accountData) => {
   } = useQuery({
     queryKey: ["transactions"],
     queryFn: () => fetchTransactions(accountData),
-    refetchInterval: 1000 * 3,
+    // refetchInterval: 1000 * 3,
   });
 
   return {

@@ -6,11 +6,17 @@ import useFormatBalance from "../Hooks/useFormatBalance";
 import { useForm, Controller } from "react-hook-form";
 import { useTransferMoney } from "../services/TransferMoney";
 import { AccountContext } from "../Context/AccountContext";
-import { useQueryClient } from "@tanstack/react-query";
 
-const Transfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
+const Transfers = ({
+  isOpen,
+  closeModal,
+  formData,
+  closeSendModal,
+  bank,
+  accountName,
+}) => {
   const darkMode = useSelector((state) => state.darkMode);
-  const RecipientName = "Lawal Temidayo";
+  const RecipientName = accountName;
   const RecipientAccountNumber = formData.accountNumber;
   const amount = formData.amount;
   const { accountData } = useContext(AccountContext);
@@ -88,7 +94,7 @@ const Transfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
           isOpen ? "translate-y-0" : "translate-y-full"
         } ${darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"}`}
       >
-        {isTransfering && (
+        {/* {isTransfering && (
           <div
             className={`fixed left-0 top-0 z-[9999] flex h-full w-full items-center justify-center overflow-hidden transition-opacity ${
               isTransfering ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -112,7 +118,7 @@ const Transfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
               </svg>
             </div>
           </div>
-        )}
+        )} */}
         {!transactionSuccess ? (
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-semibold">Payment</h1>
@@ -229,12 +235,12 @@ const Transfers = ({ isOpen, closeModal, formData, closeSendModal, bank }) => {
               {error && <p className="text-center text-red-600">{error}</p>}
 
               <button
-                className={`h-10 w-full text-xl font-semibold text-white bg-colorPrimary rounded-md ${
+                className={`flex items-center justify-center w-full h-10 text-xl font-semibold text-white rounded-md bg-colorPrimary ${
                   error ? "" : "mt-5"
-                }`}
+                } `}
                 disabled={error}
               >
-                Confirm Payment
+                {isTransfering ? <div className="spinner"></div> : "Confirm"}
               </button>
             </form>
           </div>
@@ -259,6 +265,7 @@ Transfers.propTypes = {
   formData: PropTypes.object.isRequired,
   closeSendModal: PropTypes.func.isRequired,
   bank: PropTypes.object.isRequired,
+  accountName: PropTypes.string.isRequired,
 };
 
 export default Transfers;
