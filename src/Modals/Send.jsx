@@ -6,6 +6,7 @@ import { PiCurrencyDollarSimpleBold } from "react-icons/pi";
 import { Controller, useForm } from "react-hook-form";
 import InfoModal from "./SendInfoModal";
 import supabase from "../supabase";
+import coBankImage from "../assets/cobank.svg";
 
 function Send() {
   const darkMode = useSelector((state) => state.darkMode);
@@ -33,22 +34,37 @@ function Send() {
 
   console.log(accountName);
 
-  useEffect(() => {
-    const fetchBanks = async () => {
-      try {
-        const response = await fetch("https://nigerianbanks.xyz");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
+  // WILL BE USED LATER
+  // useEffect(() => {
+  //   const fetchBanks = async () => {
+  //     try {
+  //       const response = await fetch("https://nigerianbanks.xyz");
+  //       if (!response.ok) {
+  //         throw new Error("Network response was not ok");
+  //       }
+  //       const data = await response.json();
 
-        setBanks(data);
-      } catch (error) {
-        console.error("Error fetching banks:", error);
-      }
+  //       const coBank = {
+  //         name: "Co Bank",
+  //         image: coBankImage,
+  //       };
+
+  //       setBanks([coBank, ...data]);
+  //     } catch (error) {
+  //       console.error("Error fetching banks:", error);
+  //     }
+  //   };
+
+  //   fetchBanks();
+  // }, []);
+
+  useEffect(() => {
+    const coBank = {
+      name: "Co Bank",
+      logo: coBankImage,
     };
 
-    fetchBanks();
+    setBanks([coBank]);
   }, []);
 
   useEffect(() => {
@@ -92,6 +108,8 @@ function Send() {
         .select("*")
         .eq("account_number", accountNumber)
         .eq("bank_name", bank_name);
+
+      console.log(accountNumber, bank_name);
 
       console.log(centralizedAccountInformation);
       if (error) throw error;

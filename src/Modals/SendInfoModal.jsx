@@ -17,9 +17,9 @@ const Transfers = ({
 }) => {
   const darkMode = useSelector((state) => state.darkMode);
   const RecipientName = accountName;
-  const RecipientAccountNumber = formData.accountNumber;
+  const recipientAccountNumber = formData.accountNumber;
   const amount = formData.amount;
-  const { accountData } = useContext(AccountContext);
+  const { accountData, customerData } = useContext(AccountContext);
   const accountId = accountData.map((acc) => acc.accountId);
   const accountBalance = accountData.map((acc) => acc.accountBalance);
   const [error, setError] = useState(null);
@@ -31,6 +31,25 @@ const Transfers = ({
     isTransfering,
     transferError,
   } = useTransferMoney();
+
+  // FullName of Account
+  const senderfullName = customerData
+    ?.map((customer) => {
+      const capitalizeLastName =
+        customer.lastName.charAt(0).toUpperCase() +
+        customer.lastName.slice(1).toLowerCase();
+      const capitalizeFirst =
+        customer.firstName.charAt(0).toUpperCase() +
+        customer.firstName.slice(1).toLowerCase();
+
+      // Format the full name with a space in between
+      const fullName = `${capitalizeLastName} ${capitalizeFirst}`;
+      console.log(fullName); // This will log each name
+
+      // Return the formatted name directly
+      return fullName;
+    })
+    .join(" ");
 
   const {
     control,
@@ -59,7 +78,14 @@ const Transfers = ({
 
   const onSubmit = (data) => {
     const pin = data.pin;
-    transferMoney({ accountId, amount, pin });
+    transferMoney({
+      accountId,
+      amount,
+      pin,
+      accountName,
+      recipientAccountNumber,
+      senderfullName,
+    });
   };
 
   function removeCommas(numberString) {
@@ -153,7 +179,7 @@ const Transfers = ({
 
           <div className="flex items-center justify-between">
             <p className="text-sm">Account Number</p>
-            <p>{RecipientAccountNumber}</p>
+            <p>{recipientAccountNumber}</p>
           </div>
 
           <div className="flex items-center justify-between">

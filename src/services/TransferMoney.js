@@ -1,15 +1,31 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "../supabase";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const transferMoneyApi = async (tranferInfo) => {
-  const { accountId, amount, pin } = tranferInfo;
+  const {
+    accountId,
+    amount,
+    pin,
+    accountName,
+    recipientAccountNumber,
+    senderfullName,
+  } = tranferInfo;
+  console.log(accountName, recipientAccountNumber);
   const FormattedAmount = Number(amount);
 
+  // Senders Info
   const { data: senderAccount, error: senderError } = await supabase
     .from("accounts")
     .select("*")
     .eq("accountId", accountId);
+
+  // Receiver Info
+  const { data: receiverAccount, error: receiverError } = await supabase
+    .from("accounts")
+    .select("*")
+    .eq("accountNumber", recipientAccountNumber);
+  console.log(receiverAccount, receiverError);
 
   if (senderError) {
     throw new Error(
@@ -17,10 +33,13 @@ const transferMoneyApi = async (tranferInfo) => {
     );
   }
 
-  console.log(senderAccount);
+  console.log(receiverAccount);
 
   const senderBalance = senderAccount[0]?.accountBalance;
   const senderpin = senderAccount[0]?.pin;
+
+  const receiverBalance = receiverAccount[0]?.accountBalance;
+  const receiverAccountId = receiverAccount[0]?.accountId;
 
   if (pin !== senderpin) {
     throw new Error("incorrect pin");
@@ -31,12 +50,21 @@ const transferMoneyApi = async (tranferInfo) => {
   }
 
   const UpdatedSenderBalance = senderBalance - FormattedAmount;
+  const UpdatedReceiverBalance = receiverBalance + FormattedAmount;
 
+  // updating senders balance
   await supabase
     .from("accounts")
     .update({ accountBalance: UpdatedSenderBalance })
     .eq("accountId", accountId);
 
+  // Updating Reciever balance
+  await supabase
+    .from("accounts")
+    .update({ accountBalance: UpdatedReceiverBalance })
+    .eq("accountNumber", recipientAccountNumber);
+
+  // Sender transaction update
   await supabase.from("transactions").insert([
     {
       accountId: String(accountId),
@@ -44,7 +72,21 @@ const transferMoneyApi = async (tranferInfo) => {
       type: "debit",
       description: "",
       status: "successful",
-      name: "Lawal",
+      name: accountName,
+    },
+  ]);
+
+  console.log(senderfullName);
+
+  // Receiver transaction update
+  await supabase.from("transactions").insert([
+    {
+      accountId: String(receiverAccountId),
+      amount: +amount,
+      type: "credit",
+      description: "",
+      status: "successful",
+      name: senderfullName,
     },
   ]);
 
