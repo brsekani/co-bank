@@ -1,29 +1,33 @@
-import { useEffect, useRef, useState } from "react";
-import { RxCross2 } from "react-icons/rx";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setShowSendUI } from "../Features/uiSlice";
-import { PiCurrencyDollarSimpleBold } from "react-icons/pi";
 import { Controller, useForm } from "react-hook-form";
+import { RxCross2 } from "react-icons/rx";
+import { PiCurrencyDollarSimpleBold } from "react-icons/pi";
+import { setShowSendUI } from "../Features/uiSlice";
 import InfoModal from "./SendInfoModal";
 import supabase from "../supabase";
 import coBankImage from "../assets/cobank.svg";
+import { AccountContext } from "../Context/AccountContext";
 
 function Send() {
-  const darkMode = useSelector((state) => state.darkMode);
-  const { showSendUI } = useSelector((state) => state.ui);
   const dispatch = useDispatch();
   const sendRef = useRef(null);
+  const accountNumberInputRef = useRef(null);
+
+  const darkMode = useSelector((state) => state.darkMode);
+  const { showSendUI } = useSelector((state) => state.ui);
+
   const [banks, setBanks] = useState([]);
   const [selectedBank, setSelectedBank] = useState("");
   const [showBankList, setShowBankList] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormatData] = useState({});
-  // const [accountNumber, setAccountNumber] = useState("");
-  // const [accountInfo, setAccountInfo] = useState(null);
   const [accountName, setAccountName] = useState("");
   const [accountNotFound, setAccountNotFound] = useState("");
-  const accountNumberInputRef = useRef(null);
   const [loadingAccName, setLoadingAccountName] = useState(false);
+
+  const { accountData } = useContext(AccountContext);
+  const senderAccouuntNum = accountData.at(0).accountNumber;
 
   useEffect(() => {
     console.log(showSendUI, accountNumberInputRef.current);
@@ -103,20 +107,28 @@ function Send() {
     setLoadingAccountName(true);
     const bank_name = bankName.toLowerCase();
     try {
-      const { data: centralizedAccountInformation, error } = await supabase
-        .from("centralizedAccountInformation")
-        .select("*")
-        .eq("account_number", accountNumber)
-        .eq("bank_name", bank_name);
-
-      console.log(accountNumber, bank_name);
-
-      console.log(centralizedAccountInformation);
-      if (error) throw error;
-      return centralizedAccountInformation;
+      if (senderAccouuntNum === accountNumber) {
+        throw new Error("You cannot send money to your own account.");
+      } else {
+        const { data: centralizedAccountInformation, error } = await supabase
+          .from("centralizedAccountInformation")
+          .select("*")
+          .eq("account_number", accountNumber)
+          .eq("bank_name", bank_name);
+        console.log(centralizedAccountInformation);
+        if (error) throw error;
+        if (
+          !centralizedAccountInformation ||
+          centralizedAccountInformation.length === 0
+        ) {
+          throw new Error(
+            "No account information found for the provided account number and bank name."
+          );
+        }
+        return centralizedAccountInformation;
+      }
     } catch (error) {
-      console.error("Error fetching account info:", error);
-      return null;
+      setAccountNotFound(error.message);
     } finally {
       setLoadingAccountName(false);
     }
@@ -135,8 +147,6 @@ function Send() {
       setFormatData(data);
       setShowModal(true);
       setAccountNotFound(""); // Clear previous error message
-    } else {
-      setAccountNotFound("Account info not found");
     }
   };
 
@@ -207,7 +217,6 @@ function Send() {
                   placeholder="Enter 10-digit Account Number"
                   maxLength={10}
                   ref={accountNumberInputRef}
-                  // onChange={() => setAccountNotFound("")}
                 />
               )}
             />
@@ -342,7 +351,7 @@ function Send() {
           </button>
         </form>
         {accountNotFound !== "" && (
-          <p className="text-red-600 text-xl font-medium mt-2">
+          <p className="mt-2 text-sm font-normal text-red-600">
             {accountNotFound}
           </p>
         )}
