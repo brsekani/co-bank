@@ -94,6 +94,25 @@ function Send() {
     return parts.join(".");
   };
 
+  // To make the send modal close when i go back on devices like mobile and others
+  useEffect(() => {
+    const handlePopState = () => {
+      dispatch(setShowSendUI(false));
+    };
+
+    if (showSendUI) {
+      window.history.pushState({ modalOpen: true }, "");
+      window.addEventListener("popstate", handlePopState);
+    } else {
+      window.removeEventListener("popstate", handlePopState);
+    }
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [dispatch, showSendUI]);
+
   const handleBankSelect = (bank) => {
     setSelectedBank(bank);
     setValue("bankName", bank.name); // Update the form data with the selected bank name
