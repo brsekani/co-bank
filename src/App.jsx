@@ -15,6 +15,7 @@ import Verification from "./Pages/Verification";
 import { AccountProvider } from "./Context/AccountContext";
 import { Provider } from "react-redux";
 import Store from "./App/Store";
+import SignUpAndLogin from "./Pages/SignUpAndLogin";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <AccountProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="SignUpAndLogin" element={<SignUpAndLogin />} />
             <Route element={<AppLayout />}>
               <Route index element={<Navigate replace to="dashboard" />} />
               <Route path="dashboard" element={<Dashboard />} />

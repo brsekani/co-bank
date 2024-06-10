@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import { useForm, Controller } from "react-hook-form";
@@ -97,17 +97,28 @@ const Transfers = ({
     setTransactionSuccess(false);
   }
 
-  function handleClosePaymentModal() {
+  const handleClosePaymentModal = useCallback(() => {
     clearErrors("pin");
     setValue("pin", ""); // Clear the pin input
     setError(null);
     closeModal();
-  }
+  }, [clearErrors, setValue, closeModal, setError]);
 
   function handlePin() {
     clearErrors("pin");
     setError(null);
   }
+  useEffect(() => {
+    const handlePopState = () => {
+      handleClosePaymentModal();
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [handleClosePaymentModal]);
 
   return (
     <div

@@ -8,7 +8,6 @@ import InfoModal from "./SendInfoModal";
 import supabase from "../supabase";
 import coBankImage from "../assets/cobank.svg";
 import { AccountContext } from "../Context/AccountContext";
-import useFormatBalance from "../Hooks/useFormatBalance";
 
 function Send() {
   const dispatch = useDispatch();
@@ -143,7 +142,8 @@ function Send() {
           .eq("account_number", accountNumber)
           .eq("bank_name", bank_name);
         console.log(centralizedAccountInformation);
-        if (error) throw error;
+        if (error)
+          throw new Error("Bad or No network please check your connect");
         if (
           !centralizedAccountInformation ||
           centralizedAccountInformation.length === 0
@@ -362,9 +362,9 @@ function Send() {
               size={25}
               className="absolute top-7 left-1"
             />
-            {errors.Amount && (
+            {errors.amount && (
               <span className="text-xs text-red-500">
-                {errors.Amount.message}
+                {errors.amount.message}
               </span>
             )}
           </div>
