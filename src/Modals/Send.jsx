@@ -8,6 +8,7 @@ import InfoModal from "./SendInfoModal";
 import supabase from "../supabase";
 import coBankImage from "../assets/cobank.svg";
 import { AccountContext } from "../Context/AccountContext";
+import useFormatBalance from "../Hooks/useFormatBalance";
 
 function Send() {
   const dispatch = useDispatch();
@@ -85,6 +86,13 @@ function Send() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dispatch, showModal]);
+
+  // Define a function to format the number
+  const formatNumber = (value) => {
+    const parts = value.replace(/[^0-9]/g, "").split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+  };
 
   const handleBankSelect = (bank) => {
     setSelectedBank(bank);
@@ -210,7 +218,8 @@ function Send() {
                 <input
                   {...field}
                   type="text"
-                  inputMode="numeric"
+                  inputMode="tel"
+                  autoComplete="off"
                   className={`${
                     errors.accountNumber ? "border-red-500" : "border-white/1"
                   } h-10 w-full bg-transparent border pl-3`}
@@ -309,9 +318,10 @@ function Send() {
             <input
               className="w-full h-10 bg-transparent border border-white/1 pl-7"
               placeholder="Enter Amount"
-              type="number"
-              inputMode="numeric"
-              pattern="[0-9]*"
+              type="text"
+              inputMode="tel"
+              autoComplete="off"
+              maxLength={15}
               {...register("amount", {
                 required: "Enter an amount",
                 validate: (value) => {
@@ -322,15 +332,14 @@ function Send() {
                 },
               })}
               onChange={(e) => {
-                const formattedAmount = e.target.value
-                  .replace(/[^\d]/g, "") // Remove non-digit characters
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Add commas for thousands
-                setValue("Amount", formattedAmount);
+                const rawValue = e.target.value.replace(/,/g, "");
+                const formattedValue = formatNumber(rawValue);
+                setValue("amount", formattedValue, { shouldValidate: true });
               }}
             />
 
             <PiCurrencyDollarSimpleBold
-              color="GhostSmoke"
+              color="rgb(0, 163, 255)"
               size={25}
               className="absolute top-7 left-1"
             />

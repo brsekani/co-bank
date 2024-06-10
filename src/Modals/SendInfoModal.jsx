@@ -234,6 +234,7 @@ const Transfers = ({
                     <input
                       {...field}
                       type="password"
+                      autoComplete="new-password"
                       inputMode="numeric"
                       pattern="[0-9]*"
                       maxLength={4}
