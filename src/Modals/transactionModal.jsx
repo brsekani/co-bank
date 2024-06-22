@@ -1,10 +1,16 @@
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { IoClose } from "react-icons/io5";
+
 import { useSelector } from "react-redux";
 import { GrStatusGood } from "react-icons/gr";
 import useFormatBalance from "../Hooks/useFormatBalance";
 
-const TransactionModal = ({ transaction, onClose }) => {
+const TransactionModal = ({
+  transaction,
+  onClose,
+  selectedTransaction,
+  setSelectedTransaction,
+}) => {
   const { transactionId, name, amount, status, timestamp } = transaction;
   const darkMode = useSelector((state) => state.darkMode);
 
@@ -20,14 +26,38 @@ const TransactionModal = ({ transaction, onClose }) => {
     second: "2-digit",
   });
 
+  const [showFullId, setShowFullId] = useState(false);
+
+  const handleToggleFullId = () => {
+    setShowFullId((prev) => !prev);
+  };
+
   const handlePrintReceipt = () => {
     // Logic to generate PDF receipt
     console.log("Generating PDF Receipt...");
   };
 
-  const truncateTransactionId = (id, maxLength = 10) => {
-    return id.length > maxLength ? `${id.slice(0, maxLength)}...` : id;
-  };
+  const truncatedTransactionId = transactionId.slice(0, 10) + "...";
+
+  const fullIdContent = <p className="font-medium">{transactionId}</p>;
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setSelectedTransaction(false);
+    };
+
+    if (selectedTransaction) {
+      window.history.pushState({ modalOpen: true }, "");
+      window.addEventListener("popstate", handlePopState);
+    } else {
+      window.removeEventListener("popstate", handlePopState);
+    }
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [selectedTransaction, setSelectedTransaction]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-5 bg-black bg-opacity-50">
@@ -39,15 +69,19 @@ const TransactionModal = ({ transaction, onClose }) => {
         <div className="flex flex-col items-center justify-center">
           <GrStatusGood size={55} color=" #4CAF50" />
           <h1 className="mt-3 text-2xl font-bold">Payments Success</h1>
-          {/* <p className="text-2xl font-bold">{formattedAmout}</p> */}
         </div>
         <hr className="mt-3 mb-3" />
         <div className="flex flex-col gap-3">
-          <div className="flex justify-between">
+          <div
+            className="flex justify-between cursor-pointer"
+            onClick={handleToggleFullId}
+          >
             <p className="text-gray-600">Transaction ID</p>
-            <p className="font-medium">
-              {truncateTransactionId(transactionId)}
-            </p>
+            {showFullId ? (
+              fullIdContent
+            ) : (
+              <p className="font-medium">{truncatedTransactionId}</p>
+            )}
           </div>
 
           <div className="flex justify-between">
@@ -97,6 +131,8 @@ const TransactionModal = ({ transaction, onClose }) => {
 TransactionModal.propTypes = {
   transaction: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
+  selectedTransaction: PropTypes.bool.isRequired,
+  setSelectedTransaction: PropTypes.bool.isRequired,
 };
 
 export default TransactionModal;

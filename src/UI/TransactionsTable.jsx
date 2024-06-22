@@ -192,6 +192,8 @@ function TransactionsTable() {
           <TransactionModal
             transaction={selectedTransaction}
             onClose={handleCloseModal}
+            selectedTransaction={selectedTransaction}
+            setSelectedTransaction={setSelectedTransaction}
           />
         )}
       </div>
