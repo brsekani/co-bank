@@ -1,6 +1,7 @@
 import { useState } from "react";
 import coBankLogo from "../assets/cobank.svg";
 import { useForm } from "react-hook-form";
+import { useAuth } from "../Context/AuthProvider";
 
 function SignUpAndLogin() {
   const {
@@ -9,9 +10,16 @@ function SignUpAndLogin() {
     formState: { errors },
   } = useForm();
   const [isLogin, setIsLogin] = useState(true);
+  const { login, loading, error } = useAuth();
 
-  const logInOnSubmit = (data) => {
-    console.log(data);
+  const logInOnSubmit = async (formData) => {
+    const email = formData.emailAddress;
+    const password = formData.password;
+
+    login({
+      email,
+      password,
+    });
   };
 
   const sigUpOnSubmit = (data) => {
@@ -103,6 +111,7 @@ function SignUpAndLogin() {
                   })}
                   type="text"
                   placeholder="Email Address"
+                  defaultValue="text@supabase.com"
                   autoComplete="off"
                   className="w-full h-12 px-4 transition-all border border-gray-300 rounded-xl focus:border-colorPrimary"
                 />
@@ -118,6 +127,7 @@ function SignUpAndLogin() {
                   {...register("password", { required: "Enter Password" })}
                   type="password"
                   placeholder="Password"
+                  defaultValue="12345qwer"
                   required
                   className="w-full h-12 px-4 transition-all border border-gray-300 rounded-xl focus:border-colorPrimary"
                 />

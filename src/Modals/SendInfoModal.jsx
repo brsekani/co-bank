@@ -108,17 +108,7 @@ const Transfers = ({
     clearErrors("pin");
     setError(null);
   }
-  useEffect(() => {
-    const handlePopState = () => {
-      handleClosePaymentModal();
-    };
 
-    window.addEventListener("popstate", handlePopState);
-
-    return () => {
-      window.removeEventListener("popstate", handlePopState);
-    };
-  }, [handleClosePaymentModal]);
 
   return (
     <div

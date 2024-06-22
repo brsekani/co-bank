@@ -11,11 +11,10 @@ import Security from "./Pages/Security";
 import TransactionsTable from "./UI/TransactionsTable";
 import Notifications from "./Pages/Notifications";
 import Verification from "./Pages/Verification";
-
+import SignUpAndLogin from "./Pages/SignUpAndLogin";
 import { AccountProvider } from "./Context/AccountContext";
 import { Provider } from "react-redux";
 import Store from "./App/Store";
-import SignUpAndLogin from "./Pages/SignUpAndLogin";
 
 function App() {
   return (
@@ -24,7 +23,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="SignUpAndLogin" element={<SignUpAndLogin />} />
-            <Route element={<AppLayout />}>
+            <Route path="/" element={<AppLayout />}>
               <Route index element={<Navigate replace to="dashboard" />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="cards" element={<Cards />} />
@@ -35,8 +34,8 @@ function App() {
                 <Route index element={<Profile />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="security" element={<Security />} />
-                <Route path="Notifications" element={<Notifications />} />
-                <Route path="Verification" element={<Verification />} />
+                <Route path="notifications" element={<Notifications />} />
+                <Route path="verification" element={<Verification />} />
               </Route>
               <Route path="support" element={<Support />} />
             </Route>

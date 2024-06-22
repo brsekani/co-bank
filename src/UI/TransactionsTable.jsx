@@ -4,10 +4,12 @@ import faceImage from "/public/face image.avif";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import { useSelector } from "react-redux";
 import { AccountContext } from "../Context/AccountContext";
+import TransactionModal from "../Modals/transactionModal";
 
 function TransactionsTable() {
   const darkMode = useSelector((state) => state.darkMode);
   const [transactions, setTransactions] = useState([]);
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
   const { transactionsData, isLoadingTD, isErrorTD, isLoadingTransactions } =
     useContext(AccountContext);
   const pageSize = 10; // Number of transactions per page
@@ -25,6 +27,14 @@ function TransactionsTable() {
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const currentTransactions = transactions?.slice(startIndex, endIndex);
+
+  const handleDetailsClick = (transaction) => {
+    setSelectedTransaction(transaction);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedTransaction(null);
+  };
 
   if (isLoadingTransactions) {
     return (
@@ -135,6 +145,7 @@ function TransactionsTable() {
                     <td>
                       <button
                         className={`px-2 py-1 rounded-md border border-colorPrimary`}
+                        onClick={() => handleDetailsClick(transaction)}
                       >
                         Details
                       </button>
@@ -174,6 +185,14 @@ function TransactionsTable() {
           <div className="text-center text-slate-500">
             <p>-- End ---</p>
           </div>
+        )}
+
+        {/* Modal */}
+        {selectedTransaction && (
+          <TransactionModal
+            transaction={selectedTransaction}
+            onClose={handleCloseModal}
+          />
         )}
       </div>
     );

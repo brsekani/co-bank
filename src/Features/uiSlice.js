@@ -21,7 +21,6 @@ const uiSlice = createSlice({
     },
 
     setShowSendUI: (state, actions) => {
-      console.log(state.showSendUI); // Corrected this line
       state.showSendUI = actions.payload;
     },
 
@@ -41,5 +40,7 @@ export const {
   showAirtimeUI,
   setShowAirtimeUI,
 } = uiSlice.actions;
+
+
 
 export default uiSlice.reducer;
