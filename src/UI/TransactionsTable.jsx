@@ -1,36 +1,26 @@
 import { useContext, useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import faceImage from "/public/face image.avif";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import { useSelector } from "react-redux";
 import { AccountContext } from "../Context/AccountContext";
 import TransactionModal from "../Modals/transactionModal";
+import useTransactionsTable from "../Hooks/useTransactionsTable";
 
 function TransactionsTable() {
-  const darkMode = useSelector((state) => state.darkMode);
-  const [transactions, setTransactions] = useState([]);
-  const [selectedTransaction, setSelectedTransaction] = useState(null);
-  const { transactionsData, isLoadingTD, isErrorTD, isLoadingTransactions } =
-    useContext(AccountContext);
-  const pageSize = 10; // Number of transactions per page
-  const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    if (!isLoadingTD && !isErrorTD) {
-      const sortedTransaction = transactionsData?.sort(
-        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-      );
-      setTransactions(sortedTransaction); // Update transactions state when data is fetched
-    }
-  }, [isLoadingTD, isErrorTD, transactionsData]);
-
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const currentTransactions = transactions?.slice(startIndex, endIndex);
-
-  const handleDetailsClick = (transaction) => {
-    setSelectedTransaction(transaction);
-  };
+  const {
+    darkMode,
+    isLoadingTransactions,
+    currentTransactions,
+    handleDetailsClick,
+    transactions,
+    url,
+    currentPage,
+    setCurrentPage,
+    endIndex,
+    selectedTransaction,
+    setSelectedTransaction,
+  } = useTransactionsTable();
 
   const handleCloseModal = () => {
     setSelectedTransaction(null);
@@ -70,7 +60,9 @@ function TransactionsTable() {
         <div className="flex items-center justify-between mb-5">
           <h1>Transactions</h1>
           <NavLink to="/Transactions">
-            <p>See All</p>
+            <p className={`${url === "/Transactions" ? "hidden" : "block"}`}>
+              See All
+            </p>
           </NavLink>
         </div>
 
@@ -79,10 +71,10 @@ function TransactionsTable() {
             <thead>
               <tr className="h-10 mb-32 bg-gray-400">
                 <th className="pl-5">Transaction</th>
-                <th>Date</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Details</th>
+                <th className="pl-5">Date</th>
+                <th className="pl-5">Amount</th>
+                <th className="pl-5">Status</th>
+                <th className="pl-5">Details</th>
               </tr>
             </thead>
 
@@ -192,8 +184,6 @@ function TransactionsTable() {
           <TransactionModal
             transaction={selectedTransaction}
             onClose={handleCloseModal}
-            selectedTransaction={selectedTransaction}
-            setSelectedTransaction={setSelectedTransaction}
           />
         )}
       </div>

@@ -4,13 +4,12 @@ import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { GrStatusGood } from "react-icons/gr";
 import useFormatBalance from "../Hooks/useFormatBalance";
+import useTransactionsTable from "../Hooks/useTransactionsTable";
 
-const TransactionModal = ({
-  transaction,
-  onClose,
-  selectedTransaction,
-  setSelectedTransaction,
-}) => {
+const TransactionModal = ({ transaction, onClose }) => {
+  const { selectedTransaction, setSelectedTransaction } =
+    useTransactionsTable();
+
   const { transactionId, name, amount, status, timestamp } = transaction;
   const darkMode = useSelector((state) => state.darkMode);
 
