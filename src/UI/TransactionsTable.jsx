@@ -4,7 +4,7 @@ import faceImage from "/public/face image.avif";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import { useSelector } from "react-redux";
 import { AccountContext } from "../Context/AccountContext";
-import TransactionModal from "../Modals/transactionModal";
+import TransactionModal from "../Modals/TransactionModal";
 import useTransactionsTable from "../Hooks/useTransactionsTable";
 
 function TransactionsTable() {
