@@ -1,9 +1,6 @@
-import { useContext, useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import faceImage from "/public/face image.avif";
 import useFormatBalance from "../Hooks/useFormatBalance";
-import { useSelector } from "react-redux";
-import { AccountContext } from "../Context/AccountContext";
 import TransactionModal from "../Modals/TransactionModal";
 import useTransactionsTable from "../Hooks/useTransactionsTable";
 
