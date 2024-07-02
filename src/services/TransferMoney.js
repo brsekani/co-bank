@@ -121,7 +121,7 @@ export const useTransferMoney = () => {
 
   const {
     mutate: transferMoney,
-    isLoading: isTransferring,
+    isPending: isTransferring,
     error: transferError,
   } = useMutation({
     mutationFn: transferMoneyApi,

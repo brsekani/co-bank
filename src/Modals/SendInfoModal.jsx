@@ -30,7 +30,7 @@ const Transfers = ({
     transferMoney,
     transactionSuccess,
     setTransactionSuccess,
-    isTransfering,
+    isTransferring,
     transferError,
   } = useTransferMoney();
 
@@ -288,9 +288,9 @@ const Transfers = ({
                 className={`flex items-center justify-center w-full h-10 text-xl font-semibold text-white rounded-md bg-colorPrimary ${
                   error ? "" : "mt-5"
                 } `}
-                disabled={error}
+                disabled={error || isTransferring}
               >
-                {isTransfering ? <div className="spinner"></div> : "Confirm"}
+                {isTransferring ? <div className="spinner"></div> : "Confirm"}
               </button>
             </form>
           </div>
