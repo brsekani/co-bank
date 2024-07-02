@@ -1,8 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import supabase from "../supabase";
 import { accountIdInfo, customerIdInfo } from "../utility/utilityFunction";
-import { getCurrentUser } from "./apiAuth";
-import { useAuth } from "../Context/AuthProvider";
 
 const accountIdInfoData = accountIdInfo();
 const customerIdInfoData = customerIdInfo();

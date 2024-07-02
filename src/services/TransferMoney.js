@@ -2,106 +2,126 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "../supabase";
 import { useState } from "react";
 
-const transferMoneyApi = async (tranferInfo) => {
+// Function to handle money transfer
+const transferMoneyApi = async (transferInfo) => {
   const {
     accountId,
     amount,
     pin,
     accountName,
     recipientAccountNumber,
-    senderfullName,
-  } = tranferInfo;
-  console.log(accountName, recipientAccountNumber);
-  const FormattedAmount = Number(amount);
+    senderFullName,
+    balanceType,
+  } = transferInfo;
 
-  // Senders Info
+  const formattedAmount = Number(amount);
+
+  // Fetch sender's info
   const { data: senderAccount, error: senderError } = await supabase
     .from("accounts")
     .select("*")
     .eq("accountId", accountId);
 
-  // Receiver Info
+  // Fetch receiver's info
   const { data: receiverAccount, error: receiverError } = await supabase
     .from("accounts")
     .select("*")
     .eq("accountNumber", recipientAccountNumber);
-  console.log(receiverAccount, receiverError);
 
   if (senderError) {
     throw new Error(
       senderError.message || "Error fetching sender account data"
     );
   }
+  if (receiverError) {
+    throw new Error(
+      receiverError.message || "Error fetching receiver account data"
+    );
+  }
 
-  console.log(receiverAccount);
+  // Determine the balance type for the sender
+  let senderBalance;
+  if (balanceType === "accountBalance") {
+    senderBalance = senderAccount[0]?.accountBalance;
+  } else if (balanceType === "creditCardBalance") {
+    senderBalance = senderAccount[0]?.creditCardBalance;
+  } else if (balanceType === "savingsBalance") {
+    senderBalance = senderAccount[0]?.savingsBalance;
+  }
 
-  const senderBalance = senderAccount[0]?.accountBalance;
-  const senderpin = senderAccount[0]?.pin;
-
+  const senderPin = senderAccount[0]?.pin;
   const receiverBalance = receiverAccount[0]?.accountBalance;
   const receiverAccountId = receiverAccount[0]?.accountId;
 
-  if (pin !== senderpin) {
-    throw new Error("incorrect pin");
+  // Validate pin
+  if (pin !== senderPin) {
+    throw new Error("Incorrect pin");
   }
 
-  if (senderBalance < FormattedAmount) {
+  // Validate sufficient balance
+  if (senderBalance < formattedAmount) {
     throw new Error("Insufficient balance to transfer");
   }
 
-  const UpdatedSenderBalance = senderBalance - FormattedAmount;
-  const UpdatedReceiverBalance = receiverBalance + FormattedAmount;
+  const updatedSenderBalance = senderBalance - formattedAmount;
+  const updatedReceiverBalance = receiverBalance + formattedAmount;
 
-  // updating senders balance
+  // Function to update balance
+  const updateBalance = async (accountId, field, balance) => {
+    await supabase
+      .from("accounts")
+      .update({ [field]: balance })
+      .eq("accountId", accountId);
+  };
+
+  // Updating sender's balance
+  if (balanceType === "accountBalance") {
+    await updateBalance(accountId, "accountBalance", updatedSenderBalance);
+  } else if (balanceType === "creditCardBalance") {
+    await updateBalance(accountId, "creditCardBalance", updatedSenderBalance);
+  } else if (balanceType === "savingsBalance") {
+    await updateBalance(accountId, "savingsBalance", updatedSenderBalance);
+  }
+
+  // Updating receiver's balance
   await supabase
     .from("accounts")
-    .update({ accountBalance: UpdatedSenderBalance })
-    .eq("accountId", accountId);
-
-  // Updating Reciever balance
-  await supabase
-    .from("accounts")
-    .update({ accountBalance: UpdatedReceiverBalance })
+    .update({ accountBalance: updatedReceiverBalance })
     .eq("accountNumber", recipientAccountNumber);
 
-  // Sender transaction update
-  await supabase.from("transactions").insert([
-    {
-      accountId: String(accountId),
-      amount: -amount,
-      type: "debit",
-      description: "",
-      status: "successful",
-      name: accountName,
-    },
-  ]);
+  // Function to insert transaction
+  const insertTransaction = async (accountId, amount, type, name) => {
+    await supabase.from("transactions").insert([
+      {
+        accountId: String(accountId),
+        amount,
+        type,
+        description: "",
+        status: "successful",
+        name,
+      },
+    ]);
+  };
 
-  console.log(senderfullName);
+  // Sender transaction update
+  await insertTransaction(accountId, -amount, "debit", accountName);
 
   // Receiver transaction update
-  await supabase.from("transactions").insert([
-    {
-      accountId: String(receiverAccountId),
-      amount: +amount,
-      type: "credit",
-      description: "",
-      status: "successful",
-      name: senderfullName,
-    },
-  ]);
+  await insertTransaction(receiverAccountId, amount, "credit", senderFullName);
 
   return {
     message: "Money Transfer successful",
   };
 };
 
+// Custom hook to manage money transfer
 export const useTransferMoney = () => {
   const queryClient = useQueryClient();
   const [transactionSuccess, setTransactionSuccess] = useState(false);
 
   const {
     mutate: transferMoney,
-    isPending: isTransfering,
+    isLoading: isTransferring,
     error: transferError,
   } = useMutation({
     mutationFn: transferMoneyApi,
@@ -115,7 +135,7 @@ export const useTransferMoney = () => {
     transferMoney,
     transactionSuccess,
     setTransactionSuccess,
-    isTransfering,
+    isTransferring,
     transferError,
   };
 };

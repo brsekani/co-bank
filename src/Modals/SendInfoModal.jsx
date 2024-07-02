@@ -22,6 +22,8 @@ const Transfers = ({
   const { accountData, customerData } = useContext(AccountContext);
   const accountId = accountData.map((acc) => acc.accountId);
   const accountBalance = accountData.map((acc) => acc.accountBalance);
+  const savingsBalance = accountData.map((acc) => acc.savingsBalance);
+  const creditCardBalance = accountData.map((acc) => acc.creditCardBalance);
   const [error, setError] = useState(null);
 
   const {
@@ -78,6 +80,8 @@ const Transfers = ({
 
   const onSubmit = (data) => {
     const pin = data.pin;
+    const balanceType = data.balanceType;
+    console.log(balanceType);
     transferMoney({
       accountId,
       amount,
@@ -85,6 +89,7 @@ const Transfers = ({
       accountName,
       recipientAccountNumber,
       senderfullName,
+      balanceType,
     });
   };
 
@@ -109,7 +114,6 @@ const Transfers = ({
     setError(null);
   }
 
-
   return (
     <div
       className={`fixed left-0 top-0 z-[9999] flex h-full w-full items-center justify-center overflow-hidden transition-opacity ${
@@ -121,31 +125,6 @@ const Transfers = ({
           isOpen ? "translate-y-0" : "translate-y-full"
         } ${darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"}`}
       >
-        {/* {isTransfering && (
-          <div
-            className={`fixed left-0 top-0 z-[9999] flex h-full w-full items-center justify-center overflow-hidden transition-opacity ${
-              isTransfering ? "opacity-100" : "opacity-0 pointer-events-none"
-            } bg-[rgba(0,0,0,.486)]`}
-          >
-            <div className="text-blue-500 z-1000">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 101 101"
-                className="w-8 h-8 spin-animation"
-              >
-                <path
-                  fill="#00446A"
-                  d="M48.734 2.797A6 6 0 0 1 53.808 0h36.31c4.724 0 7.595 5.207 5.073 9.203l-42.925 68A6 6 0 0 1 47.192 80h-36.31c-4.724 0-7.595-5.207-5.073-9.203z"
-                ></path>
-                <path
-                  fill="#00A3FF"
-                  d="M48.734 23.797A6 6 0 0 1 53.808 21h36.31c4.724 0 7.595 5.208 5.073 9.203l-42.925 68A6 6 0 0 1 47.192 101h-36.31c-4.724 0-7.595-5.207-5.073-9.203z"
-                ></path>
-              </svg>
-            </div>
-          </div>
-        )} */}
         {!transactionSuccess ? (
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-semibold">Payment</h1>
@@ -170,7 +149,7 @@ const Transfers = ({
           {useFormatBalance(Number(removeCommas(amount)) + 1)}
         </h1>
 
-        <div className="px-5 mt-2">
+        <div className="px-5 py-2 mt-2 border rounded-lg shadow-lg">
           {!transactionSuccess && (
             <div className="flex items-center justify-between">
               <p className="text-sm">Fee</p>
@@ -198,9 +177,9 @@ const Transfers = ({
 
         {!transactionSuccess && (
           <div className="mt-3">
-            <h1 className="mb-1 text-xl text-colorPrimary">Payment Method</h1>
+            <h1 className="mb-1 text-sm text-colorPrimary">Payment Method</h1>
 
-            <div
+            {/* <div
               className={`flex items-start justify-between ${
                 error === "Insufficient balance to transfer"
                   ? "text-red-600"
@@ -209,9 +188,52 @@ const Transfers = ({
             >
               <p>Balance</p>
               <p>{useFormatBalance(accountBalance)}</p>
-            </div>
+            </div> */}
 
             <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="relative w-full mb-2 rounded-lg shadow-lg">
+                <Controller
+                  name="balanceType"
+                  control={control}
+                  defaultValue="accountBalance"
+                  render={({ field }) => (
+                    <select
+                      {...field}
+                      className="w-full py-2 pl-3 pr-10 border rounded-lg appearance-none h-14 bg-input border-border text-primary"
+                    >
+                      <option value="accountBalance" className="text-primary">
+                        Current Balance - {useFormatBalance(accountBalance)}
+                      </option>
+                      <option
+                        value="creditCardBalance"
+                        className="text-primary"
+                      >
+                        Credit Card Balance -
+                        {useFormatBalance(creditCardBalance)}
+                      </option>
+                      <option value="savingsBalance" className="text-primary">
+                        Savings Balance - {useFormatBalance(savingsBalance)}
+                      </option>
+                    </select>
+                  )}
+                />
+                <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-primary dark:text-primary-foreground">
+                  <svg
+                    className="w-4 h-4 transition-transform duration-300 transform rotate-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+
               <div className="flex items-center justify-between">
                 <label
                   className={`${

@@ -1,55 +1,65 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { login as loginService, getCurrentUser } from "../services/apiAuth";
+import supabase from "../supabase";
+import bcrypt from "bcryptjs";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const userData = await getCurrentUser();
-        setUser(userData);
-        setIsAuthenticated(true);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
+    const storedUser = sessionStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
   }, []);
 
-  const login = async ({ email, password }) => {
-    setLoading(true);
-    setError(null);
+  const login = async (email, password) => {
     try {
-      await loginService({ email, password });
-      const userData = await getCurrentUser();
-      setUser(userData);
-      setIsAuthenticated(true);
+      const { data: userData, error } = await supabase
+        .from("customers")
+        .select("email, password, customerId")
+        .eq("email", email)
+        .single();
+
+      if (error) throw new Error(error.message);
+      console.log(email, password);
+      console.log(userData);
+
+      // const validEmail = await bcrypt.compare(email, userData.email);
+      // const validPassword = await bcrypt.compare(password, userData.password);
+      const validEmail = userData.email === email;
+      const validPassword = userData.password === password;
+      if (!validEmail || !validPassword)
+        throw new Error("Incorrect email or password");
+
+      const { data: accountData, error: accountError } = await supabase
+        .from("accounts")
+        .select("accountId")
+        .eq("customerId", userData.customerId)
+        .single();
+
+      if (accountError) throw new Error(accountError.message);
+
+      const { customerId } = userData;
+      const { accountId } = accountData;
+      setUser({ customerId, accountId });
+      sessionStorage.setItem("user", JSON.stringify({ customerId, accountId }));
     } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
+      throw new Error(error.message);
     }
   };
 
   const logout = () => {
-    setIsAuthenticated(false);
     setUser(null);
+    sessionStorage.removeItem("user");
   };
 
+  console.log(user);
+
   return (
-    <AuthContext.Provider
-      value={{ isAuthenticated, user, login, logout, loading, error }}
-    >
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -59,6 +69,4 @@ AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export default AuthContext;

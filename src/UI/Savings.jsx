@@ -1,9 +1,14 @@
 import { GoArrowUpRight } from "react-icons/go";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import { useSelector } from "react-redux";
+import { useContext } from "react";
+import { AccountContext } from "../Context/AccountContext";
 
 function Savings() {
-  const totalSavings = 1280;
+  const { accountData } = useContext(AccountContext);
+  const savingsBalance = accountData.at(0).savingsBalance;
+
+  const totalSavings = savingsBalance;
   const targetSavings = 10000;
   const completionPercentage = (totalSavings / targetSavings) * 100;
 

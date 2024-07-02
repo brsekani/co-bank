@@ -1,29 +1,31 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import coBankLogo from "../assets/cobank.svg";
 import { useForm } from "react-hook-form";
-import { useAuth } from "../Context/AuthProvider";
+import AuthContext from "../Context/AuthProvider";
 
 function SignUpAndLogin() {
+  const [isLogin, setIsLogin] = useState(true);
+  const { login } = useContext(AuthContext);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const [isLogin, setIsLogin] = useState(true);
-  const { login, loading, error } = useAuth();
-
-  const logInOnSubmit = async (formData) => {
-    const email = formData.emailAddress;
-    const password = formData.password;
-
-    login({
-      email,
-      password,
-    });
-  };
 
   const sigUpOnSubmit = (data) => {
     console.log(data);
+  };
+
+  const loginOnSubmit = async (data) => {
+    const { emailAddress, password } = data;
+    try {
+      await login(emailAddress, password);
+      // Handle successful login, redirect, etc.
+    } catch (error) {
+      console.error("Login error:", error.message);
+      // Handle login error, show error message to user
+    }
   };
 
   return (
@@ -31,7 +33,6 @@ function SignUpAndLogin() {
       <div className="h-full max-w-full p-8 overflow-hidden bg-white shadow-lg sm:h-fit sm:max-w-sm wrapper sm:rounded-2xl">
         <div className="flex items-center justify-center mb-4">
           <img className="w-10 h-10" src={coBankLogo} alt="Co-Bank" />
-          {/* <p className="text-4xl">Co Bank</p> */}
         </div>
         <div className="flex w-[200%]">
           <div
@@ -94,8 +95,7 @@ function SignUpAndLogin() {
             }}
           >
             <form
-              onSubmit={handleSubmit(logInOnSubmit)}
-              action="#"
+              onSubmit={handleSubmit(loginOnSubmit)}
               className={`w-1/2 ${!isLogin ? "pr-10" : ""}`}
               noValidate
             >
@@ -193,6 +193,16 @@ function SignUpAndLogin() {
                 <button className="relative z-10 w-full h-10 text-lg font-medium text-white border-none cursor-pointer bg-none">
                   Signup
                 </button>
+              </div>
+              <div className="mt-4 text-center signup-link">
+                Already a member?{" "}
+                <a
+                  href="#"
+                  onClick={() => setIsLogin(true)}
+                  className="text-colorPrimary hover:underline"
+                >
+                  Login now
+                </a>
               </div>
             </form>
           </div>

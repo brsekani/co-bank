@@ -25,13 +25,13 @@ function Security() {
       <div className="flex flex-col gap-10">
         <h1 className="text-3xl">Security</h1>
 
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-col gap-1">
             <h1 className="text-2xl">Email Address</h1>
             <p className="text-sm">The email associated with your account</p>
           </div>
           <div>
-            <div className="flex flex-col items-start lg:flex-row lg:items-center gap-5">
+            <div className="flex flex-col items-start gap-5 lg:flex-row lg:items-center">
               <div className="flex flex-col">
                 <h1 className="text-xl">{email}</h1>
                 <p
@@ -42,7 +42,7 @@ function Security() {
                   {emailVerified ? "Verified" : "Not Verified"}
                 </p>
               </div>
-              <button className="flex items-center gap-1 px-4 py-2 border border-colorPrimary rounded-md">
+              <button className="flex items-center gap-1 px-4 py-2 border rounded-md border-colorPrimary">
                 <span>Edit</span>
                 <TbPencilMinus />
               </button>
@@ -53,7 +53,7 @@ function Security() {
 
       {/* Password */}
       <hr />
-      <div className="flex lg:flex-row flex-col lg:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl">Password</h1>
           <p className="text-sm">
@@ -61,15 +61,15 @@ function Security() {
           </p>
         </div>
         <div>
-          <button className="px-4 py-1 text-xl text-center border border-colorPrimary rounded-md">
+          <button className="px-4 py-1 text-xl text-center border rounded-md border-colorPrimary">
             Change Password
           </button>
         </div>
       </div>
 
       {/* Deactivate My Account */}
-      <hr />
-      <div className="flex lg:flex-row flex-col lg:items-center lg:justify-between gap-4">
+      {/* <hr />
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl">Deactivate My Account</h1>
           <p className="text-sm">
@@ -78,15 +78,15 @@ function Security() {
           </p>
         </div>
         <div>
-          <button className="px-4 py-1 text-xl text-center border border-colorPrimary rounded-md">
+          <button className="px-4 py-1 text-xl text-center border rounded-md border-colorPrimary">
             Deactivate
           </button>
         </div>
-      </div>
+      </div> */}
 
       {/* Delete My Account */}
       <hr />
-      <div className="flex lg:flex-row flex-col lg:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl">Delete My Account</h1>
           <p className="text-sm">
