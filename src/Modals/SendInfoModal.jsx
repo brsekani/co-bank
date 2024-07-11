@@ -179,17 +179,6 @@ const Transfers = ({
           <div className="mt-3">
             <h1 className="mb-1 text-sm text-colorPrimary">Payment Method</h1>
 
-            {/* <div
-              className={`flex items-start justify-between ${
-                error === "Insufficient balance to transfer"
-                  ? "text-red-600"
-                  : ""
-              }`}
-            >
-              <p>Balance</p>
-              <p>{useFormatBalance(accountBalance)}</p>
-            </div> */}
-
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="relative w-full mb-2 rounded-lg shadow-lg">
                 <Controller
@@ -199,7 +188,11 @@ const Transfers = ({
                   render={({ field }) => (
                     <select
                       {...field}
-                      className="w-full py-2 pl-3 pr-10 border rounded-lg appearance-none h-14 bg-input border-border text-primary"
+                      className={`w-full py-2 pl-3 pr-10 border rounded-lg h-14 bg-input border-border text-primary ${
+                        darkMode
+                          ? "bg-[#1E1E1E] text-white"
+                          : "bg-white text-black"
+                      }`}
                     >
                       <option value="accountBalance" className="text-primary">
                         Current Balance - {useFormatBalance(accountBalance)}
