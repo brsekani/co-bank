@@ -6,7 +6,7 @@ import { AccountContext } from "../Context/AccountContext";
 
 function Savings() {
   const { accountData } = useContext(AccountContext);
-  const savingsBalance = accountData.at(0).savingsBalance;
+  const savingsBalance = accountData?.at(0).savingsBalance;
 
   const totalSavings = savingsBalance;
   const targetSavings = 10000;

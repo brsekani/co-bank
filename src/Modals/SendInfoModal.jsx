@@ -1,11 +1,9 @@
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import useFormatBalance from "../Hooks/useFormatBalance";
-import { useForm, Controller } from "react-hook-form";
-import { useTransferMoney } from "../services/TransferMoney";
-import { AccountContext } from "../Context/AccountContext";
+import { Controller } from "react-hook-form";
+
+import useSendInfoModal from "../Hooks/useSendInfoModal";
 
 const Transfers = ({
   isOpen,
@@ -15,104 +13,27 @@ const Transfers = ({
   bank,
   accountName,
 }) => {
-  const darkMode = useSelector((state) => state.darkMode);
-  const RecipientName = accountName;
-  const recipientAccountNumber = formData.accountNumber;
-  const amount = formData.amount;
-  const { accountData, customerData } = useContext(AccountContext);
-  const accountId = accountData.map((acc) => acc.accountId);
-  const accountBalance = accountData.map((acc) => acc.accountBalance);
-  const savingsBalance = accountData.map((acc) => acc.savingsBalance);
-  const creditCardBalance = accountData.map((acc) => acc.creditCardBalance);
-  const [error, setError] = useState(null);
-
   const {
-    transferMoney,
+    darkMode,
+    accountBalance,
+    savingsBalance,
+    creditCardBalance,
+    error,
     transactionSuccess,
-    setTransactionSuccess,
     isTransferring,
-    transferError,
-  } = useTransferMoney();
-
-  // FullName of Account
-  const senderfullName = customerData
-    ?.map((customer) => {
-      const capitalizeLastName =
-        customer.lastName.charAt(0).toUpperCase() +
-        customer.lastName.slice(1).toLowerCase();
-      const capitalizeFirst =
-        customer.firstName.charAt(0).toUpperCase() +
-        customer.firstName.slice(1).toLowerCase();
-
-      // Format the full name with a space in between
-      const fullName = `${capitalizeLastName} ${capitalizeFirst}`;
-      console.log(fullName); // This will log each name
-
-      // Return the formatted name directly
-      return fullName;
-    })
-    .join(" ");
-
-  const {
     control,
     handleSubmit,
-    formState: { errors },
-    clearErrors,
-    setValue,
-  } = useForm();
-
-  const pinInputRef = useRef(null);
-
-  useEffect(() => {
-    if (isOpen && pinInputRef.current) {
-      // Focus the pin input when the component mounts
-      pinInputRef.current.focus();
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (transferError?.message === "incorrect pin") {
-      clearErrors("pin");
-      setValue("pin", ""); // Clear the pin input
-    }
-    setError(transferError?.message);
-  }, [transferError, clearErrors, setValue]);
-
-  const onSubmit = (data) => {
-    const pin = data.pin;
-    const balanceType = data.balanceType;
-    console.log(balanceType);
-    transferMoney({
-      accountId,
-      amount,
-      pin,
-      accountName,
-      recipientAccountNumber,
-      senderfullName,
-      balanceType,
-    });
-  };
-
-  function removeCommas(numberString) {
-    return numberString?.replace(/,/g, "");
-  }
-
-  function handleClose() {
-    closeSendModal();
-    setTransactionSuccess(false);
-  }
-
-  const handleClosePaymentModal = useCallback(() => {
-    clearErrors("pin");
-    setValue("pin", ""); // Clear the pin input
-    setError(null);
-    closeModal();
-  }, [clearErrors, setValue, closeModal, setError]);
-
-  function handlePin() {
-    clearErrors("pin");
-    setError(null);
-  }
+    errors,
+    onSubmit,
+    removeCommas,
+    handleClose,
+    handleClosePaymentModal,
+    handlePin,
+    pinInputRef,
+  } = useSendInfoModal({ closeModal, formData, closeSendModal, accountName });
+  const RecipientName = accountName;
+  const recipientAccountNumber = formData?.accountNumber;
+  const amount = formData?.amount;
 
   return (
     <div

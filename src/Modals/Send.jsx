@@ -201,6 +201,7 @@ function Send() {
               onChange={(e) => {
                 const rawValue = e.target.value.replace(/,/g, "");
                 const formattedValue = formatNumber(rawValue);
+
                 setValue("amount", formattedValue, { shouldValidate: true });
               }}
             />
