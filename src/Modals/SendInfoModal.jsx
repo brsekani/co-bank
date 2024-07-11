@@ -35,6 +35,9 @@ const Transfers = ({
   const RecipientName = accountName;
   const recipientAccountNumber = formData?.accountNumber;
   const amount = formData?.amount;
+  const formattedAccountBalance = useFormatBalance(accountBalance);
+  const formattedCreditCardBalance = useFormatBalance(creditCardBalance);
+  const formattedSavingsBalance = useFormatBalance(savingsBalance);
 
   return (
     <div
@@ -120,36 +123,20 @@ const Transfers = ({
                       }`}
                     >
                       <option value="accountBalance" className="text-primary">
-                        Current Balance - {useFormatBalance(accountBalance)}
+                        Current Balance - {formattedAccountBalance}
                       </option>
                       <option
                         value="creditCardBalance"
                         className="text-primary"
                       >
-                        Credit Card Balance -
-                        {useFormatBalance(creditCardBalance)}
+                        Credit Card Balance - {formattedCreditCardBalance}
                       </option>
                       <option value="savingsBalance" className="text-primary">
-                        Savings Balance - {useFormatBalance(savingsBalance)}
+                        Savings Balance - {formattedSavingsBalance}
                       </option>
                     </select>
                   )}
                 />
-                <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-primary dark:text-primary-foreground">
-                  <svg
-                    className="w-4 h-4 transition-transform duration-300 transform rotate-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M19 9l-7 7-7-7"
-                    ></path>
-                  </svg>
-                </div>
               </div>
 
               <div className="flex items-center justify-between">
