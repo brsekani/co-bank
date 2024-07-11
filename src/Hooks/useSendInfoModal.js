@@ -109,6 +109,10 @@ const useSendInfoModal = ({
     setError(null);
   }
 
+  function handleSelectPaymentMethod() {
+    setError(null);
+  }
+
   return {
     darkMode,
     accountBalance,
@@ -126,6 +130,7 @@ const useSendInfoModal = ({
     handleClosePaymentModal,
     handlePin,
     pinInputRef,
+    handleSelectPaymentMethod,
   };
 };
 

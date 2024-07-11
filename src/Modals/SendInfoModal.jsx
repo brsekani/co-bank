@@ -30,6 +30,7 @@ const Transfers = ({
     handleClosePaymentModal,
     handlePin,
     pinInputRef,
+    handleSelectPaymentMethod,
   } = useSendInfoModal({ closeModal, formData, closeSendModal, accountName });
   const RecipientName = accountName;
   const recipientAccountNumber = formData?.accountNumber;
@@ -106,6 +107,9 @@ const Transfers = ({
                   name="balanceType"
                   control={control}
                   defaultValue="accountBalance"
+                  rules={{
+                    onChange: handleSelectPaymentMethod,
+                  }}
                   render={({ field }) => (
                     <select
                       {...field}
