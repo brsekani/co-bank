@@ -1,10 +1,13 @@
 import { GoArrowUpRight, GoGoal } from "react-icons/go";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import { completionPercentage } from "../utility/utilityFunction";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { IoMdAddCircleOutline } from "react-icons/io";
+import { setShowAddNewGoal } from "../Features/uiSlice";
 
 function Goals() {
   const darkMode = useSelector((state) => state.darkMode);
+  const dispatch = useDispatch();
 
   const goals = [
     {
@@ -68,7 +71,9 @@ function Goals() {
             >
               <div className="flex flex-row items-center justify-between">
                 <div className="flex items-start gap-3">
-                  <GoGoal size={40} />
+                  <div className="flex items-center justify-center bg-colorPrimary/10 w-[44px] h-[44px] rounded-md">
+                    <GoGoal size={20} />
+                  </div>
                   <p className="text-3xl font-medium">{goal.Name}</p>
                 </div>
                 <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#a1a1a1]">
@@ -79,7 +84,6 @@ function Goals() {
               <div className="flex items-center justify-between mt-3">
                 <div className="flex items-center gap-2">
                   <h1 className="text-3xl">
-                    <span>$</span>
                     {useFormatBalance(goal.totalAmount)}
                   </h1>
                   <span
@@ -97,7 +101,7 @@ function Goals() {
               </div>
 
               <p className="flex items-center gap-1 mt-10 text-sm">
-                Target:<span>${useFormatBalance(goal.TargetAmount)}</span>
+                Target:{useFormatBalance(goal.TargetAmount)}
               </p>
 
               <div className="w-full h-12 bg-[rgb(161,161,161)] rounded-md mt-3">
@@ -109,6 +113,33 @@ function Goals() {
             </div>
           );
         })}
+
+        <div
+          className={`min-h-[216px] max-h-[240px] bg-[#1E1E1E] w-full p-5 rounded-md ${
+            darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+          }`}
+        >
+          <div className="flex items-start gap-3 mb-2">
+            <div className="flex items-center justify-center bg-colorPrimary/10 w-[44px] h-[44px] rounded-md">
+              <GoGoal size={20} />
+            </div>
+            <p className="text-3xl font-medium">Add New Goal</p>
+          </div>
+
+          <p>
+            Ready to take control of your financial future? Set clear targets
+            for your savings, goals, and more with our streamlined banking
+            tools. Start planning smarter today!
+          </p>
+
+          <button
+            className="w-[140x] h-10 flex items-center justify-center gap-2 px-2 rounded-md bg-colorPrimary text-white mt-2"
+            onClick={() => dispatch(setShowAddNewGoal(true))}
+          >
+            <IoMdAddCircleOutline size={30} color="white" />
+            <span>New Goal</span>
+          </button>
+        </div>
       </div>
     </div>
   );

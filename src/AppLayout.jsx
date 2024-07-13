@@ -1,16 +1,19 @@
 import { Outlet } from "react-router-dom";
 import SideBar from "./Components/SideBar";
 import Header from "./UI/Header";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useContext, useEffect } from "react";
 import Send from "./Modals/Send";
 import Airtime from "./Modals/Airtime";
 import { AccountContext } from "./Context/AccountContext";
+import AddNewGoal from "./Modals/AddNewGoal";
 // import { setDarkMode } from "./Features/DarkMode";
 
 function AppLayout() {
   const darkMode = useSelector((state) => state.darkMode);
-  const { showSendUI, showAirtimeUI } = useSelector((state) => state.ui);
+  const { showSendUI, showAirtimeUI, showAddNewGoal } = useSelector(
+    (state) => state.ui
+  );
   // const dispatch = useDispatch();
 
   const { isLoadingAccountData, isLoadingCustomerData, isLoadingTransactions } =
@@ -97,6 +100,7 @@ function AppLayout() {
         </div>
         {showSendUI && <Send />}
         {showAirtimeUI && <Airtime />}
+        {showAddNewGoal && <AddNewGoal />}
       </div>
     </>
   );

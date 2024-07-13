@@ -5,6 +5,7 @@ const initialState = {
   isSideBarHovered: false,
   showSendUI: false,
   showAirtimeUI: false,
+  showAddNewGoal: false,
 };
 
 const uiSlice = createSlice({
@@ -27,6 +28,9 @@ const uiSlice = createSlice({
     setShowAirtimeUI: (state, actions) => {
       state.showAirtimeUI = actions.payload;
     },
+    setShowAddNewGoal: (state, actions) => {
+      state.showAddNewGoal = actions.payload;
+    },
   },
 });
 
@@ -39,8 +43,8 @@ export const {
   setShowSendUI,
   showAirtimeUI,
   setShowAirtimeUI,
+  showAddNewGoal,
+  setShowAddNewGoal,
 } = uiSlice.actions;
-
-
 
 export default uiSlice.reducer;
