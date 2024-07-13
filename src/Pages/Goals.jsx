@@ -115,7 +115,7 @@ function Goals() {
         })}
 
         <div
-          className={`min-h-[216px] max-h-[240px] bg-[#1E1E1E] w-full p-5 rounded-md ${
+          className={`min-h-[216px] max-h-fit bg-[#1E1E1E] w-full p-5 rounded-md  ${
             darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
           }`}
         >
