@@ -4,6 +4,7 @@ import {
   useAccountData,
   useCustomerData,
   useTransactions,
+  useGoals,
 } from "../services/UserData";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -22,6 +23,8 @@ const AccountProvider = ({ children }) => {
   const { isLoadingTransactions, transactionsData, errorTransactions } =
     useTransactions(accountData);
 
+  const { isLoadingGoals, goalsData, errorGoals } = useGoals(accountData);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AccountContext.Provider
@@ -35,6 +38,9 @@ const AccountProvider = ({ children }) => {
           transactionsData,
           isLoadingTransactions,
           errorTransactions,
+          isLoadingGoals,
+          goalsData,
+          errorGoals,
         }}
       >
         {children}

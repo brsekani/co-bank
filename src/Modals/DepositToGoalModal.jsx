@@ -55,8 +55,8 @@ function DepositToGoalModal({ isOpen, onClose, goal, dispatch }) {
         }`}
         ref={DespositToGoalRef}
       >
-        <h1 className="text-2xl font-semibold text-center sm:text-3xl">
-          Add Funds to {goal.Name}
+        <h1 className="text-2xl font-semibold text-center sm:text-3xl text-colorPrimary">
+          Add Funds to <span className="capitalize">{goal.name}</span>
         </h1>
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -122,7 +122,7 @@ DepositToGoalModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   dispatch: PropTypes.func.isRequired,
   goal: PropTypes.shape({
-    Name: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     // Define other properties of the goal object as needed
   }).isRequired,
 };

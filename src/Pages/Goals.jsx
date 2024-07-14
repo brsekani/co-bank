@@ -4,9 +4,10 @@ import { completionPercentage } from "../utility/utilityFunction";
 import { useDispatch, useSelector } from "react-redux";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { setShowAddNewGoal, setShowDepositToGoal } from "../Features/uiSlice";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import DepositToGoalModal from "../Modals/DepositToGoalModal";
 import { IoAdd } from "react-icons/io5";
+import { AccountContext } from "../Context/AccountContext";
 
 function Goals() {
   const darkMode = useSelector((state) => state.darkMode);
@@ -14,40 +15,41 @@ function Goals() {
   const dispatch = useDispatch();
   const [selectedGoal, setSelectedGoal] = useState(null);
   const [searchedGoals, setSearchGoals] = useState("");
-  const goals = [
-    {
-      name: "Savings",
-      targetAmount: 1000,
-      totalAmount: 100,
-    },
-    {
-      name: "Car",
-      targetAmount: 1000,
-      totalAmount: 100,
-    },
-    {
-      name: "Savings",
-      targetAmount: 1000,
-      totalAmount: 100,
-    },
-    {
-      name: "Savings",
-      targetAmount: 1000,
-      totalAmount: 100,
-    },
-    {
-      name: "Savings",
-      targetAmount: 1000,
-      totalAmount: 100,
-    },
-    {
-      name: "Savings",
-      targetAmount: 1000,
-      totalAmount: 100,
-    },
-  ];
+  const { isLoadingGoals, goalsData, errorGoals } = useContext(AccountContext);
+  // const goals = [
+  //   {
+  //     name: "Savings",
+  //     targetAmount: 1000,
+  //     totalAmount: 100,
+  //   },
+  //   {
+  //     name: "Car",
+  //     targetAmount: 1000,
+  //     totalAmount: 100,
+  //   },
+  //   {
+  //     name: "Savings",
+  //     targetAmount: 1000,
+  //     totalAmount: 100,
+  //   },
+  //   {
+  //     name: "Savings",
+  //     targetAmount: 1000,
+  //     totalAmount: 100,
+  //   },
+  //   {
+  //     name: "Savings",
+  //     targetAmount: 1000,
+  //     totalAmount: 100,
+  //   },
+  //   {
+  //     name: "Savings",
+  //     targetAmount: 1000,
+  //     totalAmount: 100,
+  //   },
+  // ];
 
-  const filteredGoals = goals.filter((goal) =>
+  const filteredGoals = goalsData?.filter((goal) =>
     goal.name.toLowerCase().includes(searchedGoals.toLowerCase())
   );
 
@@ -90,7 +92,7 @@ function Goals() {
                   <div className="flex items-center justify-center bg-colorPrimary/10 w-[44px] h-[44px] rounded-md">
                     <GoGoal size={20} />
                   </div>
-                  <p className="text-3xl font-medium">{goal.name}</p>
+                  <p className="text-3xl font-medium capitalize">{goal.name}</p>
                 </div>
                 <div
                   className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer bg-colorPrimary/10"

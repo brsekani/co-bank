@@ -50,6 +50,21 @@ const fetchTransactions = async (accountData) => {
   return data;
 };
 
+const fetchGoals = async (accountData) => {
+  const accountId = accountData?.map((acc) => acc.accountId).at(0);
+
+  const { data, error } = await supabase
+    .from("goals")
+    .select("*")
+    .eq("id", accountId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  console.log(data);
+  return data;
+};
+
 export const useCustomerData = () => {
   const {
     isPending: isLoadingCustomerData,
@@ -96,5 +111,23 @@ export const useTransactions = (accountData) => {
     isLoadingTransactions,
     transactionsData,
     errorTransactions,
+  };
+};
+
+export const useGoals = (accountData) => {
+  const {
+    isPending: isLoadingGoals,
+    data: goalsData,
+    error: errorGoals,
+  } = useQuery({
+    queryKey: ["goals"],
+    queryFn: () => fetchGoals(accountData),
+    // refetchInterval: 1000 * 3,
+  });
+  console.log(goalsData);
+  return {
+    isLoadingGoals,
+    goalsData,
+    errorGoals,
   };
 };
