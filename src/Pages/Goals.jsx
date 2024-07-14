@@ -13,39 +13,43 @@ function Goals() {
   const { showDepositToGoal } = useSelector((state) => state.ui);
   const dispatch = useDispatch();
   const [selectedGoal, setSelectedGoal] = useState(null);
-
+  const [searchedGoals, setSearchGoals] = useState("");
   const goals = [
     {
-      Name: "Savings",
-      TargetAmount: 1000,
+      name: "Savings",
+      targetAmount: 1000,
       totalAmount: 100,
     },
     {
-      Name: "Car",
-      TargetAmount: 1000,
+      name: "Car",
+      targetAmount: 1000,
       totalAmount: 100,
     },
     {
-      Name: "Savings",
-      TargetAmount: 1000,
+      name: "Savings",
+      targetAmount: 1000,
       totalAmount: 100,
     },
     {
-      Name: "Savings",
-      TargetAmount: 1000,
+      name: "Savings",
+      targetAmount: 1000,
       totalAmount: 100,
     },
     {
-      Name: "Savings",
-      TargetAmount: 1000,
+      name: "Savings",
+      targetAmount: 1000,
       totalAmount: 100,
     },
     {
-      Name: "Savings",
-      TargetAmount: 1000,
+      name: "Savings",
+      targetAmount: 1000,
       totalAmount: 100,
     },
   ];
+
+  const filteredGoals = goals.filter((goal) =>
+    goal.name.toLowerCase().includes(searchedGoals.toLowerCase())
+  );
 
   const handleGoalClick = (goal) => {
     setSelectedGoal(goal);
@@ -64,12 +68,14 @@ function Goals() {
           className="w-[193px] h-[28px] bg-transparent border border-[#6b7280] px-2 "
           type="text"
           placeholder="Search Goals"
+          onChange={(e) => setSearchGoals(e.target.value)}
+          value={searchedGoals}
         />
       </div>
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-        {goals.map((goal, i) => {
+        {filteredGoals?.map((goal, i) => {
           const Percentage = completionPercentage(
-            goal.TargetAmount,
+            goal.targetAmount,
             goal.totalAmount
           );
           return (
@@ -84,7 +90,7 @@ function Goals() {
                   <div className="flex items-center justify-center bg-colorPrimary/10 w-[44px] h-[44px] rounded-md">
                     <GoGoal size={20} />
                   </div>
-                  <p className="text-3xl font-medium">{goal.Name}</p>
+                  <p className="text-3xl font-medium">{goal.name}</p>
                 </div>
                 <div
                   className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer bg-colorPrimary/10"
@@ -114,7 +120,7 @@ function Goals() {
               </div>
 
               <p className="flex items-center gap-1 mt-3 text-sm">
-                Target:{useFormatBalance(goal.TargetAmount)}
+                Target:{useFormatBalance(goal.targetAmount)}
               </p>
 
               <div className="w-full h-12 bg-[rgb(161,161,161)] rounded-md mt-3">
