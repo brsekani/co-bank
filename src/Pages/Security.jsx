@@ -17,8 +17,8 @@ function Security() {
 
   return (
     <div
-      className={`flex flex-col gap-10 bg-[#1E1E1E] p-5 rounded-md ${
-        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+      className={`flex flex-col gap-10 bg-gray-800 p-5 rounded-md ${
+        darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
       }`}
     >
       {/* Email Address */}

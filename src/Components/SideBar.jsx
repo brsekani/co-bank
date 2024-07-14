@@ -27,7 +27,7 @@ function SideBar() {
       )}
       <div
         className={`${
-          darkMode ? "bg-[#1E1E1E]" : "bg-white"
+          darkMode ? "bg-gray-800" : "bg-white"
         } text-[#6C6F87] w-20 ${
           isSideBarHovered ? "" : ""
         } flex flex-col justify-between h-full ${

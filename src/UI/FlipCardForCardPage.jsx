@@ -56,7 +56,7 @@ function FlipCardForCardPage() {
       <div className="flip-card-inner">
         <div
           className={`flip-card-front ${
-            darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+            darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
           }`}
         >
           <div className="flex items-center justify-between">

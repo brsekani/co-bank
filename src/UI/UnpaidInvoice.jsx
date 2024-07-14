@@ -7,8 +7,8 @@ function UnpaidInvoice() {
 
   return (
     <div
-      className={`bg-[#1E1E1E] w-full h-fit p-5 rounded-md ${
-        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+      className={`bg-gray-800 w-full h-fit p-5 rounded-md ${
+        darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
       }`}
     >
       <h6 className="text-[12px]">Unpaid Invoice</h6>

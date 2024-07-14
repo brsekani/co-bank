@@ -39,7 +39,7 @@ function Send() {
       <div
         ref={sendRef}
         className={`flex item-center md:justify-center flex-col p-5 rounded-lg font-rob w-full h-full md:w-[450px] md:h-fit ${
-          darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+          darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
         }`}
       >
         <div className="flex items-center justify-between">
@@ -162,7 +162,7 @@ function Send() {
                       key={i}
                       className={`${
                         darkMode
-                          ? "bg-[#1E1E1E] text-white"
+                          ? "bg-gray-800 text-white"
                           : "bg-white text-black"
                       } h-12 border border-[#fff]/1 flex items-center gap-3 px-3 cursor-pointer`}
                       onClick={() => handleBankSelect(bank)}

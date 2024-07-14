@@ -37,8 +37,8 @@ function OverviewCard() {
 
   return (
     <div
-      className={`min-h-[490px] max-h-[660px] w-full bg-[#1E1E1E] row-start-4 col-start-1 col-end-3 xl:row-start-2 md:row-start-3 md:col-start-1 md:col-end-3 lg:row-start-3 p-5 rounded-md overflow-x-auto ${
-        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+      className={`min-h-[490px] max-h-[660px] w-full bg-gray-800 row-start-4 col-start-1 col-end-3 xl:row-start-2 md:row-start-3 md:col-start-1 md:col-end-3 lg:row-start-3 p-5 rounded-md overflow-x-auto ${
+        darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
       }`}
     >
       <h2 className="mb-3 text-2xl font-meduim">Overview</h2>

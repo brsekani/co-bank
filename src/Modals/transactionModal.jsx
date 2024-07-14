@@ -79,7 +79,7 @@ const TransactionModal = ({ transaction, onClose }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center px-5 bg-black bg-opacity-50">
       <div
         className={`w-full max-w-md rounded-md ${
-          darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+          darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
         }`}
       >
         <div className="p-5" ref={TransactionModalRef}>

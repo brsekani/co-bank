@@ -25,7 +25,7 @@ function Verification() {
   return (
     <div
       className={`flex flex-col gap-10 ${
-        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+        darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
       } p-5 rounded-md`}
     >
       {/* Email Address */}

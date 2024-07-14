@@ -17,7 +17,7 @@ function Header() {
   return (
     <div
       className={`h-16 p-4 flex items-center justify-between ${
-        darkMode ? "bg-[#1E1E1E]" : "bg-white shadow-md"
+        darkMode ? "bg-gray-800" : "bg-white shadow-md"
       }`}
     >
       <h1

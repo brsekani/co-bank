@@ -3,11 +3,16 @@ import useFormatBalance from "../Hooks/useFormatBalance";
 import { completionPercentage } from "../utility/utilityFunction";
 import { useDispatch, useSelector } from "react-redux";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { setShowAddNewGoal } from "../Features/uiSlice";
+import { setShowAddNewGoal, setShowDepositToGoal } from "../Features/uiSlice";
+import { useState } from "react";
+import DepositToGoalModal from "../Modals/DepositToGoalModal";
+import { IoAdd } from "react-icons/io5";
 
 function Goals() {
   const darkMode = useSelector((state) => state.darkMode);
+  const { showDepositToGoal } = useSelector((state) => state.ui);
   const dispatch = useDispatch();
+  const [selectedGoal, setSelectedGoal] = useState(null);
 
   const goals = [
     {
@@ -42,14 +47,19 @@ function Goals() {
     },
   ];
 
+  const handleGoalClick = (goal) => {
+    setSelectedGoal(goal);
+    dispatch(setShowDepositToGoal(true));
+  };
+
   return (
     <div
       className={`flex flex-col gap-5 p-5 ${
-        darkMode ? "bg-[#121212] text-white" : "bg-[#ececec] text-black"
+        darkMode ? "text-white" : "text-black"
       }`}
     >
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl">All Goals</h1>
+        <h1 className="text-3xl font-semibold">All Goals</h1>
         <input
           className="w-[193px] h-[28px] bg-transparent border border-[#6b7280] px-2 "
           type="text"
@@ -65,8 +75,8 @@ function Goals() {
           return (
             <div
               key={i}
-              className={`min-h-[216px] max-h-[240px] bg-[#1E1E1E] w-full p-5 rounded-md ${
-                darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+              className={`min-h-[216px] max-h-[240px] bg-gray-800 w-full p-5 rounded-md ${
+                darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
               }`}
             >
               <div className="flex flex-row items-center justify-between">
@@ -76,8 +86,11 @@ function Goals() {
                   </div>
                   <p className="text-3xl font-medium">{goal.Name}</p>
                 </div>
-                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#a1a1a1]">
-                  <GoArrowUpRight size={20} />
+                <div
+                  className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer bg-colorPrimary/10"
+                  onClick={() => handleGoalClick(goal)}
+                >
+                  <IoAdd size={25} />
                 </div>
               </div>
 
@@ -100,7 +113,7 @@ function Goals() {
                 </div>
               </div>
 
-              <p className="flex items-center gap-1 mt-10 text-sm">
+              <p className="flex items-center gap-1 mt-3 text-sm">
                 Target:{useFormatBalance(goal.TargetAmount)}
               </p>
 
@@ -115,8 +128,8 @@ function Goals() {
         })}
 
         <div
-          className={`min-h-[216px] max-h-fit bg-[#1E1E1E] w-full p-5 rounded-md  ${
-            darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+          className={`min-h-[216px] max-h-fit bg-gray-800 w-full p-5 rounded-md  ${
+            darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
           }`}
         >
           <div className="flex items-start gap-3 mb-2">
@@ -141,6 +154,15 @@ function Goals() {
           </button>
         </div>
       </div>
+
+      {showDepositToGoal && selectedGoal && (
+        <DepositToGoalModal
+          isOpen={showDepositToGoal}
+          onClose={() => dispatch(setShowDepositToGoal(false))}
+          goal={selectedGoal}
+          dispatch={dispatch}
+        />
+      )}
     </div>
   );
 }

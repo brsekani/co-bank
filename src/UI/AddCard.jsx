@@ -6,8 +6,8 @@ function AddCard() {
 
   return (
     <div
-      className={`w-full bg-[#1E1E1E] md:flex-row col-start-1 col-end-3 md:col-start-1 md:col-end-3 xl:row-end-1 xl:row-start-1 p-5 rounded-md ${
-        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+      className={`w-full bg-gray-800 md:flex-row col-start-1 col-end-3 md:col-start-1 md:col-end-3 xl:row-end-1 xl:row-start-1 p-5 rounded-md ${
+        darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
       }`}
     >
       <div className="flex flex-row items-center justify-between ">

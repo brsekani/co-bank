@@ -49,8 +49,8 @@ function AddNewGoal() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-black bg-opacity-50">
       <div
-        className={`w-full sm:max-w-lg h-full sm:h-fit mx-auto rounded-lg shadow-lg bg-white text-black ${
-          darkMode ? "bg-gray-800 text-white" : ""
+        className={`w-full sm:max-w-lg h-full sm:h-fit mx-auto rounded-lg shadow-lg text-black ${
+          darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
         }`}
         ref={addNewGoalRef}
       >
@@ -81,7 +81,7 @@ function AddNewGoal() {
                   <input
                     {...field}
                     type="text"
-                    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    className="w-full h-10 px-3 py-2 bg-transparent border rounded-md focus:outline-none focus:border-blue-500"
                     placeholder="Enter goal name"
                     maxLength={10}
                   />
@@ -98,7 +98,7 @@ function AddNewGoal() {
                 Target Amount
               </label>
               <input
-                className="w-full h-10 bg-transparent border border-white/1 pl-7"
+                className="w-full h-10 bg-transparent border rounded-md border-white/1 pl-7 focus:border-blue-500"
                 placeholder="Enter Amount"
                 type="text"
                 inputMode="tel"

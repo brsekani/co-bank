@@ -51,7 +51,7 @@ function TransactionsTable() {
     return (
       <div
         className={`w-full ${
-          darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+          darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
         } col-start-1 col-end-4 h-fit p-10 rounded-md text-base`}
       >
         <div className="flex items-center justify-between mb-5">

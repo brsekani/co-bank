@@ -85,7 +85,7 @@ function AppLayout() {
       )} */}
       <div
         className={`flex h-screen text-white ${
-          darkMode ? "bg-[#121212]" : "bg-[#ececec]"
+          darkMode ? "bg-gray-900" : "bg-[#ececec]"
         } font-rob cursor-default relative`}
       >
         <div className="absolute h-full">

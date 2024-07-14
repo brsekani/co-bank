@@ -18,8 +18,8 @@ function AllInvoice() {
 
   return (
     <div
-      className={`xl:row-start-1 xl:col-start-1 xl:col-end-3 bg-[#1E1E1E] p-5 rounded-md ${
-        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+      className={`xl:row-start-1 xl:col-start-1 xl:col-end-3 bg-gray-800 p-5 rounded-md ${
+        darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
       }`}
     >
       <div className="flex flex-row items-center justify-between ">

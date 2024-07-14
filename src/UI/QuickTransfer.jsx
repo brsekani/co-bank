@@ -5,8 +5,8 @@ function QuickTransfer() {
 
   return (
     <div
-      className={`w-full h-full bg-[#1E1E1E] col-start-1 col-end-3 row-end-3 md:col-end-2 row-start-2 xl:row-start-1 xl:row-end-2 xl:col-start-3 xl:col-end-4 p-5 rounded-md  ${
-        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+      className={`w-full h-full bg-gray-800 col-start-1 col-end-3 row-end-3 md:col-end-2 row-start-2 xl:row-start-1 xl:row-end-2 xl:col-start-3 xl:col-end-4 p-5 rounded-md  ${
+        darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
       }`}
     >
       <h1 className="text-3xl font-semibold">Quick Transfer</h1>

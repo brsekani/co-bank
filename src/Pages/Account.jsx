@@ -24,7 +24,7 @@ function Account() {
     <div className="grid gap-5 p-5 xl:grid-cols-4 md:grid-cols-3">
       <div
         className={`xl:col-start-1 xl:col-end-2 ${
-          darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+          darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
         } md:block hidden rounded-md`}
       >
         <AccountNav />
@@ -52,7 +52,7 @@ function Account() {
         className={` h-full ${
           showMobile ? "row-start-1 col-start-1 col-end-3 block" : "hidden"
         } ${
-          darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+          darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
         } md:hidden block`}
       >
         <AccountMobileNav setShowMobileNav={setShowMobileNav} />

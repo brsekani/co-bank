@@ -48,7 +48,7 @@ const Transfers = ({
       <div
         className={`flex item-center md:justify-center flex-col p-5 rounded-lg font-rob w-full h-full md:w-[450px] md:h-fit transform transition-transform ${
           isOpen ? "translate-y-0" : "translate-y-full"
-        } ${darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"}`}
+        } ${darkMode ? "bg-gray-800 text-white" : "bg-white text-black"}`}
       >
         {!transactionSuccess ? (
           <div className="flex items-center justify-between">
@@ -118,7 +118,7 @@ const Transfers = ({
                       {...field}
                       className={`w-full py-2 pl-3 pr-10 border rounded-lg h-14 bg-input border-border text-primary ${
                         darkMode
-                          ? "bg-[#1E1E1E] text-white"
+                          ? "bg-gray-800 text-white"
                           : "bg-white text-black"
                       }`}
                     >
@@ -170,7 +170,7 @@ const Transfers = ({
                       ref={pinInputRef}
                       className={`w-48 h-12 text-2xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 ${
                         darkMode
-                          ? "bg-[#1E1E1E] text-white"
+                          ? "bg-gray-800 text-white"
                           : "bg-white text-black"
                       } ${
                         error === "incorrect pin"

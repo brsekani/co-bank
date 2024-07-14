@@ -58,7 +58,7 @@ function Profile() {
       {/* Profile */}
       <div
         className={`flex flex-col gap-10  rounded-md  p-5 ${
-          darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+          darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
         }`}
       >
         <div className="flex items-center justify-between">
@@ -85,7 +85,7 @@ function Profile() {
       {/* Account Details */}
       <div
         className={`flex flex-col gap-10 ${
-          darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+          darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
         } rounded-md  p-5`}
       >
         <h1 className="text-xl lg:text-3xl">Account Details</h1>
@@ -105,7 +105,7 @@ function Profile() {
       {/* Personal Information */}
       <div
         className={`flex flex-col gap-10  rounded-md ${
-          darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+          darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
         } p-5`}
       >
         <div className="flex items-center justify-between">

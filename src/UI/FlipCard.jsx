@@ -53,7 +53,7 @@ function FlipCard() {
 
   return (
     <div
-      className={`w-full font-rob ${darkMode ? "bg-[#1E1E1E]" : "bg-white"}  ${
+      className={`w-full font-rob ${darkMode ? "bg-gray-800" : "bg-white"}  ${
         darkMode ? "text-white" : "text-black"
       }  col-start-1 col-end-4 md:col-start-2 md:col-end-4 xl:col-end-3 min-h-[195px] max-h-[250px] rounded-md p-5`}
     >
@@ -61,7 +61,7 @@ function FlipCard() {
         <div className="flip-card-inner">
           <div
             className={`flip-card-front ${
-              darkMode ? "bg-[#1E1E1E]" : "bg-white"
+              darkMode ? "bg-gray-800" : "bg-white"
             }`}
           >
             <div className="flex items-center justify-between">

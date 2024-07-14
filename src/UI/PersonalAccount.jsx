@@ -44,8 +44,8 @@ function PersonalAccount() {
 
   return (
     <div
-      className={`w-full min-h-[195px] max-h-[250px] col-start-1 col-end-4 md:col-start-1 md:col-end-2  bg-[#1E1E1E] p-5 rounded-md ${
-        darkMode ? "bg-[#1E1E1E]" : "bg-white"
+      className={`w-full min-h-[195px] max-h-[250px] col-start-1 col-end-4 md:col-start-1 md:col-end-2  bg-gray-800 p-5 rounded-md ${
+        darkMode ? "bg-gray-800" : "bg-white"
       } ${darkMode ? "text-white shadow-md" : "text-black"} font-rob`}
     >
       <div className="flex items-center justify-between">

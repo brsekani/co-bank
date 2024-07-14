@@ -65,7 +65,7 @@ function Notifications() {
   return (
     <div
       className={`flex flex-col gap-10 p-5 rounded-md ${
-        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+        darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
       }`}
     >
       <div className="flex flex-col gap-1">

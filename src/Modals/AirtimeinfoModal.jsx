@@ -42,7 +42,7 @@ function AirtimeinfoModal({ isOpen, closeModal, formData, closeAirtimeModal }) {
       <div
         className={`flex item-center md:justify-center flex-col p-5 rounded-lg font-rob w-full h-full md:w-[450px] md:h-fit transform transition-transform ${
           isOpen ? "translate-y-0" : "translate-y-full"
-        } ${darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"}`}
+        } ${darkMode ? "bg-gray-800 text-white" : "bg-white text-black"}`}
       >
         {!transactionSuccess ? (
           <div className="flex items-center justify-between">
@@ -91,7 +91,7 @@ function AirtimeinfoModal({ isOpen, closeModal, formData, closeAirtimeModal }) {
                   maxLength={4}
                   minLength={4}
                   className={`w-48 h-12 text-2xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 ${
-                    darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+                    darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
                   } `}
                   {...register("pin", {
                     required: "Enter pin",

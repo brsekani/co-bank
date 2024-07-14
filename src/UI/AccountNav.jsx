@@ -44,7 +44,7 @@ function AccountNav() {
   return (
     <div
       className={`${
-        darkMode ? "bg-[#1E1E1E] text-white" : "bg-white text-black"
+        darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
       }`}
     >
       <nav>
