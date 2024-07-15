@@ -1,4 +1,5 @@
 export function completionPercentage(totalAmount, TargetAmount) {
+  console.log(typeof totalAmount, typeof TargetAmount);
   const Percentage = (TargetAmount / totalAmount) * 100;
   return Percentage;
 }

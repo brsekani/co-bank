@@ -1,4 +1,4 @@
-import { GoArrowUpRight, GoGoal } from "react-icons/go";
+import { GoGoal } from "react-icons/go";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import { completionPercentage } from "../utility/utilityFunction";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,41 +15,13 @@ function Goals() {
   const dispatch = useDispatch();
   const [selectedGoal, setSelectedGoal] = useState(null);
   const [searchedGoals, setSearchGoals] = useState("");
-  const { isLoadingGoals, goalsData, errorGoals } = useContext(AccountContext);
-  // const goals = [
-  //   {
-  //     name: "Savings",
-  //     targetAmount: 1000,
-  //     totalAmount: 100,
-  //   },
-  //   {
-  //     name: "Car",
-  //     targetAmount: 1000,
-  //     totalAmount: 100,
-  //   },
-  //   {
-  //     name: "Savings",
-  //     targetAmount: 1000,
-  //     totalAmount: 100,
-  //   },
-  //   {
-  //     name: "Savings",
-  //     targetAmount: 1000,
-  //     totalAmount: 100,
-  //   },
-  //   {
-  //     name: "Savings",
-  //     targetAmount: 1000,
-  //     totalAmount: 100,
-  //   },
-  //   {
-  //     name: "Savings",
-  //     targetAmount: 1000,
-  //     totalAmount: 100,
-  //   },
-  // ];
+  const { goalsData } = useContext(AccountContext);
 
-  const filteredGoals = goalsData?.filter((goal) =>
+  const arrangedGoalsByDataCreated = goalsData?.sort(
+    (a, b) => new Date(b.created_at) - new Date(a.created_at)
+  );
+
+  const filteredGoals = arrangedGoalsByDataCreated?.filter((goal) =>
     goal.name.toLowerCase().includes(searchedGoals.toLowerCase())
   );
 
@@ -80,6 +52,9 @@ function Goals() {
             goal.targetAmount,
             goal.totalAmount
           );
+          {
+            console.log(goal.targetAmount, goal.totalAmount);
+          }
           return (
             <div
               key={i}
@@ -109,7 +84,7 @@ function Goals() {
                   </h1>
                   <span
                     className={`px-2 py-1 text-[12px] font-medium ${
-                      completionPercentage > 66
+                      Percentage > 66
                         ? "bg-green-600"
                         : completionPercentage > 33
                         ? "bg-yellow-600"

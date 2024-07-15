@@ -1,14 +1,19 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setShowAddNewGoal } from "../Features/uiSlice";
 import { GoGoal } from "react-icons/go";
 import { useForm, Controller } from "react-hook-form";
 import { PiCurrencyDollarSimpleBold } from "react-icons/pi";
+import { AccountContext } from "../Context/AccountContext";
+import { useAddGoalApi } from "../services/addGoalApi";
 
 function AddNewGoal() {
   const darkMode = useSelector((state) => state.darkMode);
   const addNewGoalRef = useRef();
   const dispatch = useDispatch();
+  const { accountData } = useContext(AccountContext);
+  const accountId = accountData.map((acc) => acc.accountId);
+  const { isAddGoalError, addGoal, isAddingGoal } = useAddGoalApi();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -41,9 +46,13 @@ function AddNewGoal() {
   };
 
   const onSubmit = (data) => {
-    console.log(data);
-    // You can dispatch actions here to handle form submission
-    dispatch(setShowAddNewGoal(false)); // Example: Close modal after submission
+    const goalData = {
+      accountId: accountId[0], // Assuming you want the first accountId
+      name: data.name,
+      totalAmount: 0,
+      targetAmount: parseFloat(data.amount.replace(/,/g, "")),
+    };
+    addGoal(goalData);
   };
 
   return (
@@ -70,12 +79,8 @@ function AddNewGoal() {
                   required: "Please enter the name of your goal",
                   minLength: {
                     value: 3,
-                    message: "Please enter a 3 characters",
+                    message: "Please enter at least 3 characters",
                   },
-                  //   pattern: {
-                  //     value: /^\d{10}$/,
-                  //     message: "Please enter a valid 10-digit account number",
-                  //   },
                 }}
                 render={({ field }) => (
                   <input
@@ -116,7 +121,6 @@ function AddNewGoal() {
                 onChange={(e) => {
                   const rawValue = e.target.value.replace(/,/g, "");
                   const formattedValue = formatNumber(rawValue);
-
                   setValue("amount", formattedValue, { shouldValidate: true });
                 }}
               />
@@ -135,8 +139,13 @@ function AddNewGoal() {
               type="submit"
               className="w-full px-4 py-2 text-white transition duration-200 bg-blue-500 rounded-md hover:bg-blue-600"
             >
-              Add Goal
+              {isAddingGoal ? "Adding Goal..." : "Add Goal"}
             </button>
+            {isAddGoalError && (
+              <p className="text-xs text-red-500">
+                Error adding goal. Please try again.
+              </p>
+            )}
           </form>
         </div>
       </div>

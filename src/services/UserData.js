@@ -56,7 +56,7 @@ const fetchGoals = async (accountData) => {
   const { data, error } = await supabase
     .from("goals")
     .select("*")
-    .eq("id", accountId);
+    .eq("accountId", accountId);
 
   if (error) {
     throw new Error(error.message);
