@@ -15,6 +15,8 @@ import SignUpAndLogin from "./Pages/SignUpAndLogin";
 import { AccountProvider } from "./Context/AccountContext";
 import { Provider } from "react-redux";
 import Store from "./App/Store";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -40,6 +42,7 @@ function App() {
               <Route path="support" element={<Support />} />
             </Route>
           </Routes>
+          <ToastContainer />
         </BrowserRouter>
       </AccountProvider>
     </Provider>

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "../supabase";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 // Function to handle money transfer
 const transferMoneyApi = async (transferInfo) => {
@@ -113,6 +114,7 @@ const transferMoneyApi = async (transferInfo) => {
 
   return {
     message: "Money Transfer successful",
+    amount,
   };
 };
 
@@ -127,9 +129,10 @@ export const useTransferMoney = () => {
     error: transferError,
   } = useMutation({
     mutationFn: transferMoneyApi,
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["account"] });
       setTransactionSuccess(true);
+      toast.success(`$${data.amount} was successfully sent`);
     },
   });
 

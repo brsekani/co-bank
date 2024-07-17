@@ -3,6 +3,7 @@ import supabase from "../supabase";
 import { setShowAddNewGoal, setShowDepositToGoal } from "../Features/uiSlice";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const addGoalApi = async (goalData) => {
   const { accountId, name, targetAmount } = goalData;
@@ -32,7 +33,7 @@ const addGoalApi = async (goalData) => {
     throw new Error(error.message);
   }
 
-  return { message: "Goal Added", data };
+  return { message: "Goal Added", data, name };
 };
 
 const updateGoalApi = async (goalData) => {
@@ -124,7 +125,7 @@ const updateGoalApi = async (goalData) => {
     throw new Error(error.message);
   }
 
-  return { message: "Goal Added", data };
+  return { message: "Goal Added", data, name };
 };
 
 export const useAddGoalApi = () => {
@@ -138,9 +139,10 @@ export const useAddGoalApi = () => {
     isPending: isAddingGoal,
   } = useMutation({
     mutationFn: addGoalApi,
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["goals"] });
       dispatch(setShowAddNewGoal(false));
+      toast.success(`${data.name} has been Added to goals`);
     },
     onError: (error) => {
       setError(error.message);
@@ -153,7 +155,6 @@ export const useAddGoalApi = () => {
 export const useUpdateGoal = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
-  const [transactionSuccess, setTransactionSuccess] = useState(false);
 
   const {
     mutate: updatingGoal,
@@ -161,23 +162,16 @@ export const useUpdateGoal = () => {
     error: isUpdatingGoalError,
   } = useMutation({
     mutationFn: updateGoalApi,
-    onSuccess: () => {
-      // queryClient.invalidateQueries({ queryKey: ["goals"] });
-      queryClient.removeQueries({ queryKey: ["goals"] });
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["goals"] });
       dispatch(setShowDepositToGoal(false));
-      // queryClient.invalidateQueries({
-      //   queryKey: ["goals"],
-      //   refetchType: "all",
-      // });
-      console.log("done");
-      setTransactionSuccess(true);
+      console.log(data);
+      toast.success(`Money has been added to the goal: ${data.name}`);
     },
   });
 
   return {
     updatingGoal,
-    transactionSuccess,
-    setTransactionSuccess,
     isUpdatingGoal,
     isUpdatingGoalError,
   };

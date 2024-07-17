@@ -76,7 +76,7 @@ function Goals() {
                       percentage > 66
                         ? "bg-green-600"
                         : percentage > 33
-                        ? "bg-yellow-600"
+                        ? "bg-yellow-400"
                         : "bg-red-600"
                     }`}
                   >

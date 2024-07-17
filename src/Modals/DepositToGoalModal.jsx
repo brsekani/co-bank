@@ -44,6 +44,7 @@ function DepositToGoalModal({ isOpen, onClose, goal }) {
               inputMode="tel"
               autoComplete="off"
               maxLength={15}
+              disabled={isUpdatingGoal}
               {...register("amount", {
                 required: "Enter an amount",
                 validate: (value) => {
@@ -97,6 +98,7 @@ function DepositToGoalModal({ isOpen, onClose, goal }) {
                   className={`w-full py-2 pl-3 pr-10 border rounded-lg h-10 bg-input border-border text-primary ${
                     darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
                   }`}
+                  disabled={isUpdatingGoal}
                 >
                   <option value="accountBalance" className="text-primary">
                     Current Balance - {formattedAccountBalance}
