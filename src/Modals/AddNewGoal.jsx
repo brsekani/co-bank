@@ -1,59 +1,24 @@
-import { useContext, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setShowAddNewGoal } from "../Features/uiSlice";
 import { GoGoal } from "react-icons/go";
-import { useForm, Controller } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { PiCurrencyDollarSimpleBold } from "react-icons/pi";
-import { AccountContext } from "../Context/AccountContext";
-import { useAddGoalApi } from "../services/addGoalApi";
+
+import useAddNewGoal from "../Hooks/useAddNewGoal";
 
 function AddNewGoal() {
-  const darkMode = useSelector((state) => state.darkMode);
-  const addNewGoalRef = useRef();
-  const dispatch = useDispatch();
-  const { accountData } = useContext(AccountContext);
-  const accountId = accountData.map((acc) => acc.accountId);
-  const { isAddGoalError, addGoal, isAddingGoal, error } = useAddGoalApi();
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        !isAddingGoal &&
-        addNewGoalRef.current &&
-        !addNewGoalRef.current.contains(event.target)
-      ) {
-        dispatch(setShowAddNewGoal(false));
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dispatch, isAddingGoal]);
-
   const {
-    control,
+    darkMode,
+    addNewGoalRef,
     handleSubmit,
-    formState: { errors },
+    onSubmit,
+    control,
+    errors,
     register,
+    formatNumber,
     setValue,
-  } = useForm();
-
-  const formatNumber = (value) => {
-    const parts = value.replace(/[^0-9]/g, "").split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-  };
-
-  const onSubmit = (data) => {
-    const goalData = {
-      accountId: accountId[0], // Assuming you want the first accountId
-      name: data.name,
-      targetAmount: parseFloat(data.amount.replace(/,/g, "")),
-    };
-    addGoal(goalData);
-  };
+    isAddingGoal,
+    isAddGoalError,
+    error,
+  } = useAddNewGoal();
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-black bg-opacity-50">
@@ -141,7 +106,6 @@ function AddNewGoal() {
             >
               {isAddingGoal ? "Adding Goal..." : "Add Goal"}
             </button>
-            {console.log(error)}
             {isAddGoalError && <p className="text-xs text-red-500">{error}</p>}
           </form>
         </div>
