@@ -1,13 +1,10 @@
 import { GoGoal } from "react-icons/go";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import { completionPercentage } from "../utility/utilityFunction";
-import { useDispatch, useSelector } from "react-redux";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { setShowAddNewGoal, setShowDepositToGoal } from "../Features/uiSlice";
-import { useContext, useState } from "react";
 import DepositToGoalModal from "../Modals/DepositToGoalModal";
 import { IoAdd } from "react-icons/io5";
-import { AccountContext } from "../Context/AccountContext";
 import useGoals from "../Hooks/useGoals";
 
 function Goals() {
@@ -21,6 +18,7 @@ function Goals() {
     selectedGoal,
     dispatch,
   } = useGoals();
+
   return (
     <div
       className={`flex flex-col gap-5 p-5 ${
@@ -39,17 +37,17 @@ function Goals() {
       </div>
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
         {filteredGoals?.map((goal, i) => {
-          const Percentage = completionPercentage(
+          const percentage = completionPercentage(
             goal.targetAmount,
             goal.totalAmount
           );
-          {
-            console.log(goal.targetAmount, goal.totalAmount);
-          }
+          const totalAmount = useFormatBalance(goal.totalAmount);
+          const targetAmount = useFormatBalance(goal.targetAmount);
+
           return (
             <div
               key={i}
-              className={`min-h-[216px] max-h-[240px] bg-gray-800 w-full p-5 rounded-md ${
+              className={`min-h-[216px] max-h-[240px] w-full p-5 rounded-md ${
                 darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
               }`}
             >
@@ -60,38 +58,38 @@ function Goals() {
                   </div>
                   <p className="text-3xl font-medium capitalize">{goal.name}</p>
                 </div>
-                <div
-                  className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer bg-colorPrimary/10"
-                  onClick={() => handleGoalClick(goal)}
-                >
-                  <IoAdd size={25} />
-                </div>
+                {percentage < 100 && (
+                  <div
+                    className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer bg-colorPrimary/10"
+                    onClick={() => handleGoalClick(goal)}
+                  >
+                    <IoAdd size={25} />
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center justify-between mt-3">
                 <div className="flex items-center gap-2">
-                  <h1 className="text-3xl">
-                    {useFormatBalance(goal.totalAmount)}
-                  </h1>
+                  <h1 className="text-3xl">{totalAmount}</h1>
                   <span
-                    className={`px-2 py-1 text-[12px] font-medium ${
-                      Percentage > 66
+                    className={`px-2 py-1 text-[12px] font-medium rounded-xl ${
+                      percentage > 66
                         ? "bg-green-600"
-                        : completionPercentage > 33
+                        : percentage > 33
                         ? "bg-yellow-600"
                         : "bg-red-600"
-                    }  rounded-xl`}
+                    }`}
                   >
-                    {Percentage.toFixed(2)}%
+                    {percentage.toFixed(2)}%
                   </span>
                 </div>
               </div>
 
               <p className="flex items-center gap-1 mt-3 text-sm">
-                Target:{useFormatBalance(goal.targetAmount)}
+                Target: {targetAmount}
               </p>
 
-              {Percentage === 100 ? (
+              {percentage === 100 ? (
                 <button className="flex items-center justify-center w-full h-12 gap-2 px-2 mt-2 text-lg text-white rounded-md sm:text-2xl stripe-bg">
                   Cash out
                 </button>
@@ -99,7 +97,7 @@ function Goals() {
                 <div className="w-full h-12 bg-[rgb(161,161,161)] rounded-md mt-3">
                   <div
                     className="h-12 rounded-md stripe-bg"
-                    style={{ width: `${Percentage}%` }}
+                    style={{ width: `${percentage}%` }}
                   ></div>
                 </div>
               )}

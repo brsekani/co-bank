@@ -44,7 +44,6 @@ const transferMoneyApi = async (transferInfo) => {
   // Determine the balance type for the sender
   let senderBalance;
   if (balanceType === "accountBalance") {
-    console.log(true);
     senderBalance = senderAccount[0]?.accountBalance;
   } else if (balanceType === "creditCardBalance") {
     senderBalance = senderAccount[0]?.creditCardBalance;
@@ -61,7 +60,6 @@ const transferMoneyApi = async (transferInfo) => {
     throw new Error("Incorrect pin");
   }
 
-  console.log(senderBalance, formattedAmount);
   // Validate sufficient balance
   if (senderBalance < formattedAmount) {
     throw new Error("Insufficient balance to transfer");

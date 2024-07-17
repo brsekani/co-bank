@@ -119,6 +119,7 @@ export const useGoals = (accountData) => {
     isPending: isLoadingGoals,
     data: goalsData,
     error: errorGoals,
+    refetch: refetchGoals,
   } = useQuery({
     queryKey: ["goals"],
     queryFn: () => fetchGoals(accountData),
@@ -129,5 +130,6 @@ export const useGoals = (accountData) => {
     isLoadingGoals,
     goalsData,
     errorGoals,
+    refetchGoals,
   };
 };

@@ -1,54 +1,29 @@
 import PropTypes from "prop-types";
-import { createPortal } from "react-dom";
-import { useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { PiCurrencyDollarSimpleBold } from "react-icons/pi";
-import { setShowDepositToGoal } from "../Features/uiSlice";
-import { useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import useDepositToGoalModal from "../Hooks/useDepositToGoalModal";
 
-function DepositToGoalModal({ isOpen, onClose, goal, dispatch }) {
-  const darkMode = useSelector((state) => state.darkMode);
-  const DespositToGoalRef = useRef();
-
+function DepositToGoalModal({ isOpen, onClose, goal }) {
   const {
+    darkMode,
+    DespositToGoalRef,
     handleSubmit,
-    formState: { errors },
+    onSubmit,
     register,
+    maxAmountInput,
+    formatNumber,
     setValue,
-  } = useForm();
+    errors,
+    isUpdatingGoalError,
+    control,
+    formattedAccountBalance,
+    formattedCreditCardBalance,
+    formattedSavingsBalance,
+    isUpdatingGoal,
+  } = useDepositToGoalModal({ isOpen, goal });
 
-  const onSubmit = (data) => {
-    console.log(data);
-    // You can dispatch actions here to handle form submission
-    dispatch(setShowDepositToGoal(false)); // Example: Close modal after submission
-  };
-
-  const formatNumber = (value) => {
-    const parts = value.replace(/[^0-9]/g, "").split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        DespositToGoalRef.current &&
-        !DespositToGoalRef.current.contains(event.target)
-      ) {
-        dispatch(setShowDepositToGoal(false));
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dispatch]);
-
-  if (!isOpen) return null;
-
-  return createPortal(
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-rob">
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-black bg-opacity-50">
       <div
         className={`relative w-full h-full p-5 rounded-md shadow-lg sm:max-w-lg sm:h-fit ${
           darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
@@ -60,10 +35,10 @@ function DepositToGoalModal({ isOpen, onClose, goal, dispatch }) {
         </h1>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="relative flex flex-col mb-4">
+          <div className="relative flex flex-col mb-2">
             <label className="block text-sm font-medium">Amount</label>
             <input
-              className="w-full h-10 bg-transparent border border-white/1 pl-7"
+              className="w-full h-10 bg-transparent border rounded-md border-white/1 pl-7"
               placeholder="Enter Amount"
               type="text"
               inputMode="tel"
@@ -74,12 +49,16 @@ function DepositToGoalModal({ isOpen, onClose, goal, dispatch }) {
                 validate: (value) => {
                   const amount = parseFloat(value.replace(/,/g, ""));
                   if (isNaN(amount)) return "Invalid amount";
-                  if (amount < 100) return "Amount must be at least $10";
+                  if (amount < 1) return "Amount must be at least $1";
+                  if (amount > maxAmountInput)
+                    return `Amount must not exceed $${maxAmountInput}`;
                   return true;
                 },
               })}
               onChange={(e) => {
-                const rawValue = e.target.value.replace(/,/g, "");
+                const rawValue = e.target.value
+                  .replace(/,/g, "")
+                  .replace(/^0+/, "");
                 const formattedValue = formatNumber(rawValue);
 
                 setValue("amount", formattedValue, { shouldValidate: true });
@@ -95,25 +74,62 @@ function DepositToGoalModal({ isOpen, onClose, goal, dispatch }) {
                 {errors.amount.message}
               </span>
             )}
+            {isUpdatingGoalError && (
+              <p className="text-xs text-red-600">
+                Network Error...Kindly retry
+              </p>
+            )}
           </div>
+
+          <div className="relative w-full mb-2 rounded-lg shadow-lg">
+            <Controller
+              name="balanceType"
+              control={control}
+              defaultValue="accountBalance"
+              rules={
+                {
+                  // onChange: handleSelectPaymentMethod,
+                }
+              }
+              render={({ field }) => (
+                <select
+                  {...field}
+                  className={`w-full py-2 pl-3 pr-10 border rounded-lg h-10 bg-input border-border text-primary ${
+                    darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
+                  }`}
+                >
+                  <option value="accountBalance" className="text-primary">
+                    Current Balance - {formattedAccountBalance}
+                  </option>
+                  <option value="creditCardBalance" className="text-primary">
+                    Credit Card Balance - {formattedCreditCardBalance}
+                  </option>
+                  <option value="savingsBalance" className="text-primary">
+                    Savings Balance - {formattedSavingsBalance}
+                  </option>
+                </select>
+              )}
+            />
+          </div>
+
           <div className="flex flex-col items-center justify-center gap-1 sm:flex-row">
             <button
               type="submit"
-              className="w-full px-4 py-2 text-white transition duration-200 bg-blue-500 rounded-md hover:bg-blue-600"
+              className="flex items-center justify-center w-full h-10 px-4 py-2 text-white transition duration-200 rounded-md bg-colorPrimary"
             >
-              Add Goal
+              {isUpdatingGoal ? <div className="spinner"></div> : "Add Anount"}
             </button>
             <button
-              className="w-full px-4 py-2 text-white transition duration-200 bg-blue-500 rounded-md hover:bg-blue-600"
+              className="w-full px-4 py-2 text-white transition duration-200 rounded-md bg-colorPrimary"
               onClick={onClose}
+              disabled={isUpdatingGoal}
             >
               Close
             </button>
           </div>
         </form>
       </div>
-    </div>,
-    document.body
+    </div>
   );
 }
 
@@ -123,6 +139,9 @@ DepositToGoalModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
   goal: PropTypes.shape({
     name: PropTypes.string.isRequired,
+    targetAmount: PropTypes.string.isRequired,
+    totalAmount: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
     // Define other properties of the goal object as needed
   }).isRequired,
 };

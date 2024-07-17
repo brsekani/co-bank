@@ -13,11 +13,12 @@ function AddNewGoal() {
   const dispatch = useDispatch();
   const { accountData } = useContext(AccountContext);
   const accountId = accountData.map((acc) => acc.accountId);
-  const { isAddGoalError, addGoal, isAddingGoal } = useAddGoalApi();
+  const { isAddGoalError, addGoal, isAddingGoal, error } = useAddGoalApi();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
+        !isAddingGoal &&
         addNewGoalRef.current &&
         !addNewGoalRef.current.contains(event.target)
       ) {
@@ -29,7 +30,7 @@ function AddNewGoal() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dispatch]);
+  }, [dispatch, isAddingGoal]);
 
   const {
     control,
@@ -49,7 +50,6 @@ function AddNewGoal() {
     const goalData = {
       accountId: accountId[0], // Assuming you want the first accountId
       name: data.name,
-      totalAmount: 0,
       targetAmount: parseFloat(data.amount.replace(/,/g, "")),
     };
     addGoal(goalData);
@@ -141,11 +141,8 @@ function AddNewGoal() {
             >
               {isAddingGoal ? "Adding Goal..." : "Add Goal"}
             </button>
-            {isAddGoalError && (
-              <p className="text-xs text-red-500">
-                Error adding goal. Please try again.
-              </p>
-            )}
+            {console.log(error)}
+            {isAddGoalError && <p className="text-xs text-red-500">{error}</p>}
           </form>
         </div>
       </div>
