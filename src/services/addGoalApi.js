@@ -4,6 +4,7 @@ import { setShowAddNewGoal, setShowDepositToGoal } from "../Features/uiSlice";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const addGoalApi = async (goalData) => {
   const { accountId, name, targetAmount } = goalData;
@@ -128,6 +129,90 @@ const updateGoalApi = async (goalData) => {
   return { message: "Goal Added", data, name };
 };
 
+const withdrawFromGoal = async (goalData) => {
+  const { accountId, id, name } = goalData;
+
+  // Fetch the existing goal
+  const { data: existingGoal, error: fetchGoalError } = await supabase
+    .from("goals")
+    .select("totalAmount")
+    .eq("accountId", accountId)
+    .eq("id", id)
+    .single();
+
+  if (fetchGoalError) {
+    throw new Error(`Failed to fetch the goal: ${fetchGoalError.message}`);
+  }
+
+  // Fetch sender account data
+  const { data: senderAccount, error: fetchAccountError } = await supabase
+    .from("accounts")
+    .select("*")
+    .eq("accountId", accountId);
+
+  if (fetchAccountError) {
+    throw new Error(
+      `Failed to fetch sender account data: ${fetchAccountError.message}`
+    );
+  }
+
+  if (!senderAccount || senderAccount.length === 0) {
+    throw new Error("Sender account not found");
+  }
+
+  const existingGoalBalance = existingGoal.totalAmount;
+  const senderBalance = senderAccount[0].accountBalance;
+
+  // Calculate updated balance
+  const updatedSenderBalance = existingGoalBalance + senderBalance;
+
+  // Update sender account balance
+  const { error: updateAccountError } = await supabase
+    .from("accounts")
+    .update({ accountBalance: updatedSenderBalance })
+    .eq("accountId", accountId);
+
+  if (updateAccountError) {
+    throw new Error(
+      `Failed to update account balance: ${updateAccountError.message}`
+    );
+  }
+
+  // Insert a transaction record
+  const { error: insertTransactionError } = await supabase
+    .from("transactions")
+    .insert([
+      {
+        accountId: String(accountId),
+        amount: +existingGoalBalance, // Use the correct amount here
+        type: "credit",
+        description: `From ${name}`,
+        status: "successful",
+        name,
+      },
+    ]);
+
+  if (insertTransactionError) {
+    throw new Error(
+      `Failed to insert transaction: ${insertTransactionError.message}`
+    );
+  }
+
+  const { error: delelteGoalError } = await supabase
+    .from("goals")
+    .delete()
+    .eq("accountId", accountId)
+    .eq("id", id);
+
+  if (delelteGoalError) {
+    throw new Error(
+      `Failed to insert transaction: ${delelteGoalError.message}`
+    );
+  }
+
+  return { message: "Withdrawal successful", accountId, name };
+};
+
 export const useAddGoalApi = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
@@ -174,5 +259,34 @@ export const useUpdateGoal = () => {
     updatingGoal,
     isUpdatingGoal,
     isUpdatingGoalError,
+  };
+};
+
+export const useWithdrawFromGoal = () => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const {
+    mutate: withdrawGoal,
+    isPending: isWithdrawing,
+    error: withdrawGoalError,
+  } = useMutation({
+    mutationFn: withdrawFromGoal,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["goals"] });
+      toast.success(
+        `Money has been withdrawn from the ${data.name} goal to main balance`
+      );
+      navigate("/");
+    },
+    onError: (error) => {
+      toast.error(`Error withdrawing money: ${error.message}`);
+    },
+  });
+
+  return {
+    withdrawGoal,
+    isWithdrawing,
+    withdrawGoalError,
   };
 };

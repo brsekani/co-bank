@@ -9,7 +9,9 @@ const useGoals = () => {
   const dispatch = useDispatch();
   const [selectedGoal, setSelectedGoal] = useState(null);
   const [searchedGoals, setSearchGoals] = useState("");
-  const { goalsData } = useContext(AccountContext);
+  const { goalsData, isLoadingGoals } = useContext(AccountContext);
+  const { accountData } = useContext(AccountContext);
+  const accountId = accountData?.map((acc) => acc.accountId);
 
   const arrangedGoalsByDataCreated = goalsData?.sort(
     (a, b) => new Date(b.created_at) - new Date(a.created_at)
@@ -32,6 +34,8 @@ const useGoals = () => {
     showDepositToGoal,
     selectedGoal,
     dispatch,
+    accountId,
+    isLoadingGoals,
   };
 };
 
