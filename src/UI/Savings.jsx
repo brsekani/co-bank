@@ -6,7 +6,7 @@ import { AccountContext } from "../Context/AccountContext";
 
 function Savings() {
   const { accountData } = useContext(AccountContext);
-  const savingsBalance = accountData?.at(0).savingsBalance;
+  const savingsBalance = accountData?.at(0).savings_balance;
 
   const totalSavings = savingsBalance;
   const targetSavings = 10000;
@@ -43,7 +43,7 @@ function Savings() {
       </div>
 
       <p className="flex items-center gap-1 mt-10 text-sm">
-        Goal:<span>${useFormatBalance(targetSavings)}</span>
+        Goal:<span>{useFormatBalance(targetSavings)}</span>
       </p>
 
       <div className="w-full h-12 bg-[rgb(161,161,161)] rounded-md mt-3">

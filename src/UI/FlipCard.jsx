@@ -13,29 +13,29 @@ function FlipCard() {
   const [showBack, setShowBack] = useState(false);
   const darkMode = useSelector((state) => state.darkMode);
 
-  const { accountData, customerData } = useContext(AccountContext);
+  const { accountData, userData } = useContext(AccountContext);
 
   const creditCardBalance = accountData?.map(
-    (account) => account.creditCardBalance
+    (account) => account.credit_card_balance
   );
 
   const creditCardNumber = accountData?.map(
-    (account) => account.creditCardNumber
+    (account) => account.credit_card_number
   );
 
   const cvv = accountData?.map((account) => account.cvv);
 
   const creditCardExpireDate = accountData?.map(
-    (account) => account.creditCardExpireDate
+    (account) => account.expiration_date
   );
 
-  const fullName = customerData?.map((customer) => {
+  const fullName = userData?.map((customer) => {
     const capitalizeLastName =
-      customer.lastName.charAt(0).toUpperCase(1) +
-      customer.lastName.slice(1).toLowerCase();
+      customer.last_name.charAt(0).toUpperCase(1) +
+      customer.last_name.slice(1).toLowerCase();
     const capitalizeFirst =
-      customer.firstName.charAt(0).toUpperCase(1) +
-      customer.firstName.slice(1).toLowerCase();
+      customer.first_name.charAt(0).toUpperCase(1) +
+      customer.first_name.slice(1).toLowerCase();
     return `${capitalizeLastName} ${capitalizeFirst}`;
   });
 
@@ -50,6 +50,25 @@ function FlipCard() {
   function handleFlipCard() {
     setShowBack((showBack) => !showBack);
   }
+
+  const formatYearMonth = (dateArray) => {
+    if (!Array.isArray(dateArray) || dateArray.length === 0) {
+      console.error("Invalid dateArray:", dateArray);
+      return ""; // Return an empty string or handle it as needed
+    }
+
+    const dateString = dateArray[0]; // Extract the first item from the array
+
+    if (!dateString) {
+      console.error("Date string is undefined or empty.");
+      return ""; // Return an empty string or handle it as needed
+    }
+
+    const [year, month] = dateString.split("-");
+    const shortYear = year.slice(-2); // Extract last two digits of the year
+
+    return `${month}/${shortYear}`; // Format as YY/MM
+  };
 
   return (
     <div
@@ -204,7 +223,9 @@ function FlipCard() {
               <h1 className="text-base font-medium">{fullName}</h1>
               <div>
                 <p className="text-[10px]">Expires</p>
-                <h1 className="font-medium">{creditCardExpireDate}</h1>
+                <h1 className="font-medium">
+                  {formatYearMonth(creditCardExpireDate)}
+                </h1>
               </div>
               <RiVisaLine size={55} />
             </div>

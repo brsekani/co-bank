@@ -1,10 +1,9 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { BsSquareHalf } from "react-icons/bs";
 import useFormatBalance from "../Hooks/useFormatBalance";
 import useFormatCreditCardNumber from "../Hooks/useFormatCreditCardNumber";
 import { RiVisaLine } from "react-icons/ri";
 import { useSelector } from "react-redux";
-import { AccountContext } from "../Context/AccountContext";
 
 function FlipCardForCardPage() {
   const darkMode = useSelector((state) => state.darkMode);
@@ -12,33 +11,33 @@ function FlipCardForCardPage() {
   const [showCreditCardNumber, setShowCreditCardNumber] = useState(false);
   const [showBack, setShowBack] = useState(false);
 
-  const { accountData, customerData } = useContext(AccountContext);
+  const { accountData, userData } = useSelector((state) => state.auth);
 
-  const creditCardBalance = accountData?.map(
-    (account) => account.creditCardBalance
-  );
+  const creditCardBalance = accountData?.credit_card_balance;
+  const creditCardNumber = accountData?.credit_card_number;
+  const cvv = accountData?.cvv;
+  const creditCardExpireDate = accountData?.expiration_date;
 
-  const creditCardNumber = accountData?.map(
-    (account) => account.creditCardNumber
-  );
-
-  const cvv = accountData?.map((account) => account.cvv);
-
-  const creditCardExpireDate = accountData?.map(
-    (account) => account.creditCardExpireDate
-  );
-
-  // FullName
-  const fullName = customerData?.map((customer) => {
+  const fullName = () => {
     const capitalizeLastName =
-      customer.lastName.charAt(0).toUpperCase(1) +
-      customer.lastName.slice(1).toLowerCase();
-    const capitalizeFirst =
-      customer.firstName.charAt(0).toUpperCase(1) +
-      customer.firstName.slice(1).toLowerCase();
-    return `${capitalizeLastName} ${capitalizeFirst}`;
-  });
+      userData?.last_name.charAt(0).toUpperCase() +
+      userData?.last_name.slice(1).toLowerCase();
 
+    const capitalizeFirst =
+      userData?.first_name.charAt(0).toUpperCase() +
+      userData?.first_name.slice(1).toLowerCase();
+
+    return `${capitalizeLastName} ${capitalizeFirst}`;
+  };
+
+  const formatYearMonth = (dateString) => {
+    if (!dateString) {
+      return;
+    }
+    const [year, month] = dateString.split("-"); // Split by dash and get year, month
+    const shortYear = year?.slice(2); // Extract last two digits of the year
+    return `${shortYear}/${month}`; // Join them with a slash
+  };
   function toggleShowbalance() {
     setShowBalance((showBalance) => !showBalance);
   }
@@ -194,10 +193,12 @@ function FlipCardForCardPage() {
           </div>
 
           <div className="flex items-center justify-between mt-3">
-            <h1 className="text-base font-medium">{fullName}</h1>
+            <h1 className="text-base font-medium">{fullName()}</h1>
             <div>
               <p className="text-[10px]">Expires</p>
-              <h1 className="font-medium">{creditCardExpireDate}</h1>
+              <h1 className="font-medium">
+                {formatYearMonth(creditCardExpireDate)}
+              </h1>
             </div>
             <RiVisaLine size={55} />
           </div>

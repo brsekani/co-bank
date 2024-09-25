@@ -11,13 +11,11 @@ import { AccountContext } from "../Context/AccountContext";
 function PersonalAccount() {
   const [showBalance, setShowBalance] = useState(false);
   const darkMode = useSelector((state) => state.darkMode);
-
   const dispatch = useDispatch();
 
   const { accountData } = useContext(AccountContext);
-
   const accountBalance = accountData?.map((account) =>
-    Number(account?.accountBalance)
+    Number(account?.account_balance)
   );
 
   function toggleShowbalance() {

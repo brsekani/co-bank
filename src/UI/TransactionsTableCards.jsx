@@ -18,7 +18,7 @@ function TransactionsTableCards() {
   useEffect(() => {
     if (!isLoadingTD && !isErrorTD) {
       const sortedTransaction = transactionsData?.sort(
-        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
       );
       setTransactions(sortedTransaction); // Update transactions state when data is fetched
     }
@@ -90,7 +90,7 @@ function TransactionsTableCards() {
               {currentTransactions?.map((transaction) => {
                 const formattedAmout = useFormatBalance(transaction.amount);
 
-                const dateObject = new Date(transaction.timestamp);
+                const dateObject = new Date(transaction.created_at);
                 const date = dateObject; // Date string without the day of the week
                 // const time = dateObject.toLocaleTimeString(); // Time string
 
@@ -109,13 +109,13 @@ function TransactionsTableCards() {
 
                 return (
                   <tr
-                    key={transaction.transactionId}
+                    key={transaction.transaction_Id}
                     className="border-t-[1px] border-white cursor-default hover:bg-gray-300"
                   >
                     <td className="flex items-center gap-2 pl-5 mt-4 mb-4">
                       {!transaction.image ? (
                         <div className="flex items-center justify-center w-12 h-12 text-2xl text-center capitalize bg-blue-300 rounded-md text-colorPrimary ">
-                          {transaction?.name?.charAt(0)}
+                          {transaction?.recipient_name?.charAt(0)}
                         </div>
                       ) : (
                         <img
@@ -125,21 +125,23 @@ function TransactionsTableCards() {
                         />
                       )}
 
-                      <span className="capitalize">{transaction.name}</span>
+                      <span className="capitalize">
+                        {transaction.recipient_name}
+                      </span>
                     </td>
                     <td>{formattedDate}</td>
                     <td>{formattedAmout}</td>
                     <td>
                       <span
                         className={`${
-                          transaction.status === "successful"
+                          transaction.transaction_status === "successful"
                             ? "bg-green-300 text-green-600"
                             : transaction.status === "pending"
                             ? "bg-yellow-300 text-yellow-600"
                             : "bg-red-300 text-red-600 "
                         } px-3 py-1 rounded-md`}
                       >
-                        {transaction.status}
+                        {transaction.transaction_status}
                       </span>
                     </td>
                     <td>

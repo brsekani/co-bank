@@ -1,9 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = "your-supabase-url";
-const supabaseKey = "your-supabase-key";
-const supabase = createClient(supabaseUrl, supabaseKey);
+import supabase from "../supabase";
 
 const fetchAccountName = async (accountNumber, bankName) => {
   const { data, error } = await supabase

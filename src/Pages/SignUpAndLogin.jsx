@@ -1,11 +1,19 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import coBankLogo from "../assets/cobank.svg";
 import { useForm } from "react-hook-form";
-import AuthContext from "../Context/AuthProvider";
+
+import { useDispatch, useSelector } from "react-redux";
+
+import { login, reset } from "../Features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 function SignUpAndLogin() {
   const [isLogin, setIsLogin] = useState(true);
-  const { login } = useContext(AuthContext);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { message, isError, isLoading } = useSelector((state) => state?.auth); // Get user from Redux state
 
   const {
     register,
@@ -13,18 +21,28 @@ function SignUpAndLogin() {
     formState: { errors },
   } = useForm();
 
+  // Handle input change to reset error and message
+  const handleInputLogInChange = () => {
+    if (isError || message) {
+      dispatch(reset());
+    }
+  };
+
   const sigUpOnSubmit = (data) => {
     console.log(data);
   };
 
   const loginOnSubmit = async (data) => {
-    const { emailAddress, password } = data;
-    try {
-      await login(emailAddress, password);
-      // Handle successful login, redirect, etc.
-    } catch (error) {
-      console.error("Login error:", error.message);
-      // Handle login error, show error message to user
+    const resultAction = await dispatch(
+      login({ email: data.emailAddress, password: data.password })
+    );
+
+    if (resultAction.type === "auth/login/fulfilled") {
+      navigate("/dashboard", { replace: true });
+      dispatch(reset());
+    } else if (resultAction.type === "auth/login/rejected") {
+      // Optionally, handle the case where login failed, e.g., show an error message
+      console.log("Login failed. Please try again.");
     }
   };
 
@@ -67,7 +85,7 @@ function SignUpAndLogin() {
               className="hidden"
             />
             <label
-              onClick={() => setIsLogin(true)}
+              onClick={isLoading ? null : () => setIsLogin(true)}
               className={`z-10 flex items-center justify-center w-full h-full pb-1 text-lg font-medium text-center transition-colors ease-in-out cursor-pointer slide duration-600 ${
                 isLogin ? "text-white" : ""
               }`}
@@ -75,7 +93,7 @@ function SignUpAndLogin() {
               Login
             </label>
             <label
-              onClick={() => setIsLogin(false)}
+              onClick={isLoading ? null : () => setIsLogin(false)}
               className={`z-10 flex items-center justify-center w-full h-full pb-1 text-lg font-medium text-center transition-colors ease-in-out cursor-pointer slide duration-600 ${
                 !isLogin ? "text-white" : ""
               }`}
@@ -114,6 +132,8 @@ function SignUpAndLogin() {
                   defaultValue="text@supabase.com"
                   autoComplete="off"
                   className="w-full h-12 px-4 transition-all border border-gray-300 rounded-xl focus:border-colorPrimary"
+                  onChange={handleInputLogInChange}
+                  disabled={isLoading}
                 />
                 {errors?.emailAddress && (
                   <span className="text-sm text-red-500">
@@ -130,6 +150,8 @@ function SignUpAndLogin() {
                   defaultValue="12345qwer"
                   required
                   className="w-full h-12 px-4 transition-all border border-gray-300 rounded-xl focus:border-colorPrimary"
+                  onChange={handleInputLogInChange}
+                  disabled={isLoading}
                 />
                 {errors?.password && (
                   <span className="text-sm text-red-500">
@@ -137,15 +159,22 @@ function SignUpAndLogin() {
                   </span>
                 )}
               </div>
-              <div className="mt-2 pass-link">
-                <a href="#" className="text-colorPrimary hover:underline">
+              {isError && (
+                <p className="mt-2 text-sm text-red-600">{message}</p>
+              )}
+              <div className="text-right ">
+                <a href="#" className=" text-colorPrimary hover:underline">
                   Forgot password?
                 </a>
               </div>
+
               <div className="relative mt-5 overflow-hidden field btn rounded-xl">
                 <div className="btn-layer absolute h-full w-[300%] left-[-100%] bg-colorPrimary rounded-xl transition-all"></div>
-                <button className="relative z-10 w-full h-10 text-lg font-medium text-white border-none cursor-pointer bg-none">
-                  Login
+                <button
+                  className="relative z-10 w-full h-10 text-sm font-medium text-white border-none cursor-pointer bg-none"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Loading..." : "Login"}
                 </button>
               </div>
               <div className="mt-4 text-center signup-link">
@@ -190,7 +219,7 @@ function SignUpAndLogin() {
               </div>
               <div className="relative mt-5 overflow-hidden field btn rounded-xl">
                 <div className="btn-layer absolute h-full w-[300%] left-[-100%] bg-colorPrimary rounded-xl transition-all"></div>
-                <button className="relative z-10 w-full h-10 text-lg font-medium text-white border-none cursor-pointer bg-none">
+                <button className="relative z-10 w-full h-10 text-sm font-medium text-white border-none cursor-pointer bg-none">
                   Signup
                 </button>
               </div>

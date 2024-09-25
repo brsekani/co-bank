@@ -1,19 +1,15 @@
-import { useContext } from "react";
 import { TbPencilMinus } from "react-icons/tb";
 import { useSelector } from "react-redux";
-import { AccountContext } from "../Context/AccountContext";
 
 function Security() {
   const darkMode = useSelector((state) => state.darkMode);
-  const { customerData } = useContext(AccountContext);
+  const { userData } = useSelector((state) => state.auth);
 
   // Email
-  const email = customerData?.map((customer) => customer.email);
+  const email = userData?.map((customer) => customer.email);
 
   // Email Verified
-  const emailVerified = customerData
-    ?.map((customer) => customer.emailVerified)
-    .at(0);
+  const emailVerified = userData?.email;
 
   return (
     <div

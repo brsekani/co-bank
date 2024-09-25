@@ -7,51 +7,51 @@ import { AccountContext } from "../Context/AccountContext";
 function Profile() {
   const darkMode = useSelector((state) => state.darkMode);
 
-  const { customerData, accountData } = useContext(AccountContext);
+  const { userData, accountData } = useContext(AccountContext);
 
   // FullName
-  const fullName = customerData?.map((customer) => {
+  const fullName = userData?.map((customer) => {
     const capitalizeLastName =
-      customer.lastName.charAt(0).toUpperCase(1) +
-      customer.lastName.slice(1).toLowerCase();
+      customer.last_name.charAt(0).toUpperCase(1) +
+      customer.last_name.slice(1).toLowerCase();
     const capitalizeFirst =
-      customer.firstName.charAt(0).toUpperCase(1) +
-      customer.firstName.slice(1).toLowerCase();
+      customer.first_name.charAt(0).toUpperCase(1) +
+      customer.first_name.slice(1).toLowerCase();
     return `${capitalizeLastName} ${capitalizeFirst}`;
   });
 
   // FirstName
-  const firstname = customerData?.map((customer) => {
+  const firstname = userData?.map((customer) => {
     const capitalizeFirst =
-      customer.firstName.charAt(0).toUpperCase(1) +
-      customer.firstName.slice(1).toLowerCase();
+      customer.first_name.charAt(0).toUpperCase(1) +
+      customer.first_name.slice(1).toLowerCase();
 
     return capitalizeFirst;
   });
 
   // lastName
-  const lastName = customerData.map((customer) => {
+  const lastName = userData.map((customer) => {
     const capitalizeFirst =
-      customer.lastName.charAt(0).toUpperCase(1) +
-      customer.lastName.slice(1).toLowerCase();
+      customer.last_name.charAt(0).toUpperCase(1) +
+      customer.last_name.slice(1).toLowerCase();
 
     return capitalizeFirst;
   });
 
   // Email
-  const email = customerData.map((customer) => customer.email);
+  const email = userData.map((customer) => customer.email);
 
   // Phone Number
-  const phoneNumber = customerData.map((customer) => customer.phoneNumber);
+  const phoneNumber = userData.map((customer) => customer.phoneNumber);
 
   // Address
-  const address = customerData.map((customer) => customer.address);
+  const address = userData.map((customer) => customer.address);
 
   // username
-  const userName = customerData.map((customer) => `@${customer.userName}`);
+  const userName = userData.map((customer) => `@${customer.userName}`);
 
   // AccountNumber
-  const accountNumber = accountData.map((account) => account.accountNumber);
+  const accountNumber = accountData.map((account) => account.account_number);
 
   return (
     <div className="flex flex-col gap-5 ">

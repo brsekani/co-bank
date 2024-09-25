@@ -1,6 +1,6 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AccountContext } from "../Context/AccountContext";
+
 import { setShowDepositToGoal } from "../Features/uiSlice";
 
 const useGoals = () => {
@@ -9,9 +9,12 @@ const useGoals = () => {
   const dispatch = useDispatch();
   const [selectedGoal, setSelectedGoal] = useState(null);
   const [searchedGoals, setSearchGoals] = useState("");
-  const { goalsData, isLoadingGoals } = useContext(AccountContext);
-  const { accountData } = useContext(AccountContext);
-  const accountId = accountData?.map((acc) => acc.accountId);
+  // const { goalsData, isLoadingGoals } = useContext(AccountContext);
+  const { accountData } = useSelector((state) => state.auth);
+  const accountId = accountData?.accountId;
+
+  const goalsData = null;
+  const isLoadingGoals = false;
 
   const arrangedGoalsByDataCreated = goalsData?.sort(
     (a, b) => new Date(b.created_at) - new Date(a.created_at)

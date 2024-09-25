@@ -14,11 +14,11 @@ const useSendInfoModal = ({
   const darkMode = useSelector((state) => state.darkMode);
   const recipientAccountNumber = formData?.accountNumber;
   const amount = formData?.amount;
-  const { accountData, customerData } = useContext(AccountContext);
-  const accountId = accountData.map((acc) => acc.accountId);
-  const accountBalance = accountData.map((acc) => acc.accountBalance);
-  const savingsBalance = accountData.map((acc) => acc.savingsBalance);
-  const creditCardBalance = accountData.map((acc) => acc.creditCardBalance);
+  const { accountData, userData } = useContext(AccountContext);
+  const account_id = accountData.map((acc) => acc.account_id);
+  const accountBalance = accountData.map((acc) => acc.account_balance);
+  const savingsBalance = accountData.map((acc) => acc.savings_balance);
+  const creditCardBalance = accountData.map((acc) => acc.credit_card_balance);
   const [error, setError] = useState(null);
 
   const {
@@ -30,18 +30,17 @@ const useSendInfoModal = ({
   } = useTransferMoney();
 
   // FullName of Account
-  const senderfullName = customerData
+  const senderfullName = userData
     ?.map((customer) => {
       const capitalizeLastName =
-        customer.lastName.charAt(0).toUpperCase() +
-        customer.lastName.slice(1).toLowerCase();
+        customer.last_name.charAt(0).toUpperCase() +
+        customer.last_name.slice(1).toLowerCase();
       const capitalizeFirst =
-        customer.firstName.charAt(0).toUpperCase() +
-        customer.firstName.slice(1).toLowerCase();
+        customer.first_name.charAt(0).toUpperCase() +
+        customer.first_name.slice(1).toLowerCase();
 
       // Format the full name with a space in between
       const fullName = `${capitalizeLastName} ${capitalizeFirst}`;
-      console.log(fullName); // This will log each name
 
       // Return the formatted name directly
       return fullName;
@@ -77,8 +76,9 @@ const useSendInfoModal = ({
     const pin = data.pin;
     const balanceType = data.balanceType;
     const formattedAmount = parseInt(amount.replace(/,/g, ""), 10);
+
     transferMoney({
-      accountId,
+      account_id,
       amount: formattedAmount,
       pin,
       accountName,

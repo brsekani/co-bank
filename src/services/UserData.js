@@ -1,47 +1,33 @@
 import { useQuery } from "@tanstack/react-query";
 import supabase from "../supabase";
-import { accountIdInfo, customerIdInfo } from "../utility/utilityFunction";
 
-const accountIdInfoData = accountIdInfo();
-const customerIdInfoData = customerIdInfo();
-// const accountIdInfoData = "2ba2831e-6007-4f40-9cc2-d1e7e326b2ea";
-// const customerIdInfoData = "e85d8cea-b4bb-4a45-a8ac-6541112f51ec";
-
-const fetchCustomerData = async () => {
-  // const { customerId } = getCurrentUser();
-  // console.log(customerId);
-
+const fetchUserData = async (user_id) => {
   const { data, error } = await supabase
-    .from("customers")
+    .from("Users")
     .select("*")
-    .eq("customerId", customerIdInfoData);
+    .eq("user_id", user_id);
   if (error) {
     throw new Error(error.message);
   }
   return data;
 };
 
-const fetchaccountData = async () => {
-  // const { accountId } = getCurrentUser();
-  // console.log(accountId);
-
+const fetchaccountData = async (account_id) => {
   const { data, error } = await supabase
-    .from("accounts")
+    .from("Accounts")
     .select("*")
-    .eq("accountId", accountIdInfoData);
+    .eq("account_id", account_id);
   if (error) {
     throw new Error(error.message);
   }
   return data;
 };
 
-const fetchTransactions = async (accountData) => {
-  const accountId = accountData?.map((acc) => acc.accountId).at(0);
-
+const fetchTransactions = async (account_id) => {
   const { data, error } = await supabase
-    .from("transactions")
+    .from("Transactions")
     .select("*")
-    .eq("accountId", accountId);
+    .eq("account_id", account_id);
 
   if (error) {
     throw new Error(error.message);
@@ -50,13 +36,11 @@ const fetchTransactions = async (accountData) => {
   return data;
 };
 
-const fetchGoals = async (accountData) => {
-  const accountId = accountData?.map((acc) => acc.accountId).at(0);
-
+const fetchGoals = async (account_id) => {
   const { data, error } = await supabase
     .from("goals")
     .select("*")
-    .eq("accountId", accountId);
+    .eq("account_id", account_id);
 
   if (error) {
     throw new Error(error.message);
@@ -65,28 +49,29 @@ const fetchGoals = async (accountData) => {
   return data;
 };
 
-export const useCustomerData = () => {
+export const useUserData = (user_id) => {
   const {
-    isPending: isLoadingCustomerData,
-    data: customerData,
-    error: errorCustomerData,
+    isPending: isLoadingUserData,
+    data: userData,
+    error: errorUserData,
   } = useQuery({
-    queryKey: ["customer"],
-    queryFn: fetchCustomerData,
+    queryKey: ["user"],
+    queryFn: () => fetchUserData(user_id),
   });
-  console.log("Customer Data:", customerData);
+  console.log("Customer Data:", userData);
 
-  return { isLoadingCustomerData, customerData, errorCustomerData };
+  return { isLoadingUserData, userData, errorUserData };
 };
 
-export const useAccountData = () => {
+export const useAccountData = (account_id) => {
+  console.log(account_id);
   const {
     isPending: isLoadingAccountData,
     data: accountData,
     error: errorAccountData,
   } = useQuery({
     queryKey: ["account"],
-    queryFn: fetchaccountData,
+    queryFn: () => fetchaccountData(account_id),
     // refetchInterval: 1000 * 3,
   });
   return {
@@ -96,14 +81,14 @@ export const useAccountData = () => {
   };
 };
 
-export const useTransactions = (accountData) => {
+export const useTransactions = (account_id) => {
   const {
     isPending: isLoadingTransactions,
     data: transactionsData,
     error: errorTransactions,
   } = useQuery({
     queryKey: ["transactions"],
-    queryFn: () => fetchTransactions(accountData),
+    queryFn: () => fetchTransactions(account_id),
     // refetchInterval: 1000 * 3,
   });
 
@@ -114,7 +99,7 @@ export const useTransactions = (accountData) => {
   };
 };
 
-export const useGoals = (accountData) => {
+export const useGoals = (account_id) => {
   const {
     isPending: isLoadingGoals,
     data: goalsData,
@@ -122,7 +107,7 @@ export const useGoals = (accountData) => {
     refetch: refetchGoals,
   } = useQuery({
     queryKey: ["goals"],
-    queryFn: () => fetchGoals(accountData),
+    queryFn: () => fetchGoals(account_id),
     // refetchInterval: 1000 * 3,
   });
   console.log(goalsData);

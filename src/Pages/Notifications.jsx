@@ -78,7 +78,7 @@ function Notifications() {
             <div className="flex items-center gap-3">
               {!transaction.image ? (
                 <div className="flex items-center justify-center w-12 h-12 text-2xl text-center bg-blue-300 rounded-md text-colorPrimary">
-                  {transaction.name.charAt(0)}
+                  {transaction.recipient_name.charAt(0)}
                 </div>
               ) : (
                 <img
@@ -88,8 +88,11 @@ function Notifications() {
                 />
               )}
               <div className="flex flex-col gap-1">
-                <h1 className="text-lg md:text-2xl">{transaction.name}</h1>
-                <p className="text-sm">{transaction.date}</p>
+                <h1 className="text-lg md:text-2xl">
+                  {transaction.recipient_name}
+                </h1>
+                <p className="text-sm">{transaction.created_at}</p>
+                {console.log(transaction.created_at)}
               </div>
             </div>
             <h1 className="text-lg md:text-2xl">

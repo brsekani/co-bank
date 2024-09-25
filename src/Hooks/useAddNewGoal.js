@@ -1,6 +1,5 @@
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AccountContext } from "../Context/AccountContext";
 import { useAddGoalApi } from "../services/addGoalApi";
 import { setShowAddNewGoal } from "../Features/uiSlice";
 import { useForm } from "react-hook-form";
@@ -9,8 +8,8 @@ const useAddNewGoal = () => {
   const darkMode = useSelector((state) => state.darkMode);
   const addNewGoalRef = useRef();
   const dispatch = useDispatch();
-  const { accountData } = useContext(AccountContext);
-  const accountId = accountData.map((acc) => acc.accountId);
+  const { accountData } = useSelector((state) => state.auth);
+  const accountId = accountData?.accountId;
   const { isAddGoalError, addGoal, isAddingGoal, error } = useAddGoalApi();
 
   useEffect(() => {

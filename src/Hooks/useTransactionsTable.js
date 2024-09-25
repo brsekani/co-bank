@@ -18,7 +18,7 @@ const useTransactionsTable = () => {
   useEffect(() => {
     if (!isLoadingTD && !isErrorTD) {
       const sortedTransaction = transactionsData?.sort(
-        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
       );
       setTransactions(sortedTransaction); // Update transactions state when data is fetched
     }

@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 // Function to handle money transfer
 const transferMoneyApi = async (transferInfo) => {
   const {
-    accountId,
+    account_id,
     amount,
     pin,
     accountName,
@@ -21,15 +21,15 @@ const transferMoneyApi = async (transferInfo) => {
 
   // Fetch sender's info
   const { data: senderAccount, error: senderError } = await supabase
-    .from("accounts")
+    .from("Accounts")
     .select("*")
-    .eq("accountId", accountId);
+    .eq("account_id", account_id);
 
   // Fetch receiver's info
   const { data: receiverAccount, error: receiverError } = await supabase
-    .from("accounts")
+    .from("Accounts")
     .select("*")
-    .eq("accountNumber", recipientAccountNumber);
+    .eq("account_number", recipientAccountNumber);
 
   if (senderError) {
     throw new Error(
@@ -45,16 +45,16 @@ const transferMoneyApi = async (transferInfo) => {
   // Determine the balance type for the sender
   let senderBalance;
   if (balanceType === "accountBalance") {
-    senderBalance = senderAccount[0]?.accountBalance;
+    senderBalance = senderAccount[0]?.account_balance;
   } else if (balanceType === "creditCardBalance") {
-    senderBalance = senderAccount[0]?.creditCardBalance;
+    senderBalance = senderAccount[0]?.credit_card_balance;
   } else if (balanceType === "savingsBalance") {
-    senderBalance = senderAccount[0]?.savingsBalance;
+    senderBalance = senderAccount[0]?.savings_balance;
   }
 
   const senderPin = senderAccount[0]?.pin;
-  const receiverBalance = receiverAccount[0]?.accountBalance;
-  const receiverAccountId = receiverAccount[0]?.accountId;
+  const receiverBalance = receiverAccount[0]?.account_balance;
+  const receiverAccountId = receiverAccount[0]?.account_id;
 
   // Validate pin
   if (pin !== senderPin) {
@@ -69,53 +69,63 @@ const transferMoneyApi = async (transferInfo) => {
   const updatedSenderBalance = senderBalance - formattedAmount;
   const updatedReceiverBalance = receiverBalance + formattedAmount;
 
+  console.log(senderBalance);
+  console.log(receiverBalance);
+  console.log(updatedSenderBalance);
+  console.log(updatedReceiverBalance);
+
   // Function to update balance
   const updateBalance = async (accountId, field, balance) => {
     await supabase
-      .from("accounts")
+      .from("Accounts")
       .update({ [field]: balance })
-      .eq("accountId", accountId);
+      .eq("account_id", accountId);
   };
 
   // Updating sender's balance
   if (balanceType === "accountBalance") {
-    await updateBalance(accountId, "accountBalance", updatedSenderBalance);
+    await updateBalance(account_id, "account_balance", updatedSenderBalance);
   } else if (balanceType === "creditCardBalance") {
-    await updateBalance(accountId, "creditCardBalance", updatedSenderBalance);
+    await updateBalance(
+      account_id,
+      "credit_card_balance",
+      updatedSenderBalance
+    );
   } else if (balanceType === "savingsBalance") {
-    await updateBalance(accountId, "savingsBalance", updatedSenderBalance);
+    await updateBalance(account_id, "savings_balance", updatedSenderBalance);
   }
 
   // Updating receiver's balance
-  await supabase
-    .from("accounts")
-    .update({ accountBalance: updatedReceiverBalance })
-    .eq("accountNumber", recipientAccountNumber);
+  const { data, error } = await supabase
+    .from("Accounts")
+    .update({ account_balance: updatedReceiverBalance })
+    .eq("account_id", receiverAccountId);
+
+  console.log(data);
+  console.log(error);
 
   // Function to insert transaction
-  const insertTransaction = async (accountId, amount, type, name) => {
-    await supabase.from("transactions").insert([
+  const insertTransaction = async (account_id, amount, type, name) => {
+    await supabase.from("Transactions").insert([
       {
-        accountId: String(accountId),
+        account_id: String(account_id),
         amount,
-        type,
-        description: "",
-        status: "successful",
-        name,
+        transaction_status: "successful",
+        recipient_name: name,
       },
     ]);
   };
 
   // Sender transaction update
-  await insertTransaction(accountId, -amount, "debit", accountName);
+  await insertTransaction(account_id, -amount, "debit", accountName);
 
   // Receiver transaction update
   await insertTransaction(receiverAccountId, amount, "credit", senderFullName);
 
-  return {
-    message: "Money Transfer successful",
-    amount,
-  };
+  // return {
+  //   message: "Money Transfer successful",
+  //   amount,
+  // };
 };
 
 // Custom hook to manage money transfer

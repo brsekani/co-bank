@@ -16,7 +16,7 @@ function AppLayout() {
   );
   // const dispatch = useDispatch();
 
-  const { isLoadingAccountData, isLoadingCustomerData, isLoadingTransactions } =
+  const { isLoadingAccountData, isLoadingUserData, isLoadingTransactions } =
     useContext(AccountContext);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ function AppLayout() {
   //   }
   // }, [dispatch]);
 
-  if (isLoadingAccountData && isLoadingCustomerData && isLoadingTransactions) {
+  if (isLoadingAccountData && isLoadingUserData && isLoadingTransactions) {
     // Loading state while data is being fetched
     return (
       <div

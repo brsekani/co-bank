@@ -1,10 +1,11 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AccountContext } from "../Context/AccountContext";
+
 import coBankImage from "../assets/cobank.svg";
 import { setShowSendUI } from "../Features/uiSlice";
 import { useForm } from "react-hook-form";
 import supabase from "../supabase";
+import { AccountContext } from "../Context/AccountContext";
 
 const useSend = () => {
   const dispatch = useDispatch();
@@ -24,7 +25,12 @@ const useSend = () => {
   const [loadingAccName, setLoadingAccountName] = useState(false);
 
   const { accountData } = useContext(AccountContext);
-  const senderAccouuntNum = accountData.at(0).accountNumber;
+  // const senderAccouuntNum = accountData
+  //   ?.at(0)
+  //   ?.map((account) => account.account_number);
+
+  const senderAccouuntNum = accountData.map((acc) => acc.account_number).at(0);
+  console.log(senderAccouuntNum);
 
   useEffect(() => {
     console.log(showSendUI, accountNumberInputRef.current);
@@ -127,20 +133,22 @@ const useSend = () => {
   } = useForm();
 
   const fetchAccountInfo = async (accountNumber, bankName) => {
+    console.log(senderAccouuntNum.length, accountNumber.length);
     setLoadingAccountName(true);
-    const bank_name = bankName.toLowerCase();
     try {
       if (senderAccouuntNum === accountNumber) {
         throw new Error("You cannot send money to your own account.");
       } else {
         const { data: centralizedAccountInformation, error } = await supabase
-          .from("centralizedAccountInformation")
+          .from("CentralizedAccountInformation")
           .select("*")
           .eq("account_number", accountNumber)
-          .eq("bank_name", bank_name);
+          .eq("bank_name", bankName.toLowerCase());
         console.log(centralizedAccountInformation);
+
         if (error)
           throw new Error("Bad or No network please check your connect");
+
         if (
           !centralizedAccountInformation ||
           centralizedAccountInformation.length === 0
@@ -163,6 +171,8 @@ const useSend = () => {
       data.accountNumber,
       data.bankName
     );
+
+    console.log(accountInfo);
 
     const account_name = accountInfo?.at(0)?.account_name;
 

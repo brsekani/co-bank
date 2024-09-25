@@ -12,15 +12,21 @@ const TransactionModal = ({ transaction, onClose }) => {
     useTransactionsTable();
   const darkMode = useSelector((state) => state.darkMode);
 
-  const { transactionId, name, amount, status, timestamp } = transaction;
+  const {
+    transaction_id,
+    recipient_name,
+    amount,
+    transaction_status,
+    created_at,
+  } = transaction;
 
   const formattedAmout = useFormatBalance(amount);
-  const formattedDate = new Date(timestamp).toLocaleDateString(undefined, {
+  const formattedDate = new Date(created_at).toLocaleDateString(undefined, {
     month: "short",
     day: "2-digit",
     year: "numeric",
   });
-  const formattedTime = new Date(timestamp).toLocaleTimeString(undefined, {
+  const formattedTime = new Date(created_at).toLocaleTimeString(undefined, {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
@@ -46,7 +52,7 @@ const TransactionModal = ({ transaction, onClose }) => {
       const image = canvas.toDataURL("image/png");
       const link = document.createElement("a");
       link.href = image;
-      link.download = `Transaction Receipt of ${transactionId}.png`;
+      link.download = `Transaction Receipt of ${transaction_id}.png`;
       link.click();
     } catch (error) {
       console.log(error);
@@ -55,8 +61,8 @@ const TransactionModal = ({ transaction, onClose }) => {
     }
   };
 
-  const truncatedTransactionId = transactionId.slice(0, 10) + "...";
-  const fullIdContent = <p className="font-medium">{transactionId}</p>;
+  const truncatedtransaction_id = transaction_id.slice(0, 10) + "...";
+  const fullIdContent = <p className="font-medium">{transaction_id}</p>;
 
   useEffect(() => {
     const handlePopState = () => {
@@ -101,7 +107,7 @@ const TransactionModal = ({ transaction, onClose }) => {
             </svg>
             <h1 className="mt-3 text-4xl font-bold">{formattedAmout}</h1>
             <h1 className="mt-3 text-lg font-medium text-[#4CAF50]">
-              {`Payments ${status}`}
+              {`Payments ${transaction_status}`}
             </h1>
           </div>
           <hr className="mt-3 mb-3" />
@@ -114,20 +120,20 @@ const TransactionModal = ({ transaction, onClose }) => {
               {showFullId ? (
                 fullIdContent
               ) : (
-                <p className="font-medium">{truncatedTransactionId}</p>
+                <p className="font-medium">{truncatedtransaction_id}</p>
               )}
             </div>
             <div className="flex justify-between">
               <p className="text-gray-600">Name</p>
-              <p className="font-medium">{name}</p>
+              <p className="font-medium">{recipient_name}</p>
             </div>
             <div className="flex justify-between">
               <p className="text-gray-600">Amount</p>
               <p className="font-medium">{formattedAmout}</p>
             </div>
             <div className="flex justify-between">
-              <p className="text-gray-600">Status</p>
-              <p className="font-medium">{status}</p>
+              <p className="text-gray-600">transaction_status</p>
+              <p className="font-medium">{transaction_status}</p>
             </div>
             <div className="flex justify-between">
               <p className="text-gray-600">Date</p>

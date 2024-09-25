@@ -1,6 +1,5 @@
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AccountContext } from "../Context/AccountContext";
 import useFormatBalance from "./useFormatBalance";
 import { useUpdateGoal } from "../services/addGoalApi";
 import { useForm } from "react-hook-form";
@@ -9,11 +8,11 @@ import { setShowDepositToGoal } from "../Features/uiSlice";
 const useDepositToGoalModal = ({ isOpen, goal }) => {
   const dispatch = useDispatch();
   const darkMode = useSelector((state) => state.darkMode);
-  const { accountData } = useContext(AccountContext);
-  const accountId = accountData.map((acc) => acc.accountId);
-  const accountBalance = accountData.map((acc) => acc.accountBalance);
-  const savingsBalance = accountData.map((acc) => acc.savingsBalance);
-  const creditCardBalance = accountData.map((acc) => acc.creditCardBalance);
+  const { accountData } = useSelector((state) => state.auth);
+  const accountId = accountData?.accountId;
+  const accountBalance = accountData?.accountBalance;
+  const savingsBalance = accountData?.savingsBalance;
+  const creditCardBalance = accountData?.creditCardBalance;
   const formattedAccountBalance = useFormatBalance(accountBalance);
   const formattedCreditCardBalance = useFormatBalance(creditCardBalance);
   const formattedSavingsBalance = useFormatBalance(savingsBalance);
