@@ -77,7 +77,7 @@ function DepositToGoalModal({ isOpen, onClose, goal }) {
             )}
             {isUpdatingGoalError && (
               <p className="text-xs text-red-600">
-                Network Error...Kindly retry
+                {isUpdatingGoalError.message}
               </p>
             )}
           </div>

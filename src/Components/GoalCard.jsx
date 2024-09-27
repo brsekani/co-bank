@@ -9,11 +9,14 @@ function GoalCard({
   darkMode,
   handleGoalClick,
   withdrawGoal,
-  accountId,
+  account_id,
 }) {
-  const percentage = completionPercentage(goal.targetAmount, goal.totalAmount);
-  const totalAmount = useFormatBalance(goal.totalAmount);
-  const targetAmount = useFormatBalance(goal.targetAmount);
+  const percentage = completionPercentage(
+    goal.target_amount,
+    goal.total_amount
+  );
+  const total_amount = useFormatBalance(goal.total_amount);
+  const target_amount = useFormatBalance(goal.target_amount);
 
   return (
     <div
@@ -40,7 +43,7 @@ function GoalCard({
 
       <div className="flex items-center justify-between mt-3">
         <div className="flex items-center gap-2">
-          <h1 className="text-3xl">{totalAmount}</h1>
+          <h1 className="text-3xl">{total_amount}</h1>
           <span
             className={`px-2 py-1 text-[12px] font-medium rounded-xl ${
               percentage > 66
@@ -56,7 +59,7 @@ function GoalCard({
       </div>
 
       <p className="flex items-center gap-1 mt-3 text-sm">
-        Target: {targetAmount}
+        Target: {target_amount}
       </p>
 
       {percentage === 100 ? (
@@ -64,10 +67,11 @@ function GoalCard({
           className="flex items-center justify-center w-full h-12 gap-2 px-2 mt-2 text-lg text-white rounded-md sm:text-2xl stripe-bg"
           onClick={() => {
             const goalData = {
-              accountId: accountId,
+              account_id: account_id,
               id: goal.id,
               name: goal.name,
             };
+            console.log(goalData);
             withdrawGoal(goalData);
           }}
         >
@@ -89,14 +93,14 @@ GoalCard.propTypes = {
   goal: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    totalAmount: PropTypes.number.isRequired,
-    targetAmount: PropTypes.number.isRequired,
+    total_amount: PropTypes.number.isRequired,
+    target_amount: PropTypes.number.isRequired,
     // Add more specific PropTypes as per your goal object structure
   }).isRequired,
   darkMode: PropTypes.bool.isRequired,
   handleGoalClick: PropTypes.func.isRequired,
   withdrawGoal: PropTypes.func.isRequired,
-  accountId: PropTypes.string.isRequired,
+  account_id: PropTypes.string.isRequired,
 };
 
 export default GoalCard;

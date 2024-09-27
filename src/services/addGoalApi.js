@@ -7,12 +7,12 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const addGoalApi = async (goalData) => {
-  const { accountId, name, targetAmount } = goalData;
+  const { account_id, name, target_amount } = goalData;
 
   const { data: existingGoals } = await supabase
     .from("goals")
     .select("*")
-    .eq("accountId", accountId);
+    .eq("account_id", account_id);
 
   const existingGoalName = existingGoals.some(
     (existingGoal) => existingGoal.name.toLowerCase() === name.toLowerCase()
@@ -24,9 +24,9 @@ const addGoalApi = async (goalData) => {
 
   const { data, error } = await supabase.from("goals").insert([
     {
-      accountId, // Generate a unique ID
+      account_id, // Generate a unique ID
       name,
-      targetAmount,
+      target_amount,
     },
   ]);
 
@@ -38,13 +38,14 @@ const addGoalApi = async (goalData) => {
 };
 
 const updateGoalApi = async (goalData) => {
-  const { accountId, amount, id, balanceType, name } = goalData;
+  const { account_id, amount, id, balanceType, name } = goalData;
+  console.log(account_id, amount, id, balanceType, name);
 
   // Fetch sender account data
   const { data: senderAccount, error: senderError } = await supabase
-    .from("accounts")
+    .from("Accounts")
     .select("*")
-    .eq("accountId", accountId);
+    .eq("account_id", account_id);
 
   if (senderError) {
     throw new Error(
@@ -55,14 +56,14 @@ const updateGoalApi = async (goalData) => {
   // Determine sender's balance based on balance type
   let senderBalance;
   if (balanceType === "accountBalance") {
-    senderBalance = senderAccount[0]?.accountBalance;
+    senderBalance = senderAccount[0]?.account_balance;
   } else if (balanceType === "creditCardBalance") {
-    senderBalance = senderAccount[0]?.creditCardBalance;
+    senderBalance = senderAccount[0]?.credit_card_balance;
   } else if (balanceType === "savingsBalance") {
-    senderBalance = senderAccount[0]?.savingsBalance;
+    senderBalance = senderAccount[0]?.savings_balance;
   }
 
-  const formattedAmount = Number(amount);
+  const formattedAmount = String(amount);
 
   // Validate sufficient balance
   if (senderBalance < formattedAmount) {
@@ -70,59 +71,68 @@ const updateGoalApi = async (goalData) => {
   }
 
   const updatedSenderBalance = senderBalance - formattedAmount;
-
+  console.log("p1");
   // Function to update balance
-  const updateBalance = async (accountId, field, balance) => {
+  const updateBalance = async (account_id, field, updatedSenderBalance) => {
     await supabase
-      .from("accounts")
-      .update({ [field]: balance })
-      .eq("accountId", accountId);
+      .from("Accounts")
+      .update({ [field]: updatedSenderBalance })
+      .eq("account_id", account_id)
+      .select();
   };
-
+  console.log("p1");
   // Update sender's balance
   if (balanceType === "accountBalance") {
-    await updateBalance(accountId, "accountBalance", updatedSenderBalance);
+    await updateBalance(account_id, "account_balance", updatedSenderBalance);
+    console.log(account_id, "account_balance", updatedSenderBalance);
   } else if (balanceType === "creditCardBalance") {
-    await updateBalance(accountId, "creditCardBalance", updatedSenderBalance);
+    await updateBalance(
+      account_id,
+      "credit_card_balance",
+      updatedSenderBalance
+    );
   } else if (balanceType === "savingsBalance") {
-    await updateBalance(accountId, "savingsBalance", updatedSenderBalance);
+    await updateBalance(account_id, "savings_balance", updatedSenderBalance);
   }
-
   // Insert a transaction record
-  await supabase.from("transactions").insert([
+  await supabase.from("Transactions").insert([
     {
-      accountId: String(accountId),
+      account_id: String(account_id),
       amount: -amount,
-      type: "debit",
-      description: `For ${name}`,
-      status: "successful",
-      name,
+      transaction_status: "successful",
+      transaction_type: "debit",
+      recipient_name: name,
     },
   ]);
 
   // Fetch the existing goal
   const { data: existingGoal, error: fetchError } = await supabase
     .from("goals")
-    .select("totalAmount")
-    .eq("accountId", accountId)
+    .select("total_amount")
+    .eq("account_id", account_id)
     .eq("id", id)
-    .single();
+    .select();
 
   if (fetchError) {
     throw new Error(fetchError.message);
   }
 
-  const existingGoalBalance = existingGoal?.totalAmount;
-  const updatedAmount = existingGoalBalance + formattedAmount;
+  const existingGoalBalance = existingGoal[0]?.total_amount;
+  const updatedAmount = String(
+    Number(existingGoalBalance) + Number(formattedAmount)
+  );
 
   // Update the goal with the new amount
   const { data, error } = await supabase
     .from("goals")
-    .update({ totalAmount: updatedAmount })
+    .update({ total_amount: updatedAmount })
     .eq("id", id)
-    .single();
+    .select();
+
+  console.log("p4");
 
   if (error) {
+    console.log("p5");
     throw new Error(error.message);
   }
 
@@ -130,15 +140,14 @@ const updateGoalApi = async (goalData) => {
 };
 
 const withdrawFromGoal = async (goalData) => {
-  const { accountId, id, name } = goalData;
+  const { account_id, id, name } = goalData;
 
   // Fetch the existing goal
   const { data: existingGoal, error: fetchGoalError } = await supabase
     .from("goals")
-    .select("totalAmount")
-    .eq("accountId", accountId)
-    .eq("id", id)
-    .single();
+    .select("total_amount")
+    .eq("account_id", account_id)
+    .eq("id", id);
 
   if (fetchGoalError) {
     throw new Error(`Failed to fetch the goal: ${fetchGoalError.message}`);
@@ -146,9 +155,9 @@ const withdrawFromGoal = async (goalData) => {
 
   // Fetch sender account data
   const { data: senderAccount, error: fetchAccountError } = await supabase
-    .from("accounts")
+    .from("Accounts")
     .select("*")
-    .eq("accountId", accountId);
+    .eq("account_id", account_id);
 
   if (fetchAccountError) {
     throw new Error(
@@ -160,18 +169,19 @@ const withdrawFromGoal = async (goalData) => {
     throw new Error("Sender account not found");
   }
 
-  const existingGoalBalance = existingGoal.totalAmount;
-  const senderBalance = senderAccount[0].accountBalance;
+  const existingGoalBalance = existingGoal[0].total_amount;
+  const senderBalance = senderAccount[0].account_balance;
 
   // Calculate updated balance
-  const updatedSenderBalance = existingGoalBalance + senderBalance;
+  const updatedSenderBalance = String(
+    Number(existingGoalBalance) + Number(senderBalance)
+  );
 
   // Update sender account balance
   const { error: updateAccountError } = await supabase
-    .from("accounts")
-    .update({ accountBalance: updatedSenderBalance })
-    .eq("accountId", accountId);
-
+    .from("Accounts")
+    .update({ account_balance: updatedSenderBalance })
+    .eq("account_id", account_id);
   if (updateAccountError) {
     throw new Error(
       `Failed to update account balance: ${updateAccountError.message}`
@@ -180,15 +190,15 @@ const withdrawFromGoal = async (goalData) => {
 
   // Insert a transaction record
   const { error: insertTransactionError } = await supabase
-    .from("transactions")
+    .from("Transactions")
     .insert([
       {
-        accountId: String(accountId),
-        amount: +existingGoalBalance, // Use the correct amount here
-        type: "credit",
-        description: `From ${name}`,
-        status: "successful",
-        name,
+        account_id: String(account_id),
+        amount: +existingGoalBalance,
+        transaction_status: "successful",
+        transaction_type: "credit",
+        recipient_name: name,
+        // description: `From ${name}`,
       },
     ]);
 
@@ -201,7 +211,7 @@ const withdrawFromGoal = async (goalData) => {
   const { error: delelteGoalError } = await supabase
     .from("goals")
     .delete()
-    .eq("accountId", accountId)
+    .eq("account_id", account_id)
     .eq("id", id);
 
   if (delelteGoalError) {
@@ -210,7 +220,7 @@ const withdrawFromGoal = async (goalData) => {
     );
   }
 
-  return { message: "Withdrawal successful", accountId, name };
+  return { message: "Withdrawal successful", account_id, name };
 };
 
 export const useAddGoalApi = () => {
@@ -250,7 +260,6 @@ export const useUpdateGoal = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["goals"] });
       dispatch(setShowDepositToGoal(false));
-      console.log(data);
       toast.success(`Money has been added to the goal: ${data.name}`);
     },
   });

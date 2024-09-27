@@ -1,13 +1,8 @@
 import { GoGoal } from "react-icons/go";
-import useFormatBalance from "../Hooks/useFormatBalance";
-import {
-  accountIdInfo,
-  completionPercentage,
-} from "../utility/utilityFunction";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { setShowAddNewGoal, setShowDepositToGoal } from "../Features/uiSlice";
 import DepositToGoalModal from "../Modals/DepositToGoalModal";
-import { IoAdd } from "react-icons/io5";
+
 import useGoals from "../Hooks/useGoals";
 import { useWithdrawFromGoal } from "../services/addGoalApi";
 import GoalCard from "../Components/GoalCard";
@@ -22,11 +17,13 @@ function Goals() {
     showDepositToGoal,
     selectedGoal,
     dispatch,
-    accountId,
+    account_id,
     isLoadingGoals,
   } = useGoals();
   const { withdrawGoal, isWithdrawing, withdrawGoalError } =
     useWithdrawFromGoal();
+
+  console.log(account_id);
 
   if (isWithdrawing || isLoadingGoals) {
     return (
@@ -77,7 +74,7 @@ function Goals() {
               darkMode={darkMode}
               handleGoalClick={handleGoalClick}
               withdrawGoal={withdrawGoal}
-              accountId={accountId}
+              account_id={account_id}
             />
           ))}
 

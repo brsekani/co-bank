@@ -39,19 +39,19 @@ function Profile() {
   });
 
   // Email
-  const email = userData.map((customer) => customer.email);
+  const email = userData?.map((customer) => customer.email);
 
   // Phone Number
-  const phoneNumber = userData.map((customer) => customer.phoneNumber);
+  const phoneNumber = userData?.map((customer) => customer.phoneNumber);
 
   // Address
-  const address = userData.map((customer) => customer.address);
+  const address = userData?.map((customer) => customer.address);
 
   // username
-  const userName = userData.map((customer) => `@${customer.userName}`);
+  const userName = userData?.map((customer) => `@${customer.userName}`);
 
   // AccountNumber
-  const accountNumber = accountData.map((account) => account.account_number);
+  const accountNumber = accountData?.map((account) => account.account_number);
 
   return (
     <div className="flex flex-col gap-5 ">

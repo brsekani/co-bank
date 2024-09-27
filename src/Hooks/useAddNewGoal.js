@@ -1,15 +1,16 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAddGoalApi } from "../services/addGoalApi";
 import { setShowAddNewGoal } from "../Features/uiSlice";
 import { useForm } from "react-hook-form";
+import { AccountContext } from "../Context/AccountContext";
 
 const useAddNewGoal = () => {
   const darkMode = useSelector((state) => state.darkMode);
   const addNewGoalRef = useRef();
   const dispatch = useDispatch();
-  const { accountData } = useSelector((state) => state.auth);
-  const accountId = accountData?.accountId;
+  const { accountData } = useContext(AccountContext);
+  const accountId = accountData?.map((acc) => acc.account_id);
   const { isAddGoalError, addGoal, isAddingGoal, error } = useAddGoalApi();
 
   useEffect(() => {
@@ -45,9 +46,9 @@ const useAddNewGoal = () => {
 
   const onSubmit = (data) => {
     const goalData = {
-      accountId: accountId[0], // Assuming you want the first accountId
+      account_id: accountId[0], // Assuming you want the first accountId
       name: data.name,
-      targetAmount: parseFloat(data.amount.replace(/,/g, "")),
+      target_amount: parseFloat(data.amount.replace(/,/g, "")),
     };
     addGoal(goalData);
   };

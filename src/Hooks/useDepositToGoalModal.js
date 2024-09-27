@@ -1,25 +1,26 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useFormatBalance from "./useFormatBalance";
 import { useUpdateGoal } from "../services/addGoalApi";
 import { useForm } from "react-hook-form";
 import { setShowDepositToGoal } from "../Features/uiSlice";
+import { AccountContext } from "../Context/AccountContext";
 
 const useDepositToGoalModal = ({ isOpen, goal }) => {
   const dispatch = useDispatch();
   const darkMode = useSelector((state) => state.darkMode);
-  const { accountData } = useSelector((state) => state.auth);
-  const accountId = accountData?.accountId;
-  const accountBalance = accountData?.accountBalance;
-  const savingsBalance = accountData?.savingsBalance;
-  const creditCardBalance = accountData?.creditCardBalance;
+  const { accountData } = useContext(AccountContext);
+  const account_id = accountData?.map((acc) => acc.account_id);
+  const accountBalance = accountData?.map((acc) => acc.account_balance);
+  const savingsBalance = accountData?.map((acc) => acc.savings_balance);
+  const creditCardBalance = accountData?.map((acc) => acc.credit_card_balance);
   const formattedAccountBalance = useFormatBalance(accountBalance);
   const formattedCreditCardBalance = useFormatBalance(creditCardBalance);
   const formattedSavingsBalance = useFormatBalance(savingsBalance);
   const { updatingGoal, isUpdatingGoal, isUpdatingGoalError } = useUpdateGoal();
 
   const DespositToGoalRef = useRef();
-  const maxAmountInput = goal.targetAmount - goal.totalAmount;
+  const maxAmountInput = goal.target_amount - goal.total_amount;
 
   const {
     handleSubmit,
@@ -35,14 +36,12 @@ const useDepositToGoalModal = ({ isOpen, goal }) => {
 
     // Convert the cleaned string to a number
     const goalData = {
-      accountId: accountId[0],
+      account_id: account_id[0],
       amount: Number(cleanedAmount),
       id: goal.id,
       balanceType: data.balanceType,
       name: goal.name,
     };
-
-    console.log(goalData);
 
     updatingGoal(goalData);
     // You can dispatch actions here to handle form submission

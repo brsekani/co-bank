@@ -1,6 +1,6 @@
-export function completionPercentage(totalAmount, TargetAmount) {
-  console.log(typeof totalAmount, typeof TargetAmount);
-  const Percentage = (TargetAmount / totalAmount) * 100;
+export function completionPercentage(total_amount, target_amount) {
+  console.log(typeof total_amount, typeof target_amount);
+  const Percentage = (target_amount / total_amount) * 100;
   return Percentage;
 }
 
